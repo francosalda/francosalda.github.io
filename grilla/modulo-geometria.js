@@ -30,14 +30,15 @@ var superficie3D;
 var mallaDeTriangulos;
 //indica la cantidad de  filas y columnas de vertices
 
-var filas=3; // 1 indica que hay 2 filas de vertices : la '0' y la '1'
-var columnas=5; // 2 indica que hay 3 columnas de vertices : la '0', la '1' y la '2'
+var filas=40; // 1 indica que hay 2 filas de vertices : la '0' y la '1'
+var columnas=40; // 2 indica que hay 3 columnas de vertices : la '0', la '1' y la '2'
 
 
 function crearGeometria(){
         
 
-    superficie3D=new Plano(3,3);
+   // superficie3D=new Plano(3,3);
+   superficie3D=new Esfera(1);
     mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
     
 }
@@ -47,10 +48,43 @@ function dibujarGeometria(){
     dibujarMalla(mallaDeTriangulos);
 
 }
+function Esfera(radio)
+{
+    this.getPosicion=function(u,v){
+        u = u * 2*Math.PI;
+        v = v * 2*Math.PI;
 
+        var x = radio*((Math.cos(u))*(Math.cos(v)));
+        var y = radio*((Math.sin(u))*(Math.cos(v)));
+        var z = radio*(Math.sin(v));
+        return [x,y,z];
+    }
+    this.getNormal=function(u,v){
+ 
+        u = u * 2*Math.PI;
+        v = v * 2*Math.PI;
+        //calculo del vector normal a la superficie
+        var nx = Math.pow(radio,2)*Math.cos(v)*Math.cos(u)*Math.cos(v);
+        var ny = Math.pow(radio,2)*Math.cos(v)*Math.sin(u)*Math.cos(v);
+        var nz = Math.pow(radio,2)*Math.cos(v)*Math.sin(v);
+        var norma = Math.sqrt(Math.pow(nx,2)+Math.pow(ny, 2)+Math.pow(nz,2));
+
+        return [nx/norma,ny/norma,nz/norma];
+    }
+
+    this.getCoordenadasTextura=function(u,v){
+        
+        return [10,10];
+        //return [radio*Math.cos(u),radio*Math.sin(v)];
+    }
+
+}
 function Plano(ancho,largo){
 
+    
     this.getPosicion=function(u,v){
+
+    
 
         var x=(u-0.5)*ancho;
         var z=(v-0.5)*largo;
