@@ -74,7 +74,8 @@ function Esfera(radio)
 
     this.getCoordenadasTextura=function(u,v){
         
-        return [10,10];
+        return [u,v];
+        //return [10,10];
         //return [radio*Math.cos(u),radio*Math.sin(v)];
     }
 
