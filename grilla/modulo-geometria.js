@@ -33,7 +33,7 @@ var mallaDeTriangulos;
 var filas=40; // indica que hay 'filas+1' filas de vertices
 var columnas=40; // indica que hay 'columnas+1' columnas de vertices
 
-var figura_a_dibujar = "esfera";//variable global para elegir la figura a crear
+var figura_a_dibujar = "plano";//variable global para elegir la figura a crear
 console.log("Para cambiar la figura a dibujar edite la variable: figura_a_dibujar = plano o esfera o tubosenoidal ");
 
 
