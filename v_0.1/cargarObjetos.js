@@ -3,7 +3,7 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	//cargarEstanteria(objetos);
+	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	asignarMallasObjetos(objetos);
 }
@@ -36,6 +36,9 @@ function cargarGalpon(objetos)
 	pisoGalpon = new objeto3D("plano",matrizModelado);
 	galpon.agregarHijo(pisoGalpon);
 	paredGalpon = new objeto3D("plano",matrizModelado);
+	mat4.scale(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),[0.7,0.1,1.0]);
+	mat4.translate(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),[-0.1,0.5,-0.25]);
+	mat4.rotate(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),Math.PI/2,[1.0,0.0,0.0]);
 	galpon.agregarHijo(paredGalpon);
 
 	objetos.push(galpon);
@@ -45,10 +48,20 @@ function cargarEstanteria(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la estanteria");
 	estanteria = new objeto3D;
+	estanteriaInferior = new objeto3D("plano",matrizModelado);
+	mat4.scale(estanteriaInferior.obtenerMatrizTransformacion(),estanteriaInferior.obtenerMatrizTransformacion(),[0.03,1.0,0.2]);
+	mat4.translate(estanteriaInferior.obtenerMatrizTransformacion(),estanteriaInferior.obtenerMatrizTransformacion(),[-7.0,0.01,0.0]);
+	estanteriaMedia = new objeto3D("plano",matrizModelado);
+	mat4.scale(estanteriaMedia.obtenerMatrizTransformacion(),estanteriaMedia.obtenerMatrizTransformacion(),[0.03,1.0,0.2]);
+	mat4.translate(estanteriaMedia.obtenerMatrizTransformacion(),estanteriaMedia.obtenerMatrizTransformacion(),[-7.0,0.04,0.0]);
+	estanteriaSuperior = new objeto3D("plano",matrizModelado);
+	mat4.scale(estanteriaSuperior.obtenerMatrizTransformacion(),estanteriaSuperior.obtenerMatrizTransformacion(),[0.03,1.0,0.2]);
+	mat4.translate(estanteriaSuperior.obtenerMatrizTransformacion(),estanteriaSuperior.obtenerMatrizTransformacion(),[-7.0,0.07,0.0]);
+
+	estanteria.agregarHijo(estanteriaInferior);
+	estanteria.agregarHijo(estanteriaMedia);
+	estanteria.agregarHijo(estanteriaSuperior);
 	objetos.push(estanteria);
-
-
-
 
 }
 

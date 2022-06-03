@@ -1,4 +1,4 @@
-function modelarEscenaInicial()
+function modelarEscenaInicial(objetos)
 {
 	
 }

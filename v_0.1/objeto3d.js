@@ -110,7 +110,7 @@ class objeto3D
 		if(superficie == "plano")
 		{
 			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-			this.superficie3D = new PlanoPrueba(3,3);
+			this.superficie3D = new PlanoPrueba(1,1);
 		}
 		else if (superficie == 'esfera')
 		{
