@@ -2,9 +2,19 @@
 <head>
     <script src="js/jquery.js"></script>
     <script src="js/gl-matrix-3.3.0.js"></script>    
+    <script src="js/gl-matrix-3.3.0.min.js"></script>    
     <script src="js/webgl-utils.js"></script>
     <script src="js/dat.gui.js"></script>
-    <script src="modulo-geometria.js"></script>
+    <script src="curvas.js"></script>
+    <script src="objeto3d.js"></script>
+    <script src="cargarObjetos.js"></script>
+    <script src="dibujarObjetos.js"></script>
+    <script src="escenaInicial.js"></script>
+
+    
+
+   <!-- <script   src="modulo-geometria.js"></script>-->
+
     <style>
         html{
             height: 100%;
@@ -59,9 +69,8 @@
 
         var matrizProyeccion = mat4.create();            
         var matrizVista = mat4.create();            
-        var matrizModelado = mat4.create();  
-        
-        
+        var matrizModelado = mat4.create();
+    
 
         function initGL(canvas) {
 
@@ -211,27 +220,72 @@
             gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
             
             // Definimos la ubicación de la camara                        
+            
             mat4.lookAt(matrizVista,
                 vec3.fromValues(0,alturaCamara,distanciaCamara),
                 vec3.fromValues(0,0,0),
-                vec3.fromValues(0,-1,0)
+                vec3.fromValues(0,1,0)
             );
                 
             var lightPosition = [10.0,0.0, 3.0];  
-            gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);            
+            gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
 
-            setMatrixUniforms();    
-            dibujarGeometria();
+            //dibujado de objetos de la escena
+            dibujarObjetos(objetosEscena);
             
+
+            /*Graficado de cosas*/
+         /*   aux = rueda.obtenerMatrizTransformacion();
+            if(lolapalooza)
+            {
+                mat4.scale(aux,aux,[0.5,0.5,0.5]);
+                mat4.translate(aux,aux,[0,1,0]);
+                lolapalooza = false;
+                
+            }
+            mat4.rotate(aux,aux,2*Math.PI / 360 ,[1, 0,1 ]);
+            matrizModelado = aux;
+            setMatrixUniforms();
+            rueda.asignarMatrizTransformacion(aux);
+
+            rueda.dibujarMalla(rueda.obtenerMallaDeTriangulos());
+*/
+
+            /*dibujado del galpon*/
+            
+          /*  aux = pisoGalpon.obtenerMatrizTransformacion();
+            //mat4.rotate(aux,aux,2*Math.PI / 360 ,[0, 1, 0]);
+            pisoGalpon.asignarMatrizTransformacion(aux);
+            matrizModelado = aux;
+            setMatrixUniforms();
+            pisoGalpon.dibujarMalla(pisoGalpon.obtenerMallaDeTriangulos());
+            
+            //dibujado del estante
+            aux = estanteInferior.obtenerMatrizTransformacion();
+            if(lolapalooza)
+            {
+                mat4.scale(aux,aux,[0.05,1,0.15]);
+                mat4.translate(aux,aux,[-15.0,0.05,0.0]);
+                lolapalooza = false;
+                
+            }
+            matrizModelado = aux;
+            setMatrixUniforms();
+            estanteInferior.asignarMatrizTransformacion(aux);
+            estanteInferior.dibujarMalla(estanteInferior.obtenerMallaDeTriangulos());
+
+*/
+
         }
         
         function tick() {
-           // requestAnimFrame(tick);
-            //time+=1/60;
+            requestAnimFrame(tick);
+            time+=1/60;
             
             // acumulo rotaciones en matrizModelado		        
-            //mat4.rotate(matrizModelado, matrizModelado,0.03*velocidadAngular, [0, 1, 0]);
-                    
+           // mat4.rotate(matrizModelado, matrizModelado,0.03*velocidadAngular, [0, 1, 0]);
+
+
             drawScene();
         }
             
@@ -250,8 +304,39 @@
             initGL(canvas);
             initShaders();
 
+
+
+   //         lolapalooza = true;
+        //Galpon
+     //   pisoGalpon = new objeto3D("plano",matrizModelado);
+       // pisoGalpon.asignarMallaDeTriangulos();
+
+
+
+
+
+        //estanteria
+
+        objetosEscena = [];
+        cargarObjetosEscena(objetosEscena);
+
+        
+
+       /* estanteInferior = new objeto3D("plano",matrizModelado);
+        estanteInferior.asignarMallaDeTriangulos();
+        estanteSuperior = new objeto3D("plano",matrizModelado);
+        estanteSuperior.asignarMallaDeTriangulos();
+
+
+        rueda = new objeto3D("esfera",matrizModelado);
+        rueda.asignarMallaDeTriangulos();*/
+
+
             
-            crearGeometria();
+           
+            
+            
+        
 
             gl.clearColor(66.2, 0.2, 0.2, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT);
