@@ -25,6 +25,10 @@ class CurvaBezier
         Base2=function(u) { return 3*(1-u)*u*u;} //3u2-3u3
         Base3=function(u) { return u*u*u; }
 		}
+		else if (this.grado == 2)
+		{
+			
+		}
 		else {Console.log("[ERROR CURVAS]: Grado de curva no soportado");}
 		
              

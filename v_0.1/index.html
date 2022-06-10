@@ -5,7 +5,9 @@
     <script src="js/gl-matrix-3.3.0.min.js"></script>    
     <script src="js/webgl-utils.js"></script>
     <script src="js/dat.gui.js"></script>
+    <script src="transformacionesGeometricas.js"></script>
     <script src="curvas.js"></script>
+    <script src="superficiesBarrido.js"></script>
     <script src="objeto3d.js"></script>
     <script src="cargarObjetos.js"></script>
     <script src="dibujarObjetos.js"></script>
@@ -58,8 +60,8 @@
         var $canvas=$("#myCanvas");
         var aspect=$canvas.width()/$canvas.height();
 
-        var distanciaCamara=0.22;//3
-        var alturaCamara=0.15;//2
+        var distanciaCamara=3.24;//3
+        var alturaCamara=0.84;//2
         var velocidadAngular=0.15;
         
         var lighting="true";
