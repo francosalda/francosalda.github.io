@@ -48,7 +48,7 @@ function trasladarObjeto(objeto,vectorTraslacion)
 	}
 }
 //Escala un objeto que puede estar compuesto por otros objetos.
-/*function escalarObjeto(objeto,vectorEscala)
+function escalarObjeto(objeto,vectorEscala)
 {	
 	if(objeto.esUnContenedor())
 	{
@@ -62,5 +62,5 @@ function trasladarObjeto(objeto,vectorTraslacion)
 		mat4.scale(objeto.obtenerMatrizTransformacion(),objeto.obtenerMatrizTransformacion(),vectorEscala);
 	}
 
-}*/
+}
 

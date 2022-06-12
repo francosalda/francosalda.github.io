@@ -321,7 +321,7 @@ class objeto3D
     this.positionBuffer.push(pos[0]);
     this.positionBuffer.push(pos[1]);
     this.positionBuffer.push(pos[2]);
-    nrm = [0.0,-1.0,0.0];
+    nrm = [0.0,1.0,0.0];
     this.normalBuffer.push(nrm[0]);
     this.normalBuffer.push(nrm[1]);
     this.normalBuffer.push(nrm[2]);

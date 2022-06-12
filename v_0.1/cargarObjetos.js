@@ -5,6 +5,7 @@ function cargarObjetosEscena(objetos)
 	console.log("[DEBUG] Cargando objetos de la escena");
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
+	cargarAutoElevador(objetos);
 	
 	
 
@@ -31,6 +32,52 @@ function cargarGalpon(objetos)
 
 	objetos.push(galpon);
 }
+
+
+function cargarAutoElevador(objetos)
+{
+	autoElevador = new objeto3D;
+
+	palaAutoElevador = GenerarCubo();
+	barraVertical1  = GenerarCubo();
+	barraVertical2 = GenerarCubo();
+	barraHorizontal1  = GenerarCubo();
+	barraHorizontal2  = GenerarCubo();
+	barraHorizontal3  = GenerarCubo();
+
+
+	trasladarObjeto(palaAutoElevador,[0.0,0.005+0.5,0.0]);
+	mat4.scale(palaAutoElevador.obtenerMatrizTransformacion(),palaAutoElevador.obtenerMatrizTransformacion(),[0.3,0.01,0.3]);
+
+	trasladarObjeto(barraVertical1,[-0.15,0.6,0.1]);
+	mat4.scale(barraVertical1.obtenerMatrizTransformacion(),barraVertical1.obtenerMatrizTransformacion(),[0.02,1.2,0.02]);
+
+	trasladarObjeto(barraVertical2,[-0.15,0.6,-0.1]);
+	mat4.scale(barraVertical2.obtenerMatrizTransformacion(),barraVertical2.obtenerMatrizTransformacion(),[0.02,1.2,0.02]);
+
+	trasladarObjeto(barraHorizontal1,[-0.15,0.2,0.0]);
+	mat4.scale(barraHorizontal1.obtenerMatrizTransformacion(),barraHorizontal1.obtenerMatrizTransformacion(),[0.015,0.03,0.25]);
+
+	trasladarObjeto(barraHorizontal2,[-0.15,0.7,0.0]);
+	mat4.scale(barraHorizontal2.obtenerMatrizTransformacion(),barraHorizontal2.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
+
+	trasladarObjeto(barraHorizontal3,[-0.15,1.1,0.0]);
+	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
+
+	autoElevador.agregarHijo(palaAutoElevador);
+	autoElevador.agregarHijo(barraVertical1);
+	autoElevador.agregarHijo(barraVertical2);
+	autoElevador.agregarHijo(barraHorizontal1);
+	autoElevador.agregarHijo(barraHorizontal2);
+	autoElevador.agregarHijo(barraHorizontal3);
+
+	objetos.push(autoElevador);
+
+
+
+}
+
+
 
 function cargarEstanteria(objetos)
 {
