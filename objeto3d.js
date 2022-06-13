@@ -6,7 +6,8 @@ class objeto3D
 	{
 		
         if(nombreSuperficie) 
-        {
+        {   
+            this.SuperficieCerrada = false; // es true si la superficie posee tapas
             this.claseDeSuperficie = "parametrica"; // por defecto
             this.mallaDeTriangulos;
             if(!matrizModelado)
@@ -18,13 +19,12 @@ class objeto3D
                 this.matrizTransformacion = new mat4.create();
                 this.matrizTransformacion = mat4.clone(matrizModelado);    
             }
-            
-            this.filas=40; // indica que hay 'filas+1' filas de vertices
-            this.columnas=40; // indica que hay 'columnas+1' columnas de vertices
+            this.filas=50; // indica que hay 'filas+1' filas de vertices
+            this.columnas=50; // indica que hay 'columnas+1' columnas de vertices
             this.asignarTipoDeSuperficie(nombreSuperficie);
             this.contenedor = false;
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
-            this.SuperficieCerrada = false; // es true si la superficie posee tapas
+            
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
 
         }
@@ -39,7 +39,14 @@ class objeto3D
         this.hijos = [];
 	}
 
-
+    AsignarCantidadFilas(cantFilas)
+    {
+        this.filas = cantFilas;
+    }
+    AsignarCantidadColumnas(cantColumnas)
+    {
+        this.columnas = cantColumnas;
+    }
 
     esSuperficieCerrada()
     {
@@ -122,40 +129,50 @@ class objeto3D
         else if(this.claseDeSuperficie == "barrido")
         {
 
-            var barridoColumnas = 4;
-            var barridoNiveles = 1;
-            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,barridoNiveles,barridoColumnas);           
+          //  var barridoColumnas = 4;
+           // var barridoNiveles = 1;
+            //this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,barridoNiveles,barridoColumnas);           
+            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);           
             
         }
 		
 	}
 	asignarTipoDeSuperficie(superficie)
 	{
-	
 		if(superficie == "plano")
 		{
 			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
 			this.superficie3D = new Plano(1,1);
+            this.filas = 1; this.columnas = 1;
 		}
 		else if (superficie == 'esfera')
 		{
-
 			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
 			this.superficie3D = new Esfera(1);
+            this.filas = 40; this.columnas = 40;
 		}
         else if (superficie == 'cubo')
         {
             console.log("[Debug Objeto3d]: se asigno como superficie de barrido la pared de un cubo");
-            this.superficie3D = new paredCubo(1);
+            this.asignarSuperficieCerrada();
+            this.superficie3D = new paredCubo(1); // altura:1
             this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3);
+            this.curvaGeometrica.establecerGradoCurva(3); // cubica
             this.claseDeSuperficie = "barrido";
+            
+            this.filas = 1; this.columnas = 4;
+        }
+        else if (superficie == 'cilindro')
+        {
+            this.asignarSuperficieCerrada();
+            this.superficie3D = new paredTubo(1,1);//radio: 1 altura: 1
+            this.claseDeSuperficie = "barrido";
+            this.filas = 40; this.columnas = 40;
         }
 		else 
 		{
 			console.log("[DEBUG objeto3d]: Error al elejir el tipo de superficie");
 		}
-    
 	}
 
 

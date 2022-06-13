@@ -7,6 +7,28 @@ function trayectoriaLineal(t,m,b)
 }
 
 
+function paredTubo(radio,altura)
+{
+    this.getPosicion=function(u,v){   
+        var x = radio*Math.cos(u*2*Math.PI);
+        var z = radio *Math.sin(u*2*Math.PI);
+        
+        v = v-altura/2; //para posicionar el centro de masa en el origen
+        return [x,v*altura,z];
+    }
+    // DEBUG calcular normal
+    this.getNormal=function(u,v){
+        return [0,1,0];
+    }
+
+    this.getCoordenadasTextura=function(u,v){
+        return [u,v];
+    }
+
+}
+
+
+
 function paredCubo(altura)
 {
     // el parametro 'u' recorre la forma geometrica de la figura

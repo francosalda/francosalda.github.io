@@ -6,8 +6,10 @@ function cargarObjetosEscena(objetos)
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarAutoElevador(objetos);
-	//cuboPrueba = GenerarCubo();
-	//objetos.push(cuboPrueba);
+	
+	//cilindroPrueba = new objeto3D("cilindro",matrizModelado);
+	//objetos.push(cilindroPrueba);
+	
 	
 	
 	
@@ -136,6 +138,5 @@ function cargarEstanteria(objetos)
 // Genera un cubo de dimensiones 1x1x1, con dos tapas + paredes
 function GenerarCubo()
 {	nuevoCubo = new objeto3D("cubo",matrizModelado);
-	nuevoCubo.asignarSuperficieCerrada();
 	return nuevoCubo;
 }
