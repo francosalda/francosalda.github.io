@@ -169,6 +169,14 @@ class objeto3D
             this.claseDeSuperficie = "barrido";
             this.filas = 40; this.columnas = 40;
         }
+        else if (superficie == "chasis")
+        {
+            this.superficie3D = new paredTubo(1);
+            this.claseDeSuperficie = "barrido";
+            this.filas = 10; this.columnas = 10;
+
+
+        }
 		else 
 		{
 			console.log("[DEBUG objeto3d]: Error al elejir el tipo de superficie");

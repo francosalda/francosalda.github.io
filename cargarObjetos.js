@@ -3,18 +3,18 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	cargarEstanteria(objetos);
-	cargarGalpon(objetos);
-	cargarAutoElevador(objetos);
-	
-	//cilindroPrueba = new objeto3D("cilindro",matrizModelado);
-	//objetos.push(cilindroPrueba);
+	//cargarEstanteria(objetos);
+	//cargarGalpon(objetos);
+	//cargarAutoElevador(objetos);
 	
 	
+	cargarImpresora(objetos)
 	
 	
 	
-
+	
+	//objetos.push(chasis);
+	//chasis = new objeto3D("chasis",matrizModelado);
 	
 	asignarMallasObjetos(objetos);
 }
@@ -29,20 +29,46 @@ function cargarGalpon(objetos)
 	pisoGalpon = new objeto3D("plano",matrizModelado);
 	mat4.scale(pisoGalpon.obtenerMatrizTransformacion(),pisoGalpon.obtenerMatrizTransformacion(),[10.0,1.0,10.0]);
 	galpon.agregarHijo(pisoGalpon);
-
-	//paredGalpon = new objeto3D("plano",matrizModelado);
-	//mat4.translate(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),[0.0,0.5,0.0]);
-	//mat4.scale(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),[8.0,1.0,1.0]);
-	//mat4.rotate(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),Math.PI/2,[1.0,0.0,0.0]);
-	//galpon.agregarHijo(paredGalpon);
-
 	objetos.push(galpon);
+}
+
+function cargarImpresora(objetos)
+{
+	impresora = new objeto3D;//contenedor
+	tuboImpresora = new objeto3D("cilindro",matrizModelado);
+	trasladarObjeto(tuboImpresora,[0.0,0.0,0.0]);
+	escalarObjeto(tuboImpresora,[0.01,1.2,0.01]);
+	
+	CabezalImpresora = new objeto3D; // parte movil de la impresora
+
+	agarreImpresora = GenerarCubo();
+	trasladarObjeto(agarreImpresora,[0.0,0.03,0.0]);
+	escalarObjeto(agarreImpresora,[0.03,0.03,0.03]);
+
+	padImpresora = GenerarCubo();
+	trasladarObjeto(padImpresora,[-0.25,0.0,0.0]);
+	escalarObjeto(padImpresora,[0.2,0.03,0.2]);
+
+	SujetadorPadImpresora = GenerarCubo();
+	trasladarObjeto(SujetadorPadImpresora,[-0.25,0.03,0.0]);
+	escalarObjeto(SujetadorPadImpresora,[0.01,0.02,0.1]);
+
+
+	CabezalImpresora.agregarHijo(agarreImpresora);
+	CabezalImpresora.agregarHijo(padImpresora);
+	CabezalImpresora.agregarHijo(SujetadorPadImpresora);
+	impresora.agregarHijo(tuboImpresora);
+	impresora.agregarHijo(CabezalImpresora);
+	
+	
+	objetos.push(impresora);
+
 }
 
 
 function cargarAutoElevador(objetos)
 {
-	autoElevador = new objeto3D;
+	autoElevador = new objeto3D; // contenedor
 
 	palaAutoElevador = GenerarCubo();
 	barraVertical1  = GenerarCubo();
