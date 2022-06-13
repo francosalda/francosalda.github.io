@@ -24,6 +24,7 @@ class objeto3D
             this.asignarTipoDeSuperficie(nombreSuperficie);
             this.contenedor = false;
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
+            this.SuperficieCerrada = false; // es true si la superficie posee tapas
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
 
         }
@@ -40,7 +41,14 @@ class objeto3D
 
 
 
-
+    esSuperficieCerrada()
+    {
+        return this.SuperficieCerrada;
+    }
+    asignarSuperficieCerrada()
+    {
+        this.SuperficieCerrada = true;
+    }
 
 
     agregarHijo(objeto)
@@ -160,23 +168,7 @@ class objeto3D
     var indice = 0;
     var cantidad_columnas = columnas+1;
     // si es superficie de barrio debo agregar las tapas:
-    if(this.claseDeSuperficie == "barrido")
-    {
-        var verticeColapsoInferior = ((positionBuffer.length)/3) -2;
-        
-        indexBuffer[indice++] = verticeColapsoInferior;
-        indexBuffer[indice++] = 0;
-        indexBuffer[indice++] = 1;
-        indexBuffer[indice++] = verticeColapsoInferior;
-        indexBuffer[indice++] = 2;
-        indexBuffer[indice++] = 1;
-        indexBuffer[indice++] = verticeColapsoInferior;
-        indexBuffer[indice++] = 2;
-        indexBuffer[indice++] = 3;
-        indexBuffer[indice++] = verticeColapsoInferior;
-        indexBuffer[indice++] = 0;
-        indexBuffer[indice++] = 3;
-    }
+   
 
 
                 
@@ -212,48 +204,32 @@ class objeto3D
         
 
     }
-    if(this.claseDeSuperficie == "barrido")
-    {
-    var verticeColapsoSuperior = ((positionBuffer.length)/3)-1;
-      indexBuffer[indice++] = verticeColapsoSuperior;
-        indexBuffer[indice++] = 5;
-        indexBuffer[indice++] = 6;
-        indexBuffer[indice++] = verticeColapsoSuperior;
-        indexBuffer[indice++] = 7;
-        indexBuffer[indice++] = 6;
-        indexBuffer[indice++] = verticeColapsoSuperior;
-        indexBuffer[indice++] = 7;
-        indexBuffer[indice++] = 8;
-        indexBuffer[indice++] = verticeColapsoSuperior;
-        indexBuffer[indice++] = 5;
-        indexBuffer[indice++] = 8;
-}
-
+    
     //Inicialización de los buffers
-   var webgl_position_buffer = gl.createBuffer();
+    var webgl_position_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, webgl_position_buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.positionBuffer), gl.STATIC_DRAW);
     webgl_position_buffer.itemSize = 3;
-     webgl_position_buffer.numItems = this.positionBuffer.length / 3;
+    webgl_position_buffer.numItems = this.positionBuffer.length / 3;
 
     var webgl_normal_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normalBuffer), gl.STATIC_DRAW);
-     webgl_normal_buffer.itemSize = 3;
-     webgl_normal_buffer.numItems = this.normalBuffer.length / 3;
+    webgl_normal_buffer.itemSize = 3;
+    webgl_normal_buffer.numItems = this.normalBuffer.length / 3;
 
     var webgl_uvs_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.uvBuffer), gl.STATIC_DRAW);
-     webgl_uvs_buffer.itemSize = 2;
-     webgl_uvs_buffer.numItems = this.uvBuffer.length / 2;
+    webgl_uvs_buffer.itemSize = 2;
+    webgl_uvs_buffer.numItems = this.uvBuffer.length / 2;
 
 
     var webgl_index_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webgl_index_buffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexBuffer), gl.STATIC_DRAW);
-     webgl_index_buffer.itemSize = 1;
-     webgl_index_buffer.numItems = indexBuffer.length;
+    webgl_index_buffer.itemSize = 1;
+    webgl_index_buffer.numItems = indexBuffer.length;
 
     return {
         webgl_position_buffer,
@@ -269,6 +245,30 @@ class objeto3D
         this.normalBuffer = [];
         this.uvBuffer = [];
         var contador = 0;
+        let cantidad_columnas = columnas+1;
+
+
+        // se agrga la tapa inferior si es cerrada
+        if(this.esSuperficieCerrada()) 
+        {
+            for(let i = 0 ; i < cantidad_columnas; i++)
+                    {
+
+                    pos = [0.0,-0.5,0.0];
+                    this.positionBuffer.push(pos[0]);
+                    this.positionBuffer.push(pos[1]);
+                    this.positionBuffer.push(pos[2]);
+                    nrm = [0.0,-1.0,0.0];
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
+                     uvs = [0.0,0.0];
+                    this.uvBuffer.push(uvs[0]);
+                    this.uvBuffer.push(uvs[1]);
+                    }
+
+        }
+
         for (var i=0; i <= filas; i++) {
             for (var j=0; j <= columnas; j++) {
                 var u=j/columnas;
@@ -276,6 +276,8 @@ class objeto3D
                 if(this.claseDeSuperficie == "barrido")
                 {
                     var pos=superficie.getPosicion(u,v,this.curvaGeometrica);
+                    
+
                 }
                 else
                 {
@@ -301,36 +303,27 @@ class objeto3D
         }        
     }
 
-    //pusheo el ultimo vertice de COLAPSO CENTRAL en el origen
-    if(this.claseDeSuperficie == "barrido")
-    {
-    pos = [0.0,-0.5,0.0];
-    this.positionBuffer.push(pos[0]);
-    this.positionBuffer.push(pos[1]);
-    this.positionBuffer.push(pos[2]);
-    nrm = [0.0,-1.0,0.0];
-    this.normalBuffer.push(nrm[0]);
-    this.normalBuffer.push(nrm[1]);
-    this.normalBuffer.push(nrm[2]);
-     uvs = [0.0,0.0];
-    this.uvBuffer.push(uvs[0]);
-    this.uvBuffer.push(uvs[1]);
+        // se agrega la tapa superior
+        if(this.esSuperficieCerrada()) 
+        {
+            for(let i = 0 ; i < cantidad_columnas; i++)
+                    {
 
-
-    pos = [0.0,0.5,0.0];
-    this.positionBuffer.push(pos[0]);
-    this.positionBuffer.push(pos[1]);
-    this.positionBuffer.push(pos[2]);
-    nrm = [0.0,1.0,0.0];
-    this.normalBuffer.push(nrm[0]);
-    this.normalBuffer.push(nrm[1]);
-    this.normalBuffer.push(nrm[2]);
-     uvs = [0.0,0.0];
-    this.uvBuffer.push(uvs[0]);
-    this.uvBuffer.push(uvs[1]);
-
-}
-
+                    pos = [0.0,0.5,0.0];
+                    this.positionBuffer.push(pos[0]);
+                    this.positionBuffer.push(pos[1]);
+                    this.positionBuffer.push(pos[2]);
+                    nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
+                     uvs = [0.0,0.0];
+                    this.uvBuffer.push(uvs[0]);
+                    this.uvBuffer.push(uvs[1]);
+                    }
+             filas = filas + 2; // se agregaron 2 tapas
+        }
+    
 
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
@@ -396,5 +389,6 @@ function Plano(ancho,largo){
         return [u,v];
     }
 }
+
 
 

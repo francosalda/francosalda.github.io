@@ -8,6 +8,9 @@ function cargarObjetosEscena(objetos)
 	cargarAutoElevador(objetos);
 	
 	
+	
+	
+	
 
 	
 	asignarMallasObjetos(objetos);
@@ -132,5 +135,6 @@ function cargarEstanteria(objetos)
 // Genera un cubo de dimensiones 1x1x1, con dos tapas + paredes
 function GenerarCubo()
 {	nuevoCubo = new objeto3D("cubo",matrizModelado);
+	nuevoCubo.asignarSuperficieCerrada();
 	return nuevoCubo;
 }

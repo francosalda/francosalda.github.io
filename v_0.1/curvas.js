@@ -1,12 +1,10 @@
 class CurvaBezier
 {
-
 	constructor(grado)
 	{
 		console.log("[Debug Curvas]: Nueva curva de Bezier creada de grado:"+grado);
 		this.tipo = "bezier";
 		this.grado = grado;
-		
 	}
 	//metodos
 	establecerGradoCurva(grado)
