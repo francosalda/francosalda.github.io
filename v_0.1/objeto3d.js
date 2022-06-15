@@ -6,7 +6,8 @@ class objeto3D
 	{
 		
         if(nombreSuperficie) 
-        {
+        {   
+            this.SuperficieCerrada = false; // es true si la superficie posee tapas
             this.claseDeSuperficie = "parametrica"; // por defecto
             this.mallaDeTriangulos;
             if(!matrizModelado)
@@ -18,13 +19,12 @@ class objeto3D
                 this.matrizTransformacion = new mat4.create();
                 this.matrizTransformacion = mat4.clone(matrizModelado);    
             }
-            
-            this.filas=40; // indica que hay 'filas+1' filas de vertices
-            this.columnas=40; // indica que hay 'columnas+1' columnas de vertices
+            this.filas=50; // indica que hay 'filas+1' filas de vertices
+            this.columnas=50; // indica que hay 'columnas+1' columnas de vertices
             this.asignarTipoDeSuperficie(nombreSuperficie);
             this.contenedor = false;
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
-            this.SuperficieCerrada = false; // es true si la superficie posee tapas
+            
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
 
         }
@@ -32,6 +32,7 @@ class objeto3D
         {
             console.log("[DEBUG]Se instancio un nuevo objeto contenedor 3D");
             this.contenedor = true;
+            this.matrizTransformacion = new mat4.create();
         }
 
         
@@ -39,7 +40,14 @@ class objeto3D
         this.hijos = [];
 	}
 
-
+    AsignarCantidadFilas(cantFilas)
+    {
+        this.filas = cantFilas;
+    }
+    AsignarCantidadColumnas(cantColumnas)
+    {
+        this.columnas = cantColumnas;
+    }
 
     esSuperficieCerrada()
     {
@@ -122,40 +130,59 @@ class objeto3D
         else if(this.claseDeSuperficie == "barrido")
         {
 
-            var barridoColumnas = 4;
-            var barridoNiveles = 1;
-            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,barridoNiveles,barridoColumnas);           
+          //  var barridoColumnas = 4;
+           // var barridoNiveles = 1;
+            //this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,barridoNiveles,barridoColumnas);           
+            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);           
             
         }
 		
 	}
 	asignarTipoDeSuperficie(superficie)
 	{
-	
 		if(superficie == "plano")
 		{
 			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
 			this.superficie3D = new Plano(1,1);
+            this.filas = 1; this.columnas = 1;
 		}
 		else if (superficie == 'esfera')
 		{
-
 			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
 			this.superficie3D = new Esfera(1);
+            this.filas = 40; this.columnas = 40;
 		}
         else if (superficie == 'cubo')
         {
             console.log("[Debug Objeto3d]: se asigno como superficie de barrido la pared de un cubo");
-            this.superficie3D = new paredCubo(1);
+            this.asignarSuperficieCerrada();
+            this.superficie3D = new paredCubo(1); // altura:1
             this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3);
+            this.curvaGeometrica.establecerGradoCurva(3); // cubica
             this.claseDeSuperficie = "barrido";
+            
+            this.filas = 1; this.columnas = 4;
+        }
+        else if (superficie == 'cilindro')
+        {
+            this.asignarSuperficieCerrada();
+            this.superficie3D = new paredTubo(1,1);//radio: 1 altura: 1
+            this.claseDeSuperficie = "barrido";
+            this.filas = 40; this.columnas = 40;
+        }
+        else if (superficie == "chasis")
+        {
+            this.asignarSuperficieCerrada();
+            this.superficie3D = new chasis(1);
+            this.curvaGeometrica = new CurvaBezier;
+            this.curvaGeometrica.establecerGradoCurva(3); // cubica
+            this.claseDeSuperficie = "barrido";
+            this.filas = 1; this.columnas = 12;
         }
 		else 
 		{
 			console.log("[DEBUG objeto3d]: Error al elejir el tipo de superficie");
 		}
-    
 	}
 
 
@@ -248,26 +275,7 @@ class objeto3D
         let cantidad_columnas = columnas+1;
 
 
-        // se agrga la tapa inferior si es cerrada
-        if(this.esSuperficieCerrada()) 
-        {
-            for(let i = 0 ; i < cantidad_columnas; i++)
-                    {
-
-                    pos = [0.0,-0.5,0.0];
-                    this.positionBuffer.push(pos[0]);
-                    this.positionBuffer.push(pos[1]);
-                    this.positionBuffer.push(pos[2]);
-                    nrm = [0.0,-1.0,0.0];
-                    this.normalBuffer.push(nrm[0]);
-                    this.normalBuffer.push(nrm[1]);
-                    this.normalBuffer.push(nrm[2]);
-                     uvs = [0.0,0.0];
-                    this.uvBuffer.push(uvs[0]);
-                    this.uvBuffer.push(uvs[1]);
-                    }
-
-        }
+       
 
         for (var i=0; i <= filas; i++) {
             for (var j=0; j <= columnas; j++) {
@@ -303,30 +311,53 @@ class objeto3D
         }        
     }
 
-        // se agrega la tapa superior
+     // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
+            let cantidadCoordenadasPorVertice = 3;
+            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,columnas*cantidadCoordenadasPorVertice));
+            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*columnas*cantidadCoordenadasPorVertice));
             for(let i = 0 ; i < cantidad_columnas; i++)
-                    {
-
-                    pos = [0.0,0.5,0.0];
-                    this.positionBuffer.push(pos[0]);
-                    this.positionBuffer.push(pos[1]);
-                    this.positionBuffer.push(pos[2]);
-                    nrm = [0.0,1.0,0.0];
-                    this.normalBuffer.push(nrm[0]);
-                    this.normalBuffer.push(nrm[1]);
-                    this.normalBuffer.push(nrm[2]);
+                {
+                    this.positionBuffer.unshift(posVerticeInf[0]);this.positionBuffer.push(postVerticeSup[0]);
+                    this.positionBuffer.unshift(posVerticeInf[1]);this.positionBuffer.push(postVerticeSup[1]);
+                    this.positionBuffer.unshift(posVerticeInf[2]);this.positionBuffer.push(postVerticeSup[2]);
+                    nrm = [0.0,-1.0,0.0];
+                    this.normalBuffer.unshift(nrm[0]);this.normalBuffer.push(-1*nrm[0]);
+                    this.normalBuffer.unshift(nrm[1]);this.normalBuffer.push(-1*nrm[1]);
+                    this.normalBuffer.unshift(nrm[2]);this.normalBuffer.push(-1*nrm[2]);
                      uvs = [0.0,0.0];
-                    this.uvBuffer.push(uvs[0]);
-                    this.uvBuffer.push(uvs[1]);
-                    }
-             filas = filas + 2; // se agregaron 2 tapas
+                    this.uvBuffer.unshift(uvs[0]); this.uvBuffer.push(uvs[0]);
+                    this.uvBuffer.unshift(uvs[1]);this.uvBuffer.push(uvs[1]);
+                }
+            filas = filas + 2; // se agregaron 2 tapas
         }
+
+
+       
+       
     
 
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
+
+/*a partir de un conjunto de array de vertices en formato x,y,z
+calcula el punto central del poligono descripto por dichos vertices*/
+calcularPuntoCentral(vertices)
+{
+    let cantidadCoordenadasPorVertice = 3; // (x,y,z)
+    let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice; 
+    let x =0 ,y = 0, z = 0; 
+    //calcula el promedio de cada coordenada 
+    for(let i = 0; i < (cantidadVertices);i++)
+    {   
+        x += vertices[3*i];
+        y += vertices[3*i+1];
+        z += vertices[3*i+2]; // optimización
+    }
+    return [x/cantidadVertices,y/cantidadVertices,z/cantidadVertices];
+}
+    
 
 
 }   //fin de la clase objeto3D

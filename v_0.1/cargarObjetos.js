@@ -3,15 +3,17 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	cargarEstanteria(objetos);
-	cargarGalpon(objetos);
+	//cargarEstanteria(objetos);
+	//cargarGalpon(objetos);
 	cargarAutoElevador(objetos);
 	
 	
+	//cargarImpresora(objetos)
 	
 	
 	
 
+	
 	
 	asignarMallasObjetos(objetos);
 }
@@ -26,59 +28,106 @@ function cargarGalpon(objetos)
 	pisoGalpon = new objeto3D("plano",matrizModelado);
 	mat4.scale(pisoGalpon.obtenerMatrizTransformacion(),pisoGalpon.obtenerMatrizTransformacion(),[10.0,1.0,10.0]);
 	galpon.agregarHijo(pisoGalpon);
-
-	//paredGalpon = new objeto3D("plano",matrizModelado);
-	//mat4.translate(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),[0.0,0.5,0.0]);
-	//mat4.scale(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),[8.0,1.0,1.0]);
-	//mat4.rotate(paredGalpon.obtenerMatrizTransformacion(),paredGalpon.obtenerMatrizTransformacion(),Math.PI/2,[1.0,0.0,0.0]);
-	//galpon.agregarHijo(paredGalpon);
-
 	objetos.push(galpon);
 }
 
+function cargarImpresora(objetos)
+{
+	impresora = new objeto3D;//contenedor
+	tuboImpresora = new objeto3D("cilindro",matrizModelado);
+	trasladarObjeto(tuboImpresora,[0.0,0.0,0.0]);
+	escalarObjeto(tuboImpresora,[0.01,1.2,0.01]);
+	
+	CabezalImpresora = new objeto3D; // parte movil de la impresora
+
+	agarreImpresora = GenerarCubo();
+	trasladarObjeto(agarreImpresora,[0.0,0.03,0.0]);
+	escalarObjeto(agarreImpresora,[0.03,0.03,0.03]);
+
+	padImpresora = GenerarCubo();
+	trasladarObjeto(padImpresora,[-0.15,0.01,0.0]);
+	escalarObjeto(padImpresora,[0.2,0.01,0.2]);
+
+	SujetadorPadImpresora = GenerarCubo();
+	trasladarObjeto(SujetadorPadImpresora,[-0.15,0.03,0.0]);
+	escalarObjeto(SujetadorPadImpresora,[0.01,0.02,0.1]);
+
+	barraHorizontal1 = GenerarCubo();
+	trasladarObjeto(barraHorizontal1,[-0.075,0.03,+0.01]);
+	escalarObjeto(barraHorizontal1,[0.15,0.005,0.005]);
+	barraHorizontal2 = GenerarCubo();
+	trasladarObjeto(barraHorizontal2,[-0.075,0.03,-0.01]);
+	escalarObjeto(barraHorizontal2,[0.15,0.005,0.005]);
+
+	CabezalImpresora.agregarHijo(agarreImpresora);
+	CabezalImpresora.agregarHijo(padImpresora);
+	CabezalImpresora.agregarHijo(barraHorizontal1);
+	CabezalImpresora.agregarHijo(barraHorizontal2);
+	CabezalImpresora.agregarHijo(SujetadorPadImpresora);
+	impresora.agregarHijo(tuboImpresora);
+	impresora.agregarHijo(CabezalImpresora);
+	
+	
+	objetos.push(impresora);
+
+}
 
 function cargarAutoElevador(objetos)
 {
-	autoElevador = new objeto3D;
-
-	palaAutoElevador = GenerarCubo();
+	//posicion de los elementos del objeto
+	autoElevador = new objeto3D();
+	estructuraPala = new objeto3D;
 	barraVertical1  = GenerarCubo();
 	barraVertical2 = GenerarCubo();
 	barraHorizontal1  = GenerarCubo();
 	barraHorizontal2  = GenerarCubo();
 	barraHorizontal3  = GenerarCubo();
+	chasis = new objeto3D("chasis",matrizModelado);
 
-
-	trasladarObjeto(palaAutoElevador,[0.0,0.005+0.5,0.0]);
+	//chasis del autoElevador
+	rotarObjeto(chasis,Math.PI/2,[1.0,0.0,0.0]);
+	escalarObjeto(chasis,[1.5,0.5,1.0]);
+	//pala que sostendra los objetos
+	palaAutoElevador = GenerarCubo();
+	trasladarObjeto(palaAutoElevador,[0.8,0.005+0.5,0.0]);
 	mat4.scale(palaAutoElevador.obtenerMatrizTransformacion(),palaAutoElevador.obtenerMatrizTransformacion(),[0.3,0.01,0.3]);
-
-	trasladarObjeto(barraVertical1,[-0.15,0.6,0.1]);
+	//barras de la estructura de la pala
+	trasladarObjeto(barraVertical1,[0.65,0.6,0.1]);
 	mat4.scale(barraVertical1.obtenerMatrizTransformacion(),barraVertical1.obtenerMatrizTransformacion(),[0.02,1.2,0.02]);
 
-	trasladarObjeto(barraVertical2,[-0.15,0.6,-0.1]);
+	trasladarObjeto(barraVertical2,[0.65,0.6,-0.1]);
 	mat4.scale(barraVertical2.obtenerMatrizTransformacion(),barraVertical2.obtenerMatrizTransformacion(),[0.02,1.2,0.02]);
 
-	trasladarObjeto(barraHorizontal1,[-0.15,0.2,0.0]);
+	trasladarObjeto(barraHorizontal1,[0.65,0.2,0.0]);
 	mat4.scale(barraHorizontal1.obtenerMatrizTransformacion(),barraHorizontal1.obtenerMatrizTransformacion(),[0.015,0.03,0.25]);
 
-	trasladarObjeto(barraHorizontal2,[-0.15,0.7,0.0]);
+	trasladarObjeto(barraHorizontal2,[0.65,0.7,0.0]);
 	mat4.scale(barraHorizontal2.obtenerMatrizTransformacion(),barraHorizontal2.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
-	trasladarObjeto(barraHorizontal3,[-0.15,1.1,0.0]);
+	trasladarObjeto(barraHorizontal3,[0.65,1.1,0.0]);
 	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
-	autoElevador.agregarHijo(palaAutoElevador);
-	autoElevador.agregarHijo(barraVertical1);
-	autoElevador.agregarHijo(barraVertical2);
-	autoElevador.agregarHijo(barraHorizontal1);
-	autoElevador.agregarHijo(barraHorizontal2);
-	autoElevador.agregarHijo(barraHorizontal3);
+	//relacion entre objetos del autoElevador
+	estructuraPala.agregarHijo(palaAutoElevador);
+	estructuraPala.agregarHijo(barraHorizontal1);
+	estructuraPala.agregarHijo(barraHorizontal2);
+	estructuraPala.agregarHijo(barraHorizontal3);
+	estructuraPala.agregarHijo(barraVertical1);
+	estructuraPala.agregarHijo(barraVertical2);
+	autoElevador.agregarHijo(chasis);
+	autoElevador.agregarHijo(estructuraPala);
+	
+	//posicionar el autoElevador en la escena
+	trasladarObjeto(autoElevador,[0.0,0.0,0.0]);
 
+
+	//calcularFinalMatrizNodos(autoElevador);
 	objetos.push(autoElevador);
-
-
-
 }
+
+
+
+
 
 
 
@@ -135,6 +184,6 @@ function cargarEstanteria(objetos)
 // Genera un cubo de dimensiones 1x1x1, con dos tapas + paredes
 function GenerarCubo()
 {	nuevoCubo = new objeto3D("cubo",matrizModelado);
-	nuevoCubo.asignarSuperficieCerrada();
 	return nuevoCubo;
 }
+
