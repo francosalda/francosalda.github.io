@@ -32,6 +32,7 @@ class objeto3D
         {
             console.log("[DEBUG]Se instancio un nuevo objeto contenedor 3D");
             this.contenedor = true;
+            this.matrizTransformacion = new mat4.create();
         }
 
         
@@ -171,11 +172,12 @@ class objeto3D
         }
         else if (superficie == "chasis")
         {
-            this.superficie3D = new paredTubo(1);
+            this.asignarSuperficieCerrada();
+            this.superficie3D = new chasis(1);
+            this.curvaGeometrica = new CurvaBezier;
+            this.curvaGeometrica.establecerGradoCurva(3); // cubica
             this.claseDeSuperficie = "barrido";
-            this.filas = 10; this.columnas = 10;
-
-
+            this.filas = 1; this.columnas = 12;
         }
 		else 
 		{
