@@ -3,13 +3,12 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	cargarEstanteria(objetos);
-	cargarGalpon(objetos);
 	cargarAutoElevador(objetos);
-	cargarImpresora(objetos)
-	
-	
-	
+	//cargarEstanteria(objetos);
+	//cargarGalpon(objetos);
+	//cargarImpresora(objetos)
+
+
 
 	
 	
@@ -62,7 +61,7 @@ function cargarEstanteria(objetos)
 	estanteria.agregarHijo(estanteSuperior);
 
 	//ubicacion de la estanteria en la escena
-	trasladarObjeto(estanteria,[-2.0,0.0,0.0]);
+	trasladarObjeto(estanteria,[-1.5,0.0,0.0]);
 
 	objetos.push(estanteria);
 
@@ -70,23 +69,49 @@ function cargarEstanteria(objetos)
 
 function cargarGalpon(objetos)
 {
-	let anchoGalpon= 10.0;
-	let largoGalpon = 10.0;
-	galpon = new objeto3D; // objeto contenedor
 	console.log("[DEBUG] Cargando objetos del galpon");
+	let largoPiso=10.0,anchoPiso= 10.0,altoGalpon = 1.0;
+	let largoParedLateral = 8.0,anchoParedLateral = 1.0,altoParedGalpon = 2.5;
 
-	pisoGalpon = new objeto3D("plano",matrizModelado);
-	escalarObjeto(pisoGalpon,[anchoGalpon,1.0,largoGalpon]);
+	galpon = new objeto3D; // objeto contenedor
+	piso = new objeto3D("plano",matrizModelado);
+	paredLateralGalpon = new objeto3D("plano",matrizModelado);
+	paredTrasera = new objeto3D; 
+	baseParedTrasera = new objeto3D("plano",matrizModelado);
+	//superiorParedTrasera = new objeto3D("techo",matrizModelado);
 
-	galpon.agregarHijo(pisoGalpon);
+	//piso
+	escalarObjeto(piso,[anchoPiso,1.0,largoPiso]);
+	//pared lateral
+	trasladarObjeto(paredLateralGalpon,[-4.5,altoParedGalpon/2,0.0]);
+	rotarObjeto(paredLateralGalpon,Math.PI/2,[0.0,0.0,1.0]);
+	escalarObjeto(paredLateralGalpon,[altoParedGalpon,anchoParedLateral,largoParedLateral]);
+	//pared trasera
+	trasladarObjeto(baseParedTrasera,[-0.5,altoParedGalpon/2,-4.0]);
+	rotarObjeto(baseParedTrasera,Math.PI/2,[1.0,0.0,0.0]);
+	escalarObjeto(baseParedTrasera,[largoParedLateral,anchoParedLateral,altoParedGalpon]);
+	
+	
+
+
+
+	paredTrasera.agregarHijo(baseParedTrasera);
+	//paredTrasera.agregarHijo(superiorParedTrasera);
+
+	galpon.agregarHijo(piso);
+	galpon.agregarHijo(paredLateralGalpon);
+	galpon.agregarHijo(paredTrasera);
+
 	objetos.push(galpon);
 }
 function cargarAutoElevador(objetos)
 {
+
 	console.log("[DEBUG] Cargando objetos del autoElevador");
 	//posicion de los elementos del objeto
-	autoElevador = new objeto3D();
+	autoElevador = new objeto3D(); autoElevador.asignarIdentificadorObjeto("CAutoelevador");
 	estructuraPala = new objeto3D;
+	
 	barraVertical1  = GenerarCubo();
 	barraVertical2 = GenerarCubo();
 	barraHorizontal1  = GenerarCubo();
@@ -117,18 +142,22 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(barraHorizontal3,[0.65,1.1,0.0]);
 	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
+	
 	//relacion entre objetos del autoElevador
-	estructuraPala.agregarHijo(palaAutoElevador);
 	estructuraPala.agregarHijo(barraHorizontal1);
 	estructuraPala.agregarHijo(barraHorizontal2);
 	estructuraPala.agregarHijo(barraHorizontal3);
 	estructuraPala.agregarHijo(barraVertical1);
 	estructuraPala.agregarHijo(barraVertical2);
-	autoElevador.agregarHijo(chasis);
+	estructuraPala.agregarHijo(palaAutoElevador);
 	autoElevador.agregarHijo(estructuraPala);
-	
+	autoElevador.agregarHijo(chasis);
 	//posicionar el autoElevador en la escena
-	trasladarObjeto(autoElevador,[0.0,0.15,0.0]);
+	
+	trasladarObjeto(autoElevador,[0.01,0.0,0.0]);	
+
+	
+	
 
 	objetos.push(autoElevador);
 }
@@ -186,4 +215,5 @@ function GenerarCubo()
 {	nuevoCubo = new objeto3D("cubo",matrizModelado);
 	return nuevoCubo;
 }
+
 

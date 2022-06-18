@@ -11,16 +11,29 @@ function rotarObjeto(objeto,angulo,ejeRotacion)
 	
 }
 
-//Traslada un objeto que puede estar compuesto por otros objetos.
+
 function trasladarObjeto(objeto,vectorTraslacion)
 {
-	mat4.translate(objeto.obtenerMatrizTransformacion(),objeto.obtenerMatrizTransformacion(),vectorTraslacion);
+	let matrizTraslacion = mat4.create();
+	mat4.translate(matrizTraslacion,matrizTraslacion,vectorTraslacion);
+	mat4.multiply(objeto.obtenerMatrizTransformacion(),matrizTraslacion,objeto.obtenerMatrizTransformacion());
+	
 	//en caso de ser un contenedor, deben trasladarse tambien sus hijos
 	if(objeto.esUnContenedor())
 	{
-		calcularFinalMatrizNodos(objeto,objeto.obtenerMatrizTransformacion());
+		for(let i = 0 ; i <objeto.obtenerHijos().length ; i++ )
+		{
+			trasladarObjeto((objeto.obtenerHijos())[i],vectorTraslacion);
+		}
 	}		
 }
+
+
+
+
+
+
+
 //Escala un objeto que puede estar compuesto por otros objetos.
 function escalarObjeto(objeto,vectorEscala)
 {	
@@ -42,13 +55,18 @@ function calcularFinalMatrizNodos(objeto,matrizPadre)
 		{
 			mat4.multiply(aux,matrizPadre,(objeto.obtenerHijos())[i].obtenerMatrizTransformacion());
 			(objeto.obtenerHijos())[i].asignarMatrizTransformacion(aux);
-			calcularFinalMatrizNodos((objeto.obtenerHijos())[i],objeto.obtenerMatrizTransformacion());
+			if((objeto.obtenerHijos())[i].esUnContenedor())
+			{
+				calcularFinalMatrizNodos((objeto.obtenerHijos())[i],objeto.obtenerMatrizTransformacion());	
+			}
+			
 		}
 	}
 	else
 	{
 		mat4.multiply(aux,matrizPadre,objeto.obtenerMatrizTransformacion());
 		objeto.asignarMatrizTransformacion(aux);
+		console.log("DEBUG ENTRA AL ELSE IMPOSIBLE DE ENTRAR");
 	}
 
 }
@@ -59,6 +77,7 @@ function calcularFinalMatrizNodos(objeto,matrizPadre)
 function transformarObjeto(objeto,matriz)
 {
 	objeto.asignarMatrizTransformacion(matriz);
+
 	if(objeto.esUnContenedor())
 	{
 		calcularFinalMatrizNodos(objeto,objeto.obtenerMatrizTransformacion());

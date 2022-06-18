@@ -7,6 +7,9 @@ function trayectoriaLineal(t,m,b)
 }
 
 
+
+
+
 function paredTubo(radio,altura)
 {
     this.getPosicion=function(u,v){   
@@ -182,3 +185,19 @@ function verticesChasis(u)
 }
 
 
+function verticesTecho(u)
+{
+    let v1,v2,v3,v4;
+    if(u < 0.5)
+    {
+        v1=[-1.0,0.0,-0.25]; v2=v1;
+        v3=[1.0,0.0,-0,25];v4=v3;
+    }
+    else if (u>=0.5  && u < 1.1)
+    {
+        v1 = [1.0,0.0,-0,25]; v2 = [1.0,0.0,0.25];
+        v3= [-1.0,0.0,0.25]; v4 = [-1.0,0.0,-0.25];
+    }
+    return [v1,v2,v3,v4];
+
+}
