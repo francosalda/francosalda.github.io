@@ -4,10 +4,12 @@ class objeto3D
 {
 	constructor(nombreSuperficie,matrizModelado)
 	{
-		
+		this.posicionObjeto = [0.0,0.0,0.0];
         if(nombreSuperficie) 
         {   
-            this.SuperficieCerrada = false; // es true si la superficie posee tapas
+            this.Id = "none"
+            this.SuperficieCerrada = false; // es true si la superficie posee ambas tapas
+            this.superficieDeUnaCara = false;
             this.claseDeSuperficie = "parametrica"; // por defecto
             this.mallaDeTriangulos;
             if(!matrizModelado)
@@ -39,7 +41,22 @@ class objeto3D
         this.cantHijos = 0;
         this.hijos = [];
 	}
-
+    obtenerPosicionObjeto()
+    {
+        return this.posicionObjeto;
+    }
+    establecerPosicionObjeto(posicion)
+    {
+        this.posicionObjeto = posicion;
+    }
+    asignarIdentificadorObjeto(identificador)
+    {
+        this.Id = identificador;
+    }
+    obtenerIdentificadorObjeto()
+    {
+        return this.Id;
+    }
     AsignarCantidadFilas(cantFilas)
     {
         this.filas = cantFilas;
@@ -64,6 +81,16 @@ class objeto3D
     this.hijos.push(objeto);
     this.cantHijos++;
     }
+    quitarUltimoHijo()
+    {
+        this.hijos.pop();
+        this.cantHijos--;
+    }
+    obtenerUltimoHijo()
+    {
+        return this.hijos[(hijos.length)-1];
+    }
+
     obtenerHijos(objeto)
     {
     return this.hijos;
@@ -178,6 +205,16 @@ class objeto3D
             this.curvaGeometrica.establecerGradoCurva(3); // cubica
             this.claseDeSuperficie = "barrido";
             this.filas = 1; this.columnas = 12;
+        }
+        else if (superficie == "techo")
+        {
+            this.superficieDeUnaCara = true;   
+            this.superficie3D = new techo();
+            this.curvaGeometrica = new CurvaBezier;
+            this.curvaGeometrica.establecerGradoCurva(3); // cubica
+            this.claseDeSuperficie = "barrido";
+            this.filas = 1; this.columnas = 20;
+
         }
 		else 
 		{
@@ -334,7 +371,26 @@ class objeto3D
         }
 
 
-       
+       if(this.superficieDeUnaCara)
+       {
+            let cantidadCoordenadasPorVertice = 3;
+            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,columnas*cantidadCoordenadasPorVertice));
+            for(let i = 0 ; i < cantidad_columnas; i++)
+                {
+                    this.positionBuffer.unshift(posVerticeCentral[0]);
+                    this.positionBuffer.unshift(posVerticeCentral[1]);
+                    this.positionBuffer.unshift(posVerticeCentral[2]);
+                    nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.unshift(nrm[0]);
+                    this.normalBuffer.unshift(nrm[1]);
+                    this.normalBuffer.unshift(nrm[2]);
+                    uvs = [0.0,0.0];
+                    this.uvBuffer.unshift(uvs[0]); 
+                    this.uvBuffer.unshift(uvs[1]);
+
+                }
+            filas = filas + 1; // se agregaron 1 tapa
+       }
        
     
 
@@ -422,4 +478,32 @@ function Plano(ancho,largo){
 }
 
 
+function techo()
+{
+    this.getPosicion=function(u,v,curvaGeometrica){   
+    if(u < 0.5)
+        {
+         puntosDeControl = verticesTecho(u);  
+         var punto = curvaGeometrica.calcularPuntoCurva((2*u),puntosDeControl); 
+            
+        }  
+        else if (u >= 0.5)
+        {
+            puntosDeControl = verticesTecho(u);  
+           var punto = curvaGeometrica.calcularPuntoCurva((2*u -1),puntosDeControl); 
 
+        }  
+        
+        return [punto.x,0,punto.z];
+    }
+    //debug calcular normal
+    this.getNormal=function(u,v)
+    {
+        return [0,1,0];
+    }
+
+    this.getCoordenadasTextura=function(u,v){
+        return [u,v];
+    }
+
+}
