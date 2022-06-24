@@ -15,10 +15,6 @@
     <script src="controles.js"></script>
 
     
-    
-
-   
-
     <style>
         html{
             height: 100%;
@@ -62,23 +58,34 @@
         var $canvas=$("#myCanvas");
         var aspect=$canvas.width()/$canvas.height();
 
+
+        //variables de la GUI
+        var tipoSuperficieGUI = "barrido";
+        var forma2DBarridoGUI = "A1";
+        var forma2DRevolucionGUI = "B1";
+        var anguloTorsionGUI = 0;
+        var alturaTotalGUI = 1;
+
         var distanciaCamara=3.24;//3
         var alturaCamara=0.84;//2
         var velocidadAngular=0.15;
         
         var lighting="true";
-
         var vertexShaderSource;
         var fragmentShaderSource;
-
+        //matrices
         var matrizProyeccion = mat4.create();            
         var matrizVista = mat4.create();            
         var matrizModelado = mat4.create();
-
+        //objetos de la escena
         objetosEscena = [];
-
+        //controladores
         let controladorVehiculo=new AutoElevadorControl([0,0,0]);
         var matrizVehiculo = mat4.create();
+
+
+
+
 
         function initGL(canvas) {
 
@@ -263,15 +270,36 @@
             
         function initMenu(){
             var gui = new dat.GUI();
+            //Menu de control de la escena
             gui.add(window, "distanciaCamara",0.01,5).step(0.01);
             gui.add(window, "alturaCamara",-4,4).step(0.01);;
             gui.add(window, "modo",["wireframe","smooth","edges"]);
             gui.add(window, "velocidadAngular",0, 1).step(0.01);
-            
+            // Menu de parámetros para generacion de superficies
+            gui.add(window, "tipoSuperficieGUI",["barrido","Revolucion"]);
+            gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
+            gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
+            gui.add(window, "alturaTotalGUI",0.1,2.0).step(0.1);
+            gui.add(window, "anguloTorsionGUI",0.0,180).step(1);
+            //comandos
+            var f1 = gui.addFolder('Comandos'); 
+            f1.add(window, 'imprimirObjeto').name("Generar");    
+            f1.open(); // hace que la carpeta f1 inicie abierta
+
             
         }
 
     
+
+        //funcion de la impresora 3d
+        function imprimirObjeto()
+        {
+            console.log("[DEBUG] Imprimiendo el objeto seleccionado en la GUI:",tipoSuperficieGUI,forma2DBarridoGUI,forma2DRevolucionGUI);
+        }
+
+
+
+
 
 
     function webGLStart() {

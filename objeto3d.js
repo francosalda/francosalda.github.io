@@ -81,6 +81,16 @@ class objeto3D
     this.hijos.push(objeto);
     this.cantHijos++;
     }
+    quitarUltimoHijo()
+    {
+        this.hijos.pop();
+        this.cantHijos--;
+    }
+    obtenerUltimoHijo()
+    {
+        return this.hijos[(hijos.length)-1];
+    }
+
     obtenerHijos(objeto)
     {
     return this.hijos;
