@@ -3,15 +3,12 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	cargarAutoElevador(objetos);
+
+//	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
-	cargarImpresora(objetos)
+//	cargarImpresora(objetos)
 
-
-
-	
-	
 	asignarMallasObjetos(objetos);
 }
 
@@ -201,7 +198,7 @@ function cargarImpresora(objetos)
 
 // Genera un cubo de dimensiones 1x1x1, con dos tapas + paredes
 function GenerarCubo()
-{	nuevoCubo = new objeto3D("cubo",matrizModelado);
+{	nuevoCubo = new objeto3D("cuboPrueba",matrizModelado);
 	return nuevoCubo;
 }
 

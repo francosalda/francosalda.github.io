@@ -190,6 +190,21 @@ class objeto3D
             
             this.filas = 1; this.columnas = 4;
         }
+        else if (superficie == 'cuboPrueba')
+        {
+            console.log("[Debug Objeto3d]: se asigno como superficie de barrido la pared de un cubo");
+            
+            let cantidadTramos = 4;
+            let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadradoPrueba(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new paredCuboPrueba(1);
+            this.claseDeSuperficie = "barrido";
+            this.asignarSuperficieCerrada();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+
+        }
         else if (superficie == 'cilindro')
         {
             this.asignarSuperficieCerrada();
@@ -312,23 +327,63 @@ class objeto3D
         let cantidad_columnas = columnas+1;
 
 
-       
+        
 
-        for (var i=0; i <= filas; i++) {
-            for (var j=0; j <= columnas; j++) {
+
+        if(this.claseDeSuperficie == "barrido")
+        {
+                //recorro los niveles
+                for(let i = 0 ; i <=filas;i++)
+                {
+                //recorro los tramos de la curva
+                for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
+                {    
+                    //recorro el tramo de la curva
+                    for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
+                    {
+
+                        var pos=superficie.getPosicion(u,i,this.curvaGeometrica,tramo);  
+                        console.log(pos);
+                        this.positionBuffer.push(pos[0]);
+                        this.positionBuffer.push(pos[1]);
+                        this.positionBuffer.push(pos[2]);
+
+                        var nrm=superficie.getNormal(u,v);
+
+                        this.normalBuffer.push(nrm[0]);
+                        this.normalBuffer.push(nrm[1]);
+                        this.normalBuffer.push(nrm[2]);
+
+                        var uvs=superficie.getCoordenadasTextura(u,v);
+
+                        this.uvBuffer.push(uvs[0]);
+                        this.uvBuffer.push(uvs[1]);
+                        contador++;                              
+                    }
+             
+                }
+            
+            }
+        }
+        else {
+            for (var i=0; i <= filas; i++) {
+            
+            for (var j=0; j <= columnas; j ++) {
                 var u=j/columnas;
                 var v=i/filas;
-                if(this.claseDeSuperficie == "barrido")
+
+                /*if(this.claseDeSuperficie == "barrido")
                 {
+
                     var pos=superficie.getPosicion(u,v,this.curvaGeometrica);
                     
 
-                }
-                else
+                }*/
+                /*else
                 {
-                    var pos=superficie.getPosicion(u,v);
-                }
-
+                   
+                }*/
+                 var pos=superficie.getPosicion(u,v);
                 this.positionBuffer.push(pos[0]);
                 this.positionBuffer.push(pos[1]);
                 this.positionBuffer.push(pos[2]);
@@ -347,13 +402,19 @@ class objeto3D
 
         }        
     }
+        }
+
+
+        
 
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,columnas*cantidadCoordenadasPorVertice));
-            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*columnas*cantidadCoordenadasPorVertice));
+            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
+            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
+            console.log("Centro superior",postVerticeSup);
+            console.log("Centro inferior",posVerticeInf);
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeInf[0]);this.positionBuffer.push(postVerticeSup[0]);
@@ -374,7 +435,7 @@ class objeto3D
        if(this.superficieDeUnaCara)
        {
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,columnas*cantidadCoordenadasPorVertice));
+            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeCentral[0]);
@@ -393,7 +454,7 @@ class objeto3D
        }
        
     
-
+       console.log("LLENANDO BUFFERS");
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
 

@@ -29,7 +29,41 @@ function paredTubo(radio,altura)
     }
 
 }
+function paredCuboPrueba(altura)
+{
+    // el parametro 'u' recorre la forma geometrica de la figura
+    //el parametro 'v' recorre la curva de trayectoria de extrusion
+    this.getPosicion=function(u,v,curvaGeometrica,tramo)
+    {
+        let punto = curvaGeometrica.calcularPuntoCurva(u,tramo); 
+         v = v-altura/2; //para posicionar el centro de masa en el origen
+        return [punto.x,punto.y+v,punto.z];
+    }
 
+    this.getNormal=function(u,v){
+        return [0,1,0];
+    }
+
+    this.getCoordenadasTextura=function(u,v){
+        return [u,v];
+    }
+
+}
+
+
+
+/* Vertices de las curvas de bezier de figuras geometricas */
+function verticesCuadradoPrueba()
+{
+  
+
+
+    let puntosControl = [[0.5,0.0,0.5],[0.25,0.0,0.5],[-0.25,0.0,0.5],[-0.5,0.0,0.5],
+                        [-0.5,0.0,0.5],[-0.5,0.0,0.25],[-0.5,0.0,-0.25],[-0.5,0.0,-0.5],
+                        [-0.5,0.0,-0.5],[-0.25,0.0,-0.5],[0.25,0.0,-0.5],[0.5,0.0,-0.5],
+                        [0.5,0.0,-0.5],[0.5,0.0,-0.25],[0.5,0.0,0.25],[0.5,0.0,0.5]];
+    return puntosControl;
+}
 
 
 function paredCubo(altura)
