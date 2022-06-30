@@ -179,56 +179,59 @@ class objeto3D
 			this.superficie3D = new Esfera(1);
             this.filas = 40; this.columnas = 40;
 		}
+        else if (superficie == 'cilindro')
+        {
+            this.superficie3D = new paredCilindro(1,1);//radio: 1 altura: 1
+            this.asignarSuperficieCerrada();
+            this.filas = 40; this.columnas = 40;
+        }
         else if (superficie == 'cubo')
         {
-            console.log("[Debug Objeto3d]: se asigno como superficie de barrido la pared de un cubo");
-            this.asignarSuperficieCerrada();
-            this.superficie3D = new paredCubo(1); // altura:1
-            this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3); // cubica
-            this.claseDeSuperficie = "barrido";
-            
-            this.filas = 1; this.columnas = 4;
-        }
-        else if (superficie == 'cuboPrueba')
-        {
-            console.log("[Debug Objeto3d]: se asigno como superficie de barrido la pared de un cubo");
-            
+            console.log("[Debug Objeto3d]: se asigno como superficie de barrido un cubo");
             let cantidadTramos = 4;
             let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
             let gradoCurva = 3;
-            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadradoPrueba(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new paredCuboPrueba(1);
+
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadrado(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new paredCubo(1);
+            this.claseDeSuperficie = "barrido";
+            this.asignarSuperficieCerrada();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        
+        
+        else if (superficie == "chasis")
+        {
+            let cantidadTramos =4;
+            let cantidadPuntosPorTramo = 4;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesChasis(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new chasis(1);
             this.claseDeSuperficie = "barrido";
             this.asignarSuperficieCerrada();
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
 
-        }
-        else if (superficie == 'cilindro')
-        {
-            this.asignarSuperficieCerrada();
-            this.superficie3D = new paredTubo(1,1);//radio: 1 altura: 1
-            this.claseDeSuperficie = "barrido";
-            this.filas = 40; this.columnas = 40;
-        }
-        else if (superficie == "chasis")
-        {
-            this.asignarSuperficieCerrada();
+            /*
+            let cantidadTramos = 4;
+            let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
+            let gradoCurva = 3;
+            
+
             this.superficie3D = new chasis(1);
-            this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3); // cubica
+            this.asignarSuperficieCerrada();
+            //this.curvaGeometrica = new CurvaBezier;
+           // this.curvaGeometrica.establecerGradoCurva(3); // cubica
+           
+
             this.claseDeSuperficie = "barrido";
             this.filas = 1; this.columnas = 12;
+            */
         }
         else if (superficie == "techo")
         {
-            this.superficieDeUnaCara = true;   
-            this.superficie3D = new techo();
-            this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3); // cubica
-            this.claseDeSuperficie = "barrido";
-            this.filas = 1; this.columnas = 20;
+         
 
         }
 		else 
@@ -343,7 +346,6 @@ class objeto3D
                     {
 
                         var pos=superficie.getPosicion(u,i,this.curvaGeometrica,tramo);  
-                        console.log(pos);
                         this.positionBuffer.push(pos[0]);
                         this.positionBuffer.push(pos[1]);
                         this.positionBuffer.push(pos[2]);
@@ -372,17 +374,6 @@ class objeto3D
                 var u=j/columnas;
                 var v=i/filas;
 
-                /*if(this.claseDeSuperficie == "barrido")
-                {
-
-                    var pos=superficie.getPosicion(u,v,this.curvaGeometrica);
-                    
-
-                }*/
-                /*else
-                {
-                   
-                }*/
                  var pos=superficie.getPosicion(u,v);
                 this.positionBuffer.push(pos[0]);
                 this.positionBuffer.push(pos[1]);
@@ -413,8 +404,8 @@ class objeto3D
             let cantidadCoordenadasPorVertice = 3;
             let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
             let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
-            console.log("Centro superior",postVerticeSup);
-            console.log("Centro inferior",posVerticeInf);
+    
+    
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeInf[0]);this.positionBuffer.push(postVerticeSup[0]);

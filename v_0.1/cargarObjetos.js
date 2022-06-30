@@ -4,10 +4,11 @@ function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
 
-//	cargarAutoElevador(objetos);
+/*Arreglar el chasis , sus vertices y luego en objeto3d.js para que se cargue correctamente*/
+	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
-//	cargarImpresora(objetos)
+	cargarImpresora(objetos)
 
 	asignarMallasObjetos(objetos);
 }
@@ -134,10 +135,9 @@ function cargarAutoElevador(objetos)
 	autoElevador.agregarHijo(estructuraPala);
 	autoElevador.agregarHijo(chasis);
 	//posicionar el autoElevador en la escena
+	//trasladarObjeto(autoElevador,[0.0,0.2,0.0]);
 	
 
-
-	
 	
 
 	objetos.push(autoElevador);
@@ -198,7 +198,7 @@ function cargarImpresora(objetos)
 
 // Genera un cubo de dimensiones 1x1x1, con dos tapas + paredes
 function GenerarCubo()
-{	nuevoCubo = new objeto3D("cuboPrueba",matrizModelado);
+{	nuevoCubo = new objeto3D("cubo",matrizModelado);
 	return nuevoCubo;
 }
 

@@ -127,11 +127,11 @@
 
             vec3.transformMat4(translation, translation, matrizRotacion);
 
-         //   trasladarObjeto(autoElevador,[vehicleState.xVel,vehicleState.yVel,vehicleState.zVel]);
-             trasladarObjeto(autoElevador,translation);
+           trasladarObjeto(autoElevador,[vehicleState.xVel,vehicleState.yVel,vehicleState.zVel]);
+         //    trasladarObjeto(autoElevador,translation);
 
-            rotarObjeto(autoElevador,vehicleState.xRotVel,[0.0,1.0,0.0]);
-            //trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
+           // rotarObjeto(autoElevador,vehicleState.xRotVel,[0.0,1.0,0.0]);
+            trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
             
             
 

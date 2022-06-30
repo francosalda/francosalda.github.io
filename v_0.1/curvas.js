@@ -49,7 +49,7 @@ class CurvaBezier
 		else {Console.log("[ERROR CURVAS]: Grado de curva no soportado"); return false;}
 		
              
-      	console.log("Utilizando puntos de control:",puntosDeControlTramo);
+      	
 		
 		var p0=puntosDeControlTramo[0];
         var p1=puntosDeControlTramo[1];
