@@ -1,4 +1,0 @@
-function modelarEscenaInicial(objetos)
-{
-	
-}
