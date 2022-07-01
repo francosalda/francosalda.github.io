@@ -1,8 +1,6 @@
+/*Curvas de bezier*/
 class CurvaBezier
 {
-
-
-
 	constructor(grado,puntosDeControl,cantidadTramos,cantidadPuntosPorTramo)
 	{
 		console.log("[Debug Curvas]: Nueva curva de Bezier creada de grado:"+grado);
@@ -47,9 +45,7 @@ class CurvaBezier
 
 		}
 		else {Console.log("[ERROR CURVAS]: Grado de curva no soportado"); return false;}
-		
-             
-      	
+		      	
 		
 		var p0=puntosDeControlTramo[0];
         var p1=puntosDeControlTramo[1];
@@ -83,8 +79,5 @@ class CurvaBezier
         return punto;
 
 	}
-
-
-
 };
 
