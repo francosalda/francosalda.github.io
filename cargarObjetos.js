@@ -1,40 +1,42 @@
 
-/*carga el conjunto de objetos de la escena en el array 'objetos'*/
+/*carga el conjunto de objetos de la escena en el array 'objetos' */
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
 	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
-	cargarImpresora(objetos)
-
-
-
+	cargarImpresora(objetos);
 	
-	
+
+
+
 	asignarMallasObjetos(objetos);
 }
 
 
 
+
+
+
+
+
+
+/*carga las formas que conforman la estanteria*/
 function cargarEstanteria(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la estanteria");
 	estanteria = new objeto3D; // contenedor
-
 	estanteInferior = GenerarCubo();
-
-patasDelanterasEstanteria = new objeto3D; //contenedor
+	patasDelanterasEstanteria = new objeto3D; //contenedor
 	patasTraserasEstanteria = new objeto3D;//contenedor
 	estanteInferior = GenerarCubo();
 	estanteMedio = GenerarCubo();
 	estanteSuperior = GenerarCubo();
-
 	//patas de la estanteria
 	let altoPatas = 1.55,largoPatas=0.03,anchoPatas=0.03;
 	let separacionEntrePatas = 0.4; //distancia entra patas consecutivas delanteras o traseras
 	let distanciaEntrePatas = 0.25; //distancia entre patas traseras y delanteras
-
 	for(let i = 0 ; i < 9 ; i++)
 	{
 		let pataDelantera = GenerarCubo();
@@ -43,8 +45,6 @@ patasDelanterasEstanteria = new objeto3D; //contenedor
 		escalarObjeto(pataTrasera,[largoPatas,altoPatas,anchoPatas]);
 		trasladarObjeto(pataDelantera,[-distanciaEntrePatas/2,altoPatas/2,-1.5+i*separacionEntrePatas]);
 		trasladarObjeto(pataTrasera,[distanciaEntrePatas/2,altoPatas/2,-1.5+i*separacionEntrePatas]);
-		
-
 		patasDelanterasEstanteria.agregarHijo(pataDelantera);
 		patasTraserasEstanteria.agregarHijo(pataTrasera)
 	}
@@ -67,13 +67,11 @@ patasDelanterasEstanteria = new objeto3D; //contenedor
 
 	//ubicacion de la estanteria en la escena
 	trasladarObjeto(estanteria,[-1.5,0.0,0.0]);
-
-
-
 	objetos.push(estanteria);
 
 }
 
+/*Carga las formas que conforman el galpon*/
 function cargarGalpon(objetos)
 {
 	console.log("[DEBUG] Cargando objetos del galpon");
@@ -88,11 +86,10 @@ function cargarGalpon(objetos)
 	galpon.agregarHijo(pisoGalpon);
 	objetos.push(galpon);
 }
+/*Carga las formas que conforman el autoelevador*/
 function cargarAutoElevador(objetos)
 {
-
 	console.log("[DEBUG] Cargando objetos del autoElevador");
-	//posicion de los elementos del objeto
 	autoElevador = new objeto3D(); autoElevador.asignarIdentificadorObjeto("CAutoelevador");
 	estructuraPala = new objeto3D;
 	barraVertical1  = GenerarCubo();
@@ -136,12 +133,7 @@ function cargarAutoElevador(objetos)
 	estructuraPala.agregarHijo(palaAutoElevador);
 	autoElevador.agregarHijo(estructuraPala);
 	autoElevador.agregarHijo(chasis);
-	//posicionar el autoElevador en la escena
-	
-
-
-	
-	
+	trasladarObjeto(autoElevador,[0.0,0.2,0.0]);
 
 	objetos.push(autoElevador);
 }
@@ -191,15 +183,14 @@ function cargarImpresora(objetos)
 	impresora.agregarHijo(CabezalImpresora);
 	
 	//ubicacion de la impresora en la escena
-	trasladarObjeto(impresora,[1.5,0.3,0.0]);
+	trasladarObjeto(impresora,[1.5,0.6,0.0]);
 	
 	objetos.push(impresora);
 
 }
 
 
-
-// Genera un cubo de dimensiones 1x1x1, con dos tapas + paredes
+// Genera un cubo de dimensiones de paredes con 2 tapas
 function GenerarCubo()
 {	nuevoCubo = new objeto3D("cubo",matrizModelado);
 	return nuevoCubo;

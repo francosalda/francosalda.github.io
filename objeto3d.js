@@ -1,46 +1,36 @@
-
-
 class objeto3D
 {
 	constructor(nombreSuperficie,matrizModelado)
 	{
-		this.posicionObjeto = [0.0,0.0,0.0];
+		this.posicionObjeto = [0.0,0.0,0.0]; // posicion inicial del objeto
+        //si se elige un tipo de superficie
         if(nombreSuperficie) 
         {   
-            this.Id = "none"
-            this.SuperficieCerrada = false; // es true si la superficie posee ambas tapas
-            this.superficieDeUnaCara = false;
-            this.claseDeSuperficie = "parametrica"; // por defecto
-            this.mallaDeTriangulos;
-            if(!matrizModelado)
-            {
-                this.matrizTransformacion = new mat4.create();
-            }
-            else
-            {
-                this.matrizTransformacion = new mat4.create();
-                this.matrizTransformacion = mat4.clone(matrizModelado);    
-            }
-            this.filas=50; // indica que hay 'filas+1' filas de vertices
-            this.columnas=50; // indica que hay 'columnas+1' columnas de vertices
-            this.asignarTipoDeSuperficie(nombreSuperficie);
-            this.contenedor = false;
+            this.SuperficieCerrada = false; // true: posee tapa superior e inferior
+            this.superficieDeUnaCara = false; // true: si posee la tapa inferior solamente
+            this.claseDeSuperficie = "analitica"; //por defecto, pero puede ser: analitica,barrido,revolucion
+            this.mallaDeTriangulos; // almacena la malla de triangulos del objeto 
+            this.matrizTransformacion = mat4.clone(matrizModelado); // inicializa la matriz de modelado
+            this.filas=50; // indica que hay 'filas+1' filas de vertices para la malla de triangulos por defecto
+            this.columnas=50; // indica que hay 'columnas+1' columnas de vertices para la malla de triangulos por defecto
+            this.Id = "none"; // tag identificador del objeto
+            this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la funcion que calculara los vertices
+            this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
-            
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
-
         }
         else
         {
             console.log("[DEBUG]Se instancio un nuevo objeto contenedor 3D");
-            this.contenedor = true;
+            this.contenedor = true; 
             this.matrizTransformacion = new mat4.create();
         }
 
-        
-        this.cantHijos = 0;
+        this.cantHijos = 0; 
         this.hijos = [];
 	}
+
+    /*Getters y setters de la clase objeto3d*/
     obtenerPosicionObjeto()
     {
         return this.posicionObjeto;
@@ -66,6 +56,7 @@ class objeto3D
         this.columnas = cantColumnas;
     }
 
+
     esSuperficieCerrada()
     {
         return this.SuperficieCerrada;
@@ -74,7 +65,6 @@ class objeto3D
     {
         this.SuperficieCerrada = true;
     }
-
 
     agregarHijo(objeto)
     {
@@ -90,7 +80,6 @@ class objeto3D
     {
         return this.hijos[(hijos.length)-1];
     }
-
     obtenerHijos(objeto)
     {
     return this.hijos;
@@ -111,132 +100,122 @@ class objeto3D
         return this.contenedor;
     }
 
-	 dibujarMalla(mallaDeTriangulos){
-    
-    // Se configuran los buffers que alimentaron el pipeline
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.mallaDeTriangulos.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.mallaDeTriangulos.webgl_uvs_buffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, this.mallaDeTriangulos.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
-       
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mallaDeTriangulos.webgl_index_buffer);
-
-
-    if (modo!="wireframe"){
-        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));                    
-        /*
-            Aqui es necesario modificar la primitiva por triangle_strip
-        */
-          gl.drawElements(gl.TRIANGLE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
-      //  gl.drawElements(gl.TRIANGLES, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+    obtenerMallaDeTriangulos()
+    {
+        return this.mallaDeTriangulos;
     }
-    
-    if (modo!="smooth") {
-        gl.uniform1i(shaderProgram.useLightingUniform,false);
-        gl.drawElements(gl.LINE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
-    }
- 
-}
-
-
-	obtenerMallaDeTriangulos()
-	{
-		return this.mallaDeTriangulos;
-	}
-	asignarMallaDeTriangulos()
-	{
-        if(this.claseDeSuperficie == "parametrica")
+    asignarMallaDeTriangulos()
+    {
+        if(this.claseDeSuperficie == "analitica")
         {
-           this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);    
-                
+           this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);            
         }
         else if(this.claseDeSuperficie == "barrido")
         {
-
-          //  var barridoColumnas = 4;
-           // var barridoNiveles = 1;
-            //this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,barridoNiveles,barridoColumnas);           
-            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);           
-            
+            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);               
         }
-		
-	}
-	asignarTipoDeSuperficie(superficie)
-	{
-		if(superficie == "plano")
-		{
-			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-			this.superficie3D = new Plano(1,1);
-            this.filas = 1; this.columnas = 1;
-		}
-		else if (superficie == 'esfera')
-		{
-			console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-			this.superficie3D = new Esfera(1);
-            this.filas = 40; this.columnas = 40;
-		}
-        else if (superficie == 'cubo')
+        else if (this.claseDeSuperficie == "revolucion")
         {
-            console.log("[Debug Objeto3d]: se asigno como superficie de barrido la pared de un cubo");
-            this.asignarSuperficieCerrada();
-            this.superficie3D = new paredCubo(1); // altura:1
-            this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3); // cubica
-            this.claseDeSuperficie = "barrido";
-            
-            this.filas = 1; this.columnas = 4;
+
+        }
+        
+    }
+
+    /*asigna al objeto3d la funcion que generara los vertices */
+    asignarTipoDeSuperficie(superficie)
+    {
+        if(superficie == "plano")
+        {
+            console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
+            this.superficie3D = new Plano(1,1);
+            this.filas = 1; this.columnas = 1;
+        }
+        else if (superficie == 'esfera')
+        {
+            console.log("[Debug Objeto3d]: Se asigno la esfera como superficie");
+            this.superficie3D = new Esfera(1);
+            this.filas = 40; this.columnas = 40;
         }
         else if (superficie == 'cilindro')
         {
+            this.superficie3D = new paredCilindro(1,1);//radio: 1 altura: 1
             this.asignarSuperficieCerrada();
-            this.superficie3D = new paredTubo(1,1);//radio: 1 altura: 1
-            this.claseDeSuperficie = "barrido";
             this.filas = 40; this.columnas = 40;
         }
+        else if (superficie == 'cubo')
+        {
+            console.log("[Debug Objeto3d]: se asigno como superficie de barrido un cubo");
+            let cantidadTramos = 4;
+            let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadrado(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new paredCubo(1);
+            this.claseDeSuperficie = "barrido";
+            this.curvaTrayectoria = new recorridoLineal();
+            this.asignarSuperficieCerrada();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+             
         else if (superficie == "chasis")
         {
-            this.asignarSuperficieCerrada();
+            let cantidadTramos =4;
+            let cantidadPuntosPorTramo = 4;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesChasis(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new chasis(1);
-            this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3); // cubica
             this.claseDeSuperficie = "barrido";
-            this.filas = 1; this.columnas = 12;
+            this.curvaTrayectoria = new recorridoLineal();
+            this.asignarSuperficieCerrada();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else if (superficie == "techo")
         {
-            this.superficieDeUnaCara = true;   
-            this.superficie3D = new techo();
-            this.curvaGeometrica = new CurvaBezier;
-            this.curvaGeometrica.establecerGradoCurva(3); // cubica
-            this.claseDeSuperficie = "barrido";
-            this.filas = 1; this.columnas = 20;
-
+         
         }
-		else 
-		{
-			console.log("[DEBUG objeto3d]: Error al elejir el tipo de superficie");
-		}
-	}
+        else 
+        {
+            console.log("[DEBUG objeto3d]: Error al elejir el tipo de superficie");
+        }
+    }
 
+    /*Se dibujan los triangulos del objeto*/
+	 dibujarMalla(mallaDeTriangulos)
+     {
+        // Se configuran los buffers que alimentaron el pipeline
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.mallaDeTriangulos.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.mallaDeTriangulos.webgl_uvs_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
+        gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, this.mallaDeTriangulos.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
+           
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mallaDeTriangulos.webgl_index_buffer);
+
+        //modo de visualizacion de los triangulos
+        if (modo!="wireframe")
+        {
+            gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));                    
+            gl.drawElements(gl.TRIANGLE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+        }
+    
+        if (modo!="smooth") 
+        {
+            gl.uniform1i(shaderProgram.useLightingUniform,false);
+            gl.drawElements(gl.LINE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+        }
+ 
+    }
+
+    /*Se realiza el llenado de los buffers con los vertices y su informacion*/
     llenarBuffers(filas,columnas,positionBuffer,normalBuffer,uvBuffer)
     {
-        //Creo el Buffer de indices de los triángulos
-    
-    var indexBuffer = [];
+    var indexBuffer = [];//Creo el Buffer de indices de los triángulos
     var indice = 0;
     var cantidad_columnas = columnas+1;
-    // si es superficie de barrio debo agregar las tapas:
-   
-
-
-                
-
      for(let i=0 ; i< filas;i++)
     {
         for(let j=0; j < columnas;j++)
@@ -303,6 +282,7 @@ class objeto3D
 
 }
 
+/*Genera los vertices de la superficie 3d*/
 	generarSuperficie3dParametrica(superficie,filas,columnas)
     {
         this.positionBuffer = [];
@@ -311,49 +291,105 @@ class objeto3D
         var contador = 0;
         let cantidad_columnas = columnas+1;
 
-
-       
-
-        for (var i=0; i <= filas; i++) {
-            for (var j=0; j <= columnas; j++) {
-                var u=j/columnas;
-                var v=i/filas;
-                if(this.claseDeSuperficie == "barrido")
+        if(this.claseDeSuperficie == "barrido")
+        {
+                //recorro los niveles
+                for(let i = 0 ; i <=filas;i++)
                 {
-                    var pos=superficie.getPosicion(u,v,this.curvaGeometrica);
+                    //para cada nivel calculo la matriz de nivel
+        
+                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i/filas);
+                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i/filas);
+                    let normalTrayectoria = this.curvaTrayectoria.getNormal(i/filas);
+                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(normalTrayectoria,tangenteTrayectoria,i/filas);
+
+
+
+
+                    //original
+                    /*let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                     normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
+                      normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
+                       0, 0, 0, 1); */
+
+                       /* changed normal by binormal let matrizNivel = mat4.fromValues(binormalTrayectoria[0],normalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                      binormalTrayectoria[1],normalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
+                       binormalTrayectoria[2],normalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
+                       0, 0, 0, 1);*/
+
+                       let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                     normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[1],
+                      normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[2],
+                       0, 0, 0, 1); 
+                       let matrizNivelTranspuesta = mat4.create();
+                       mat4.transpose(matrizNivelTranspuesta,matrizNivel);
                     
 
+                    //recorro los tramos de la curva
+                    for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
+                    {    
+                        //recorro el tramo de la curva
+                        for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
+                        {
+
+                            let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
+                            
+                            vec4.transformMat4(pos, pos, matrizNivelTranspuesta);                    
+                            this.positionBuffer.push(pos[0]);
+                            this.positionBuffer.push(pos[1]);
+                            this.positionBuffer.push(pos[2]);
+
+                            var nrm=superficie.getNormal(u,i/filas,this.curvaGeometrica,this.curvaTrayectoria,tramo);
+                            
+                            this.normalBuffer.push(nrm[0]);
+                            this.normalBuffer.push(nrm[1]);
+                            this.normalBuffer.push(nrm[2]);
+
+                            var uvs=superficie.getCoordenadasTextura(u,v);
+                            this.uvBuffer.push(uvs[0]);
+                            this.uvBuffer.push(uvs[1]);
+                            contador++;                              
+                        }
+                 
+                    }
                 }
-                else
+        }
+        else if(this.claseDeSuperficie == "analitica")
+        {
+            for (var i=0; i <= filas; i++) 
+            {
+                for (var j=0; j <= columnas; j ++) 
                 {
+                    var u=j/columnas;
+                    var v=i/filas;
+
                     var pos=superficie.getPosicion(u,v);
-                }
+                    this.positionBuffer.push(pos[0]);
+                    this.positionBuffer.push(pos[1]);
+                    this.positionBuffer.push(pos[2]);
 
-                this.positionBuffer.push(pos[0]);
-                this.positionBuffer.push(pos[1]);
-                this.positionBuffer.push(pos[2]);
+                    var nrm=superficie.getNormal(u,v);
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
 
-                var nrm=superficie.getNormal(u,v);
+                    var uvs=superficie.getCoordenadasTextura(u,v);
+                    this.uvBuffer.push(uvs[0]);
+                    this.uvBuffer.push(uvs[1]);
+                    contador++;
 
-                this.normalBuffer.push(nrm[0]);
-                this.normalBuffer.push(nrm[1]);
-                this.normalBuffer.push(nrm[2]);
-
-                var uvs=superficie.getCoordenadasTextura(u,v);
-
-                this.uvBuffer.push(uvs[0]);
-                this.uvBuffer.push(uvs[1]);
-                 contador++;
-
-        }        
-    }
+                }        
+            }
+        }
 
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,columnas*cantidadCoordenadasPorVertice));
-            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*columnas*cantidadCoordenadasPorVertice));
+            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
+            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
+    
+    
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeInf[0]);this.positionBuffer.push(postVerticeSup[0]);
@@ -369,12 +405,10 @@ class objeto3D
                 }
             filas = filas + 2; // se agregaron 2 tapas
         }
-
-
-       if(this.superficieDeUnaCara)
-       {
+        else if(this.superficieDeUnaCara)
+        {
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,columnas*cantidadCoordenadasPorVertice));
+            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeCentral[0]);
@@ -391,119 +425,25 @@ class objeto3D
                 }
             filas = filas + 1; // se agregaron 1 tapa
        }
-       
-    
-
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
 
-/*a partir de un conjunto de array de vertices en formato x,y,z
-calcula el punto central del poligono descripto por dichos vertices*/
-calcularPuntoCentral(vertices)
-{
-    let cantidadCoordenadasPorVertice = 3; // (x,y,z)
-    let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice; 
-    let x =0 ,y = 0, z = 0; 
-    //calcula el promedio de cada coordenada 
-    for(let i = 0; i < (cantidadVertices);i++)
-    {   
-        x += vertices[3*i];
-        y += vertices[3*i+1];
-        z += vertices[3*i+2]; // optimización
+/*Calcula el punto central del poligono descripto por un conjunto de
+ vertices en formato x,y,z  */
+    calcularPuntoCentral(vertices)
+    {
+        let cantidadCoordenadasPorVertice = 3; // (x,y,z)
+        let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice; 
+        let x =0 ,y = 0, z = 0; 
+        //calcula el promedio de cada coordenada 
+        for(let i = 0; i < (cantidadVertices);i++)
+        {   
+            x += vertices[3*i];
+            y += vertices[3*i+1];
+            z += vertices[3*i+2];
+        }
+        return [x/cantidadVertices,y/cantidadVertices,z/cantidadVertices];
     }
-    return [x/cantidadVertices,y/cantidadVertices,z/cantidadVertices];
-}
     
-
-
 }   //fin de la clase objeto3D
 
-function Esfera(radio)
-{
-    this.getPosicion=function(u,v)
-    {
-        u = u *2*Math.PI;
-        v = v *Math.PI;
-
-        var x = radio*((Math.cos(u))*(Math.sin(v)));
-        var y = radio*((Math.sin(u))*(Math.sin(v)));
-        var z = radio*(Math.cos(v));
-
-        //Parametrización alternativa en des-uso
-        //var x = radio*((Math.cos(u))*(Math.cos(v)));
-        //var y = radio*((Math.sin(u))*(Math.cos(v)));
-        //var z = radio*(Math.sin(v));
-        return [x,y,z];
-    }
-    this.getNormal=function(u,v){
- 
-        u = u * 2*Math.PI;
-        v = v * 2*Math.PI;
-        //calculo del vector normal a la superficie
-        var nx = Math.pow(radio,2)*Math.cos(v)*Math.cos(u)*Math.cos(v);
-        var ny = Math.pow(radio,2)*Math.cos(v)*Math.sin(u)*Math.cos(v);
-        var nz = Math.pow(radio,2)*Math.cos(v)*Math.sin(v);
-        var norma = Math.sqrt(Math.pow(nx,2)+Math.pow(ny, 2)+Math.pow(nz,2));
-
-        return [nx/norma,ny/norma,nz/norma];
-    }
-
-    this.getCoordenadasTextura=function(u,v){
-        
-        return [u,v];
-        
-    }
-
-}
-
-function Plano(ancho,largo){
-
-    
-    this.getPosicion=function(u,v){
-
-    
-
-        var x=(u-0.5)*ancho;
-        var z=(v-0.5)*largo;
-        return [x,0,z];
-    }
-
-    this.getNormal=function(u,v){
-        return [0,1,0];
-    }
-
-    this.getCoordenadasTextura=function(u,v){
-        return [u,v];
-    }
-}
-
-
-function techo()
-{
-    this.getPosicion=function(u,v,curvaGeometrica){   
-    if(u < 0.5)
-        {
-         puntosDeControl = verticesTecho(u);  
-         var punto = curvaGeometrica.calcularPuntoCurva((2*u),puntosDeControl); 
-            
-        }  
-        else if (u >= 0.5)
-        {
-            puntosDeControl = verticesTecho(u);  
-           var punto = curvaGeometrica.calcularPuntoCurva((2*u -1),puntosDeControl); 
-
-        }  
-        
-        return [punto.x,0,punto.z];
-    }
-    //debug calcular normal
-    this.getNormal=function(u,v)
-    {
-        return [0,1,0];
-    }
-
-    this.getCoordenadasTextura=function(u,v){
-        return [u,v];
-    }
-
-}
