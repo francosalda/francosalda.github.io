@@ -2,6 +2,12 @@ class objeto3D
 {
 	constructor(nombreSuperficie,matrizModelado)
 	{
+        if(matrizModelado)
+        {
+            this.matrizTransformacion = mat4.clone(matrizModelado);
+        }else{
+            this.matrizTransformacion = mat4.create(); 
+        }
 		this.posicionObjeto = [0.0,0.0,0.0]; // posicion inicial del objeto
         //si se elige un tipo de superficie
         if(nombreSuperficie) 
@@ -10,7 +16,6 @@ class objeto3D
             this.superficieDeUnaCara = false; // true: si posee la tapa inferior solamente
             this.claseDeSuperficie = "analitica"; //por defecto, pero puede ser: analitica,barrido,revolucion
             this.mallaDeTriangulos; // almacena la malla de triangulos del objeto 
-            this.matrizTransformacion = mat4.clone(matrizModelado); // inicializa la matriz de modelado
             this.filas=50; // indica que hay 'filas+1' filas de vertices para la malla de triangulos por defecto
             this.columnas=50; // indica que hay 'columnas+1' columnas de vertices para la malla de triangulos por defecto
             this.Id = "none"; // tag identificador del objeto
@@ -149,7 +154,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadrado(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new paredCubo(1);
+            this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLineal();
             this.asignarSuperficieCerrada();
@@ -163,16 +168,48 @@ class objeto3D
             let cantidadPuntosPorTramo = 4;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesChasis(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new chasis(1);
+            this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLineal();
             this.asignarSuperficieCerrada();
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
-        else if (superficie == "techo")
+         else if (superficie == "B1")
         {
-         
+            let cantidadTramos =3;
+            let cantidadPuntosPorTramo = 4;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB1(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieBarrido(1);
+            this.claseDeSuperficie = "barrido";
+            this.curvaTrayectoria = new recorridoLineal();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        else if (superficie == "B2")
+        {
+            let cantidadTramos =7;
+            let cantidadPuntosPorTramo = 9;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB2(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieBarrido(1);
+            this.claseDeSuperficie = "barrido";
+            this.curvaTrayectoria = new recorridoLineal();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        else if (superficie == "B4")
+        {
+            let cantidadTramos =4;
+            let cantidadPuntosPorTramo = 9;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB4(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieBarrido(1);
+            this.claseDeSuperficie = "barrido";
+            this.curvaTrayectoria = new recorridoLineal();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else 
         {

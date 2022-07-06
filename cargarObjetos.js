@@ -3,12 +3,10 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	cargarAutoElevador(objetos);
+	//cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
-	
-
 
 
 	asignarMallasObjetos(objetos);

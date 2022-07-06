@@ -63,8 +63,8 @@
 
         //variables de la GUI
         var tipoSuperficieGUI = "barrido";
-        var forma2DBarridoGUI = "A1";
-        var forma2DRevolucionGUI = "B1";
+        var forma2DBarridoGUI = "B4";
+        var forma2DRevolucionGUI = "A1";
         var anguloTorsionGUI = 0;
         var alturaTotalGUI = 1;
 
@@ -84,6 +84,7 @@
         //controladores
         let controladorVehiculo=new AutoElevadorControl([0,0,0]);
         var matrizVehiculo = mat4.create();
+
 
 
 
@@ -247,6 +248,7 @@
             var lightPosition = [10.0,0.0, 3.0];  
             gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
 
+            
             //dibujado de objetos de la escena
             dibujarObjetos(objetosEscena);
 
@@ -286,7 +288,11 @@
         //funcion de la impresora 3d
         function imprimirObjeto()
         {
-            console.log("[DEBUG] Imprimiendo el objeto seleccionado en la GUI:",tipoSuperficieGUI,forma2DBarridoGUI,forma2DRevolucionGUI);
+            let objetoImpreso = new objeto3D(forma2DBarridoGUI);
+            objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
+            
+            trasladarObjeto(objetoImpreso,[1.5,0.5,0.0]);
+            objetosEscena.push(objetoImpreso);
         }
 
 
