@@ -195,7 +195,13 @@ function cargarImpresora(objetos)
 	barraHorizontal2 = GenerarCubo();
 	escalarObjeto(barraHorizontal2,[0.15,0.005,0.005]);
 	trasladarObjeto(barraHorizontal2,[-0.075,0.03,-0.01]);
-	
+
+
+	baseImpresora = new objeto3D("baseImpresora");
+	escalarObjeto(baseImpresora,[0.5,0.8,0.5]);
+	trasladarObjeto(baseImpresora,[-0.23,-0.5,0.0]);
+
+
 
 	CabezalImpresora.agregarHijo(agarreImpresora);
 	CabezalImpresora.agregarHijo(padImpresora);
@@ -204,9 +210,10 @@ function cargarImpresora(objetos)
 	CabezalImpresora.agregarHijo(SujetadorPadImpresora);
 	impresora.agregarHijo(tuboImpresora);
 	impresora.agregarHijo(CabezalImpresora);
+	impresora.agregarHijo(baseImpresora);
 	
 	//ubicacion de la impresora en la escena
-	trasladarObjeto(impresora,[1.5,0.6,0.0]);
+	trasladarObjeto(impresora,[2.0,0.6,0.0]);
 	
 	objetos.push(impresora);
 

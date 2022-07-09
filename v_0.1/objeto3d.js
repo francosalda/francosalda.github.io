@@ -177,6 +177,18 @@ class objeto3D
             this.filas = 360;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
+         else if (superficie == "baseImpresora")
+        {
+            let cantidadTramos =6;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesBaseImpresora(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
         else if (superficie == "A1")
         {
             let cantidadTramos =7;
