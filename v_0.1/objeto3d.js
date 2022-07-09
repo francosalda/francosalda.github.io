@@ -357,7 +357,7 @@ class objeto3D
 
 }
 
-/*Genera los vertices de la superficie 3d*/
+    /*Genera los vertices de la superficie 3d*/
 	generarSuperficie3dParametrica(superficie,filas,columnas)
     {
         this.positionBuffer = [];
@@ -366,128 +366,7 @@ class objeto3D
         var contador = 0;
         let cantidad_columnas = columnas+1;
 
-
-        if(this.claseDeSuperficie == "revolucion")
-        {
-            console.log("[DEbug]: Superficie de revolucion");
-             //recorro los niveles
-                for(let i = 0 ; i <=filas;i++)
-                {
-
-                    //para cada nivel calculo la matriz de nivel
-        
-                   let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i);
-                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i);
-                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(i);
-                    let normalTrayectoria = this.curvaTrayectoria.getNormal(binormalTrayectoria,tangenteTrayectoria,i);
-                    
-
-                    let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                     normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
-                      normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
-                       0, 0, 0, 1);
-
-                    let matrizNivelTranspuesta = mat4.create();
-                    mat4.transpose(matrizNivelTranspuesta,matrizNivel);
-            //recorro los tramos de la curva
-                    for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
-                    {    
-                        //recorro el tramo de la curva
-                        for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
-                        {
-
-                            let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
-                            vec4.transformMat4(pos, pos, matrizNivelTranspuesta);
-
-                            this.positionBuffer.push(pos[0]);
-                            this.positionBuffer.push(pos[1]);
-                            this.positionBuffer.push(pos[2]);
-
-                            var nrm=superficie.getNormal(u,i/filas,this.curvaGeometrica,this.curvaTrayectoria,tramo);
-                            
-                            this.normalBuffer.push(nrm[0]);
-                            this.normalBuffer.push(nrm[1]);
-                            this.normalBuffer.push(nrm[2]);
-
-                            var uvs=superficie.getCoordenadasTextura(u,v);
-                            this.uvBuffer.push(uvs[0]);
-                            this.uvBuffer.push(uvs[1]);
-                            contador++;                              
-                        }
-                    }
-
-                }
-
-        }
-
-        else if(this.claseDeSuperficie == "barrido"  )
-        {
-                //recorro los niveles
-                for(let i = 0 ; i <=filas;i++)
-                {
-
-                    //para cada nivel calculo la matriz de nivel
-        
-                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i/filas);
-                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i/filas);
-                    let normalTrayectoria = this.curvaTrayectoria.getNormal(i/filas);
-                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(normalTrayectoria,tangenteTrayectoria,i/filas);
-                    
-                    
-
-
-
-
-                    //original
-                   /* let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                     normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
-                      normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
-                       0, 0, 0, 1); */
-
-                       /*  let matrizNivel = mat4.fromValues(binormalTrayectoria[0],normalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                      binormalTrayectoria[1],normalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
-                       binormalTrayectoria[2],normalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
-                       0, 0, 0, 1);*/
-
-                       let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                     normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[1],
-                      normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[2],
-                       0, 0, 0, 1); 
-                       let matrizNivelTranspuesta = mat4.create();
-                       mat4.transpose(matrizNivelTranspuesta,matrizNivel);
-                    
-
-                    //recorro los tramos de la curva
-                    for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
-                    {    
-                        //recorro el tramo de la curva
-                        for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
-                        {
-
-                            let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
-                            console.log("Punto: ",pos);
-                            vec4.transformMat4(pos, pos, matrizNivelTranspuesta);                    
-                            console.log("Punto Transofmrado: ",pos);
-                            this.positionBuffer.push(pos[0]);
-                            this.positionBuffer.push(pos[1]);
-                            this.positionBuffer.push(pos[2]);
-
-                            var nrm=superficie.getNormal(u,i/filas,this.curvaGeometrica,this.curvaTrayectoria,tramo);
-                            
-                            this.normalBuffer.push(nrm[0]);
-                            this.normalBuffer.push(nrm[1]);
-                            this.normalBuffer.push(nrm[2]);
-
-                            var uvs=superficie.getCoordenadasTextura(u,v);
-                            this.uvBuffer.push(uvs[0]);
-                            this.uvBuffer.push(uvs[1]);
-                            contador++;                              
-                        }
-                 
-                    }
-                }
-        }
-        else if(this.claseDeSuperficie == "analitica")
+        if(this.claseDeSuperficie == "analitica")
         {
             for (var i=0; i <= filas; i++) 
             {
@@ -514,6 +393,63 @@ class objeto3D
                 }        
             }
         }
+        else 
+        {
+        //recorro los niveles
+            for(let i = 0 ; i <=filas;i++)
+            {
+            //Calculo la matriz del nivel
+            let matrizNivelTranspuesta = mat4.create();
+            if(this.claseDeSuperficie == "revolucion")
+            {
+                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i);
+                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i);
+                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(i);
+                    let normalTrayectoria = this.curvaTrayectoria.getNormal(binormalTrayectoria,tangenteTrayectoria,i);
+                    let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                    normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
+                    normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
+                    0, 0, 0, 1);
+                    mat4.transpose(matrizNivelTranspuesta,matrizNivel);
+            }
+            else if (this.claseDeSuperficie == "barrido")
+            {
+                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i/filas);
+                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i/filas);
+                    let normalTrayectoria = this.curvaTrayectoria.getNormal(i/filas);
+                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(normalTrayectoria,tangenteTrayectoria,i/filas);   
+                    let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                    normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[1],
+                    normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[2],
+                    0, 0, 0, 1); 
+                    mat4.transpose(matrizNivelTranspuesta,matrizNivel);            
+            }
+            //recorro los tramos dela curva
+            for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
+            {    
+                //recorro un tramo de la curva
+                for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
+                {
+                    let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
+                    vec4.transformMat4(pos, pos, matrizNivelTranspuesta);                    
+                    this.positionBuffer.push(pos[0]);
+                    this.positionBuffer.push(pos[1]);
+                    this.positionBuffer.push(pos[2]);
+
+                    var nrm=superficie.getNormal(u,i/filas,this.curvaGeometrica,this.curvaTrayectoria,tramo);
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
+
+                    var uvs=superficie.getCoordenadasTextura(u,v);
+                    this.uvBuffer.push(uvs[0]);
+                    this.uvBuffer.push(uvs[1]);
+                }
+         
+            }
+            
+        }   
+    }
 
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
@@ -560,6 +496,7 @@ class objeto3D
        }
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
+
 
 /*Calcula el punto central del poligono descripto por un conjunto de
  vertices en formato x,y,z  */
