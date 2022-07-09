@@ -6,10 +6,18 @@ function cargarObjetosEscena(objetos)
 	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
-	cargarImpresora(objetos)
+	cargarImpresora(objetos);
+	cargarObjetosPrueba(objetos);
 
 	asignarMallasObjetos(objetos);
 }
+
+
+
+
+
+
+
 
 
 /*carga las formas que conforman la estanteria*/
@@ -173,7 +181,7 @@ function cargarImpresora(objetos)
 	impresora.agregarHijo(CabezalImpresora);
 	
 	//ubicacion de la impresora en la escena
-	trasladarObjeto(impresora,[1.5,0.3,0.0]);
+	trasladarObjeto(impresora,[1.5,0.6,0.0]);
 	
 	objetos.push(impresora);
 
@@ -187,3 +195,28 @@ function GenerarCubo()
 }
 
 
+function cargarObjetosPrueba(objetos)
+{
+	// de revolucion
+	let A1 = new objeto3D("A1");
+	
+	escalarObjeto(A1,[2.0,2.0,2.0]);
+	trasladarObjeto(A1,[0.0,0.0,-3.0]);
+	objetos.push(A1);
+	let A2 = new objeto3D("A2");
+	
+	escalarObjeto(A2,[2.0,2.0,2.0]);
+	trasladarObjeto(A2,[-1.0,0.0,-3.0]);
+	objetos.push(A2);
+	let A3 = new objeto3D("A3");
+	
+	escalarObjeto(A3,[2.0,2.0,2.0]);
+	trasladarObjeto(A3,[-2.0,0.0,-3.0]);
+	objetos.push(A3);
+	let A4 = new objeto3D("A4");
+	
+	escalarObjeto(A4,[2.0,2.0,2.0]);
+	trasladarObjeto(A4,[-3.0,0.0,-3.0]);
+	objetos.push(A4);
+
+}

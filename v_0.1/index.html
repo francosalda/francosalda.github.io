@@ -9,6 +9,7 @@
     <script src="transformacionesGeometricas.js"></script>
     <script src="curvas.js"></script>
     <script src="superficiesBarrido.js"></script>
+    <script src="superficiesRevolucion.js"></script>
     <script src="superficiesAnaliticas.js"></script>
     <script src="objeto3d.js"></script>
     <script src="cargarObjetos.js"></script>
@@ -52,7 +53,8 @@
         var gl;
         var mat4=glMatrix.mat4;
         var mat3=glMatrix.mat3;
-        var vec3=glMatrix.vec3;   
+        var vec3=glMatrix.vec3;
+        var vec4 = glMatrix.vec4;   
         
         var earth;
             
@@ -62,8 +64,8 @@
 
         //variables de la GUI
         var tipoSuperficieGUI = "barrido";
-        var forma2DBarridoGUI = "A1";
-        var forma2DRevolucionGUI = "B1";
+        var forma2DBarridoGUI = "B4";
+        var forma2DRevolucionGUI = "A1";
         var anguloTorsionGUI = 0;
         var alturaTotalGUI = 1;
 
@@ -83,6 +85,7 @@
         //controladores
         let controladorVehiculo=new AutoElevadorControl([0,0,0]);
         var matrizVehiculo = mat4.create();
+
 
 
 
@@ -246,6 +249,7 @@
             var lightPosition = [10.0,0.0, 3.0];  
             gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
 
+            
             //dibujado de objetos de la escena
             dibujarObjetos(objetosEscena);
 
@@ -254,7 +258,7 @@
         function tick()
         {
             requestAnimFrame(tick);
-            controladorVehiculo.update();
+            //controladorVehiculo.update();
             time+=1/60;
             drawScene();
         }
@@ -285,7 +289,11 @@
         //funcion de la impresora 3d
         function imprimirObjeto()
         {
-            console.log("[DEBUG] Imprimiendo el objeto seleccionado en la GUI:",tipoSuperficieGUI,forma2DBarridoGUI,forma2DRevolucionGUI);
+            let objetoImpreso = new objeto3D(forma2DBarridoGUI);
+            objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
+            
+            trasladarObjeto(objetoImpreso,[1.5,0.5,0.0]);
+            objetosEscena.push(objetoImpreso);
         }
 
 
