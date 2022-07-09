@@ -8,7 +8,13 @@ function cargarObjetosEscena(objetos)
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
+	
+	
+	
+	
+	
 
+	
 	asignarMallasObjetos(objetos);
 }
 
@@ -64,7 +70,7 @@ function cargarEstanteria(objetos)
 	estanteria.agregarHijo(estanteSuperior);
 
 	//ubicacion de la estanteria en la escena
-	trasladarObjeto(estanteria,[-1.5,0.0,0.0]);
+	trasladarObjeto(estanteria,[-2.0,0.0,0.0]);
 	objetos.push(estanteria);
 
 }
@@ -90,6 +96,7 @@ function cargarAutoElevador(objetos)
 	console.log("[DEBUG] Cargando objetos del autoElevador");
 	autoElevador = new objeto3D(); autoElevador.asignarIdentificadorObjeto("CAutoelevador");
 	estructuraPala = new objeto3D;
+	ruedas = new objeto3D;
 	barraVertical1  = GenerarCubo();
 	barraVertical2 = GenerarCubo();
 	barraHorizontal1  = GenerarCubo();
@@ -122,6 +129,9 @@ function cargarAutoElevador(objetos)
 	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
 	
+
+
+
 	//relacion entre objetos del autoElevador
 	estructuraPala.agregarHijo(barraHorizontal1);
 	estructuraPala.agregarHijo(barraHorizontal2);
@@ -131,8 +141,23 @@ function cargarAutoElevador(objetos)
 	estructuraPala.agregarHijo(palaAutoElevador);
 	autoElevador.agregarHijo(estructuraPala);
 	autoElevador.agregarHijo(chasis);
-	trasladarObjeto(autoElevador,[0.0,0.2,0.0]);
+	
+	trasladarObjeto(autoElevador,[0.0,0.25,0.0]);
 
+	//ruedas
+	let ruedaTI = new objeto3D("rueda");let ruedaTD = new objeto3D("rueda");
+	let ruedaDI = new objeto3D("rueda");let ruedaDD = new objeto3D("rueda");
+	escalarObjeto(ruedaTI,[0.3,0.1,0.3]);escalarObjeto(ruedaDI,[0.3,0.1,0.3]);
+	rotarObjeto(ruedaTI,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDI,Math.PI/2,[1.0,0.0,0.0]);
+	trasladarObjeto(ruedaTI,[-0.3,0.18,0.28]);trasladarObjeto(ruedaDI,[0.3,0.18,0.28]);
+
+	escalarObjeto(ruedaTD,[0.3,0.1,0.3]);escalarObjeto(ruedaDD,[0.3,0.1,0.3]);
+	rotarObjeto(ruedaTD,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,Math.PI/2,[1.0,0.0,0.0]);
+	trasladarObjeto(ruedaTD,[-0.3,0.18,-0.28]);trasladarObjeto(ruedaDD,[0.3,0.18,-0.28]);
+
+	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);
+	ruedas.agregarHijo(ruedaTD);ruedas.agregarHijo(ruedaDD);
+	autoElevador.agregarHijo(ruedas);
 	objetos.push(autoElevador);
 }
 
