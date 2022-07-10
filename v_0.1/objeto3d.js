@@ -215,7 +215,7 @@ class objeto3D
         }
         else if (superficie == "A3")
         {
-            let cantidadTramos =5;
+            let cantidadTramos =6;
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA3(),cantidadTramos,cantidadPuntosPorTramo);
@@ -227,7 +227,7 @@ class objeto3D
         }
         else if (superficie == "A4")
         {
-            let cantidadTramos =6;
+            let cantidadTramos =5;
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA4(),cantidadTramos,cantidadPuntosPorTramo);

@@ -8,13 +8,7 @@ function cargarObjetosEscena(objetos)
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
-	
-	
-	
-	
-	
 
-	
 	asignarMallasObjetos(objetos);
 }
 
@@ -110,7 +104,7 @@ function cargarAutoElevador(objetos)
 	//pala que sostendra los objetos
 	palaAutoElevador = GenerarCubo();
 	escalarObjeto(palaAutoElevador,[0.4,0.01,0.3]);
-	trasladarObjeto(palaAutoElevador,[0.85,0.3,0.0]);
+	trasladarObjeto(palaAutoElevador,[0.85,0.10,0.0]);
 	
 	//barras de la estructura de la pala
 	trasladarObjeto(barraVertical1,[0.65,0.6,0.1]);
@@ -199,7 +193,7 @@ function cargarImpresora(objetos)
 
 	baseImpresora = new objeto3D("baseImpresora");
 	escalarObjeto(baseImpresora,[0.5,0.8,0.5]);
-	trasladarObjeto(baseImpresora,[-0.23,-0.5,0.0]);
+	trasladarObjeto(baseImpresora,[-0.23,-0.45,0.0]);
 
 
 
@@ -231,24 +225,19 @@ function cargarObjetosPrueba(objetos)
 {
 	// de revolucion
 	let A1 = new objeto3D("A1");
-	
-	escalarObjeto(A1,[2.0,2.0,2.0]);
-	trasladarObjeto(A1,[0.0,0.0,-3.0]);
+	trasladarObjeto(A1,[0.0,0.5,-3.0]);
 	objetos.push(A1);
+
 	let A2 = new objeto3D("A2");
-	
-	escalarObjeto(A2,[2.0,2.0,2.0]);
-	trasladarObjeto(A2,[-1.0,0.0,-3.0]);
+	trasladarObjeto(A2,[1.0,0.5,-3.0]);
 	objetos.push(A2);
+
+
 	let A3 = new objeto3D("A3");
-	
-	escalarObjeto(A3,[2.0,2.0,2.0]);
-	trasladarObjeto(A3,[-2.0,0.0,-3.0]);
+	trasladarObjeto(A3,[2.0,0.5,-3.0]);
 	objetos.push(A3);
 	let A4 = new objeto3D("A4");
-	
-	escalarObjeto(A4,[2.0,2.0,2.0]);
-	trasladarObjeto(A4,[-3.0,0.0,-3.0]);
+	trasladarObjeto(A4,[3.0,0.5,-3.0]);
 	objetos.push(A4);
 
 }
