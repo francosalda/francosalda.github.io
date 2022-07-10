@@ -261,6 +261,18 @@ class objeto3D
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
+         else if (superficie == "B3")
+        {
+            let cantidadTramos =16;
+            let cantidadPuntosPorTramo = 9;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB3(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieBarrido(1);
+            this.claseDeSuperficie = "barrido";
+            this.curvaTrayectoria = new recorridoLineal();
+            this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
         else if (superficie == "B4")
         {
             let cantidadTramos =4;

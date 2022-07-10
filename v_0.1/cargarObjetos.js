@@ -64,7 +64,7 @@ function cargarEstanteria(objetos)
 	estanteria.agregarHijo(estanteSuperior);
 
 	//ubicacion de la estanteria en la escena
-	trasladarObjeto(estanteria,[-2.0,0.0,0.0]);
+	trasladarObjeto(estanteria,[-3.5,0.0,0.0]);
 	objetos.push(estanteria);
 
 }
@@ -223,6 +223,29 @@ function GenerarCubo()
 
 function cargarObjetosPrueba(objetos)
 {
+
+	let B1 = new objeto3D("B1");
+	escalarObjeto(B1,[0.5,0.5,0.5]);
+	trasladarObjeto(B1,[-2.0,0.25,-3.0]);
+	objetos.push(B1);
+
+	let B2 = new objeto3D("B2");
+	escalarObjeto(B2,[0.5,0.5,0.5]);
+	trasladarObjeto(B2,[-4.0,0.25,-3.0]);
+	objetos.push(B2);
+
+	
+
+	let B3 = new objeto3D("B3");
+	escalarObjeto(B3,[0.5,0.5,0.5]);
+	trasladarObjeto(B3,[-1.0,0.25,-3.0]);
+	objetos.push(B3);
+
+	let B4 = new objeto3D("B4");
+	escalarObjeto(B4,[0.5,0.5,0.5]);
+	trasladarObjeto(B4,[-3.0,0.25,-3.0]);
+	objetos.push(B4);
+
 	// de revolucion
 	let A1 = new objeto3D("A1");
 	trasladarObjeto(A1,[0.0,0.5,-3.0]);
