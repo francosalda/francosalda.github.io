@@ -42,10 +42,10 @@
         Your browser does not support the HTML5 canvas element.
     </canvas>
         
-    
     <script>
 
         var vertexShaderFile="vertex-shader.glsl";
+
         var modo="edges"; // wireframe, smooth, edges
         var shaderProgram;
         var time=0;
@@ -96,238 +96,228 @@
 
 
 
+    /* Inicializacion de WebGl*/
+    function initGL(canvas) 
+    {
 
-        function initGL(canvas) {
-
-            try {
-                gl = canvas.getContext("webgl");
-                gl.canvas.width=$canvas.width();
-                gl.canvas.height=$canvas.height();                
-            } catch (e) {
-                console.error(e);
-            }
-            if (!gl) {
-                alert("[Error] No se pudo inicializar WebGL");
-            }
-        }
-
-        function loadShaders(){
-
-            $.when(loadVS(), loadFS()).done(function(res1,res2){
-                //this code is executed when all ajax calls are done     
-                webGLStart();
-            });
-
-            function loadVS() {
-                return  $.ajax({
-                    url: "shaders/"+vertexShaderFile,
-                    success: function(result){
-                        vertexShaderSource=result;
-                    }
-                });
-            }   
-
-            function loadFS() {
-                return  $.ajax({
-                    url: "shaders/fragment-shader.glsl",
-                    success: function(result){
-                        fragmentShaderSource=result;
-                    }
-                });
-            }
-        }
-        
-        function getShader(gl,code,type) {
-
-            var shader;
-
-            if (type == "fragment") 
-                shader = gl.createShader(gl.FRAGMENT_SHADER);
-            else // "vertex"
-                shader = gl.createShader(gl.VERTEX_SHADER);
-            
-            gl.shaderSource(shader, code);
-            gl.compileShader(shader);
-    
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                console.error(gl.getShaderInfoLog(shader));
-                return null;
-            }    
-            return shader;
-        }
-        
-        function onResize(){
+        try {
+            gl = canvas.getContext("webgl");
             gl.canvas.width=$canvas.width();
-            gl.canvas.height=$canvas.height();
-            aspect=$canvas.width()/$canvas.height();
+            gl.canvas.height=$canvas.height();                
+        } catch (e) {
+            console.error(e);
         }
-
-        function getShaderSource(url) {
-            var req = new XMLHttpRequest();
-            req.open("GET", url, false);
-            req.send(null);
-            return (req.status == 200) ? req.responseText : null;
-        }; 
-
-        function initShaders() {
-    
-            var fragmentShader= getShader(gl, vertexShaderSource,"vertex");
-            var vertexShader= getShader(gl, fragmentShaderSource,"fragment");
-
-            shaderProgram = gl.createProgram();
-            gl.attachShader(shaderProgram, vertexShader);
-            gl.attachShader(shaderProgram, fragmentShader);
-            gl.linkProgram(shaderProgram);
-    
-            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                alert("Could not initialise shaders");
+        if (!gl) {
+            alert("[Error] No se pudo inicializar WebGL");
+        }
+    }
+    /*Cargar shaders*/
+    function loadShaders()
+    {
+        $.when(loadVS(), loadFS()).done(function(res1,res2){
+            // Cuando se cargue todo , se inicia
+            webGLStart();
+        });
+    function loadVS() {
+        return  $.ajax({
+            url: "shaders/"+vertexShaderFile,
+            success: function(result){
+                vertexShaderSource=result;
             }
-    
-            gl.useProgram(shaderProgram);
-    
-            shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
-            gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-    
-            shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aUv");
-            gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
-    
-            shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aNormal");
-            gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
-    
-            shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-            shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
-            shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
-            shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-            shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-            shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
-            shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-            shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
-            shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
-            shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
-        }
-        
-    
-        function setMatrixUniforms() {
-            
-            gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, matrizModelado);
-            gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, matrizVista);
-            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, matrizProyeccion);
-    
-            var normalMatrix = mat3.create();
-            mat3.fromMat4(normalMatrix,matrizModelado); // normalMatrix= (inversa(traspuesta(matrizModelado)));
-    
-            mat3.invert(normalMatrix, normalMatrix);
-            mat3.transpose(normalMatrix,normalMatrix);
+        });
+    }   
 
-            gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
+    function loadFS() {
+        return  $.ajax({
+            url: "shaders/fragment-shader.glsl",
+            success: function(result){
+                fragmentShaderSource=result;
+            }
+        });
+     }
+    }
+    
+    function getShader(gl,code,type) {
+
+        var shader;
+
+        if (type == "fragment") 
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        else // "vertex"
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        
+        gl.shaderSource(shader, code);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(shader));
+            return null;
+        }    
+        return shader;
+    }
+        
+    function onResize()
+    {
+        gl.canvas.width=$canvas.width();
+        gl.canvas.height=$canvas.height();
+        aspect=$canvas.width()/$canvas.height();
+    }
+
+    function getShaderSource(url) 
+    {
+        var req = new XMLHttpRequest();
+        req.open("GET", url, false);
+        req.send(null);
+        return (req.status == 200) ? req.responseText : null;
+    }; 
+
+    function initShaders() 
+    {
+
+        var fragmentShader= getShader(gl, vertexShaderSource,"vertex");
+        var vertexShader= getShader(gl, fragmentShaderSource,"fragment");
+
+        shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+
+        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
         }
+
+        gl.useProgram(shaderProgram);
+
+        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
+        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+        shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aUv");
+        gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+
+        shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aNormal");
+        gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+
+        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+        shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
+        shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
+        shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
+        shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+        shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
+        shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+        shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
+        shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
+        shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
+    }
+    
+    
+    function setMatrixUniforms() 
+    {
+        
+        gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, matrizModelado);
+        gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, matrizVista);
+        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, matrizProyeccion);
+
+        var normalMatrix = mat3.create();
+        mat3.fromMat4(normalMatrix,matrizModelado); // normalMatrix= (inversa(traspuesta(matrizModelado)));
+
+        mat3.invert(normalMatrix, normalMatrix);
+        mat3.transpose(normalMatrix,normalMatrix);
+
+        gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
+    }
               
-        function drawScene() {
-        
-            // Se configura el viewport dentro del "canvas". 
-            // En este caso se utiliza toda el área disponible
-            gl.viewport(0, 0, $canvas.width(), $canvas.height());
-            
-            // Se habilita el color de borrado para la pantalla (Color Buffer) y otros buffers
-            gl.clearColor(0.2,0.2,0.2,1);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    function drawScene() 
+    {
     
-            // Se configura la matriz de proyección
-            mat4.identity(matrizProyeccion);
-            mat4.perspective(matrizProyeccion, 30, aspect, 0.1, 100.0);
-            mat4.scale(matrizProyeccion,matrizProyeccion,[1,-1,1]); // parche para hacer un flip de Y, parece haber un bug en glmatrix
-               
-            // Se inicializan las variables asociadas con la Iluminación
-            
-            gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
-            gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
-            gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
-            gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
-            
-            // Definimos la ubicación de la camara                        
-            
-            mat4.lookAt(matrizVista,
-                vec3.fromValues(0,alturaCamara,distanciaCamara),
-                vec3.fromValues(0,0,0),
-                vec3.fromValues(0,1,0)
-            );
-                
-            var lightPosition = [10.0,0.0, 3.0];  
-            gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
-
-            
-            //dibujado de objetos de la escena
-            dibujarObjetos(objetosEscena);
-
-        }
+        // Se configura el viewport dentro del "canvas". 
+        // En este caso se utiliza toda el área disponible
+        gl.viewport(0, 0, $canvas.width(), $canvas.height());
         
-        function tick()
+        // Se habilita el color de borrado para la pantalla (Color Buffer) y otros buffers
+        gl.clearColor(0.2,0.2,0.2,1);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        // Se configura la matriz de proyección
+        mat4.identity(matrizProyeccion);
+        mat4.perspective(matrizProyeccion, 30, aspect, 0.1, 100.0);
+        mat4.scale(matrizProyeccion,matrizProyeccion,[1,-1,1]); // parche para hacer un flip de Y, parece haber un bug en glmatrix
+           
+        // Se inicializan las variables asociadas con la Iluminación
+        
+        gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
+        gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
+        gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
+        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
+        
+        // Definimos la ubicación de la camara                        
+        
+        mat4.lookAt(matrizVista,
+            vec3.fromValues(0,alturaCamara,distanciaCamara),
+            vec3.fromValues(0,0,0),
+            vec3.fromValues(0,1,0)
+        );
+            
+        var lightPosition = [10.0,0.0, 3.0];  
+        gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
+        
+        //dibujado de objetos de la escena
+        dibujarObjetos(objetosEscena);
+
+    }
+        
+    function tick()
+    {
+        requestAnimFrame(tick);
+        controladorVehiculo.update();
+
+        // animación de impresora 3D
+        if(imprimiendo)
         {
-            requestAnimFrame(tick);
-            controladorVehiculo.update();
-
-            // animación de impresora 3D
-            if(imprimiendo)
+            if(tiempoImprimiendo < 240)
             {
-                if(tiempoImprimiendo < 240)
-                {
-                    trasladarObjeto(objetoImpreso,[0.0,0.00208,0.0]);
-                    trasladarObjeto(CabezalImpresora,[0.0,0.00208,0.0]);   
-                    tiempoImprimiendo += 1; 
-                }
-                else
-                {
-                    
-                    imprimiendo = false;
-                    tiempoImprimiendo =0; 
-                }
-                
+                trasladarObjeto(objetoImpreso,[0.0,0.00208,0.0]);
+                trasladarObjeto(CabezalImpresora,[0.0,0.00208,0.0]);   
+                tiempoImprimiendo += 1; 
             }
-
-            time+=1/60;
-            drawScene();
-        }
-            
-        function initMenu(){
-            var gui = new dat.GUI();
-            //Menu de control de la escena
-            gui.add(window, "distanciaCamara",0.01,5).step(0.01);
-            gui.add(window, "alturaCamara",-4,4).step(0.01);;
-            gui.add(window, "modo",["wireframe","smooth","edges"]);
-            gui.add(window, "velocidadAngular",0, 1).step(0.01);
-            // Menu de parámetros para generacion de superficies
-            gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
-            gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
-            gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
-            gui.add(window, "alturaTotalGUI",0.1,2.0).step(0.1);
-            gui.add(window, "anguloTorsionGUI",0.0,180).step(1);
-            //comandos
-            var f1 = gui.addFolder('Comandos'); 
-            f1.add(window, 'imprimirObjeto').name("Generar");    
-            f1.open(); // hace que la carpeta f1 inicie abierta
-
+            else
+            {
+                imprimiendo = false;
+                tiempoImprimiendo =0; 
+            }
             
         }
 
-    
+        time+=1/60;
+        drawScene();
+    }
+    /*Menu de Interfaz con el usiario*/   
+    function initMenu()
+    {
+        var gui = new dat.GUI();
+        //Menu de control de la escena
+        gui.add(window, "distanciaCamara",0.01,5).step(0.01);
+        gui.add(window, "alturaCamara",-4,4).step(0.01);;
+        gui.add(window, "modo",["wireframe","smooth","edges"]);
+        gui.add(window, "velocidadAngular",0, 1).step(0.01);
+        // Menu de parámetros para generacion de superficies
+        gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
+        gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
+        gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
+        gui.add(window, "alturaTotalGUI",0.1,2.0).step(0.1);
+        gui.add(window, "anguloTorsionGUI",0.0,20).step(1);
+        //comandos
+        var f1 = gui.addFolder('Comandos'); 
+        f1.add(window, 'imprimirObjeto').name("Generar");    
+        f1.open(); // hace que la carpeta f1 inicie abierta
 
         
-
-
-
-
-
+    }
 
     function webGLStart() {
         var canvas = document.getElementById("myCanvas");
         initGL(canvas);
         initShaders();
-
-        
         cargarObjetosEscena(objetosEscena);
-
-        
-
         gl.clearColor(66.2, 0.2, 0.2, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.enable(gl.DEPTH_TEST);
@@ -340,7 +330,6 @@
         $(document).ready(function(){
             loadShaders();
         })
-
     </script>
     
 </body>

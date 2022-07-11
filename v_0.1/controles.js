@@ -166,6 +166,7 @@
             }
             trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
             imprimiendo = true;
+            objetoEnEspera = true;
             
             objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
             objetosEscena.push(objetoImpreso);

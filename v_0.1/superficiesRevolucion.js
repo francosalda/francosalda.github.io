@@ -1,5 +1,4 @@
 
-
 function superficieRevolucion(radio)
 {
 	 this.getPosicion=function(u,curvaGeometrica,tramo)
@@ -56,7 +55,6 @@ function recorridoCircular(t)
 	}
 
 }
-
 
 /*Vertices de formas 2D de revolucion*/
 function verticesA1()

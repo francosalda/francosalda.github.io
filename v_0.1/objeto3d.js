@@ -19,7 +19,7 @@ class objeto3D
             this.filas=50; // indica que hay 'filas+1' filas de vertices para la malla de triangulos por defecto
             this.columnas=50; // indica que hay 'columnas+1' columnas de vertices para la malla de triangulos por defecto
             this.Id = "none"; // tag identificador del objeto
-            this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la funcion que calculara los vertices
+            this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la función que calculara los vertices
             this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
@@ -60,8 +60,6 @@ class objeto3D
     {
         this.columnas = cantColumnas;
     }
-
-
     esSuperficieCerrada()
     {
         return this.SuperficieCerrada;
@@ -89,8 +87,6 @@ class objeto3D
     {
     return this.hijos;
     }
-
-
     asignarMatrizTransformacion(matriz)
     {
         
@@ -111,9 +107,7 @@ class objeto3D
     }
     asignarMallaDeTriangulos()
     {
-        this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);               
-        
-        
+        this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);                  
     }
 
     /*asigna al objeto3d la funcion que generara los vertices */
@@ -146,12 +140,11 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadrado(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
+            this.curvaTrayectoria = new recorridoLinealEjeY();
             this.asignarSuperficieCerrada();
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
-             
         else if (superficie == "chasis")
         {
             let cantidadTramos =4;
@@ -160,7 +153,7 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesChasis(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
+            this.curvaTrayectoria = new recorridoLinealEjeY();
             this.asignarSuperficieCerrada();
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
@@ -245,8 +238,8 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB1(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else if (superficie == "B2")
@@ -257,8 +250,8 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB2(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
          else if (superficie == "B3")
@@ -269,8 +262,8 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB3(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else if (superficie == "B4")
@@ -281,8 +274,8 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB4(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else 
@@ -450,6 +443,7 @@ class objeto3D
             }
             else if (this.claseDeSuperficie == "barrido")
             {
+
                     let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i/filas);
                     let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i/filas);
                     let normalTrayectoria = this.curvaTrayectoria.getNormal(i/filas);
@@ -458,6 +452,11 @@ class objeto3D
                     normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[1],
                     normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[2],
                     0, 0, 0, 1); 
+                    if(imprimiendo)
+                    {
+                        mat4.rotate(matrizNivel, matrizNivel, anguloTorsionGUI*i*2*Math.PI/360, [0.0,1.0,0.0]);    
+                    }
+                    
                     mat4.transpose(matrizNivelTranspuesta,matrizNivel);            
             }
             //recorro los tramos dela curva

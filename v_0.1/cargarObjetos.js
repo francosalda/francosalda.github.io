@@ -12,14 +12,6 @@ function cargarObjetosEscena(objetos)
 	asignarMallasObjetos(objetos);
 }
 
-
-
-
-
-
-
-
-
 /*carga las formas que conforman la estanteria*/
 function cargarEstanteria(objetos)
 {
@@ -122,10 +114,6 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(barraHorizontal3,[0.65,1.1,0.0]);
 	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
-	
-
-
-
 	//relacion entre objetos del autoElevador
 	estructuraPala.agregarHijo(barraHorizontal1);
 	estructuraPala.agregarHijo(barraHorizontal2);
@@ -194,9 +182,7 @@ function cargarImpresora(objetos)
 	baseImpresora = new objeto3D("baseImpresora");
 	escalarObjeto(baseImpresora,[0.5,0.8,0.5]);
 	trasladarObjeto(baseImpresora,[-0.23,-0.45,0.0]);
-
-
-
+	/*relacion entre objetos que conforman la impresora*/
 	CabezalImpresora.agregarHijo(agarreImpresora);
 	CabezalImpresora.agregarHijo(padImpresora);
 	CabezalImpresora.agregarHijo(barraHorizontal1);
@@ -211,9 +197,7 @@ function cargarImpresora(objetos)
 	
 	//ubicacion de la impresora en la escena
 	trasladarObjeto(impresora,[2.0,0.6,0.0]);
-	
 	objetos.push(impresora);
-
 }
 
 
@@ -237,8 +221,6 @@ function cargarObjetosPrueba(objetos)
 	trasladarObjeto(B2,[-4.0,0.25,-3.0]);
 	objetos.push(B2);
 
-	
-
 	let B3 = new objeto3D("B3");
 	escalarObjeto(B3,[0.5,0.5,0.5]);
 	trasladarObjeto(B3,[-1.0,0.25,-3.0]);
@@ -257,7 +239,6 @@ function cargarObjetosPrueba(objetos)
 	let A2 = new objeto3D("A2");
 	trasladarObjeto(A2,[1.0,0.5,-3.0]);
 	objetos.push(A2);
-
 
 	let A3 = new objeto3D("A3");
 	trasladarObjeto(A3,[2.0,0.5,-3.0]);
