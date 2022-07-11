@@ -101,7 +101,7 @@ class objeto3D
     asignarMatrizTransformacion(matriz)
     {
         
-        this.matrizTransformacion =mat4.clone(matriz); ;
+        this.matrizTransformacion =mat4.clone(matriz) ;
     }
     obtenerMatrizTransformacion()
     {

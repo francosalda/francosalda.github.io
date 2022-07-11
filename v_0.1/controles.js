@@ -1,64 +1,79 @@
 
-    function AutoElevadorControl(initialPos)
-    {
+    function AutoElevadorControl(initialPos){
 
-        let vec3=glMatrix.vec3;         
+        let MIN_Y=1;
+
+        let DELTA_TRASLACION=0.05;        // velocidad de traslacion 
+        let DELTA_ROTACION=0.02;         // velocidad de rotacion
+        let DELTA_MOVIMIENTO_PALA = 0.002; 
+        let FACTOR_INERCIA=0.05;
+
+        let vec3=glMatrix.vec3;          // defino vec3 para no tener que escribir glMatrix.vec3
         let mat4=glMatrix.mat4;
 
-        
-        let DELTA_VELOCIDAD = 0.01; 
-        let DELTA_MOVIMIENTO_PALA = 0.001;
-        let DELTA_ROTACION=0.02;        
+        if (!initialPos) initialPos=[0,0,0];
 
-        //let FACTOR_AMORTIGUAMIENTO = 0.01;
-        //if (!initialPos) initialPos=[0,0,0];
-
-        let position=vec3.fromValues(initialPos[0],initialPos[1],initialPos[2]);
+        let targetPosition=vec3.fromValues(initialPos[0],initialPos[1],initialPos[2]);
         let rotation=vec3.create();
 
+        let rotationMatrix=mat4.create();       
+
+        let worldMatrix=mat4.create();
+
         let vehicleInitialState={
-            deltaX:0,
             xVel:0,
             zVel:0,
             yVel:0,
+            xVelTarget:0,
+            zVelTarget:0,
+            yVelTarget:0,
             yVelPala:0,
-            
+          
+
+
+            yRotVelTarget:0,
             yRotVel:0,
+            zRotVelTarget:0,
             zRotVel:0,
+            xRotVelTarget:0,
             xRotVel:0,
-            rightAxisMode:"move",
-            sujentadoObjeto : false
+            
+            rightAxisMode:"move"
         }
 
         let vehicleState=Object.assign({},vehicleInitialState);
 
         
-        // Manejo de eventos del teclado
-        document.addEventListener("keydown",function(e) //tecla presionada 
-        {
-            
+        // Eventos de teclado **********************************************
 
+        document.addEventListener("keydown",function(e){
             switch ( e.key ) {
 
-                case "ArrowUp": // up
-                    vehicleState.xVel = +DELTA_VELOCIDAD;
-                    break;
-                case "ArrowDown":
-                    vehicleState.xVel = -DELTA_VELOCIDAD;
-                    break;
-                case "ArrowLeft":
-                    vehicleState.xRotVel = +DELTA_ROTACION;
-                    break;
-                case "ArrowRight":
-                    vehicleState.xRotVel = -DELTA_ROTACION;
-                    break;
-
+                //avanzar
+                case "ArrowUp": case"w":
+                    vehicleState.xVelTarget=DELTA_TRASLACION;break;
+                break;
+                //retroceder
+                case "ArrowDown": case"s":
+                    vehicleState.xVelTarget=-DELTA_TRASLACION;break;
+                break;
+                //girar sobre el eje 'y' horario
+                case "d": case "ArrowRight":
+                    vehicleState.yRotVelTarget=DELTA_ROTACION;
+                break;
+                //girar sobre el eje 'y' antihorario
+                case "a":  case "ArrowLeft":
+                    vehicleState.yRotVelTarget=-DELTA_ROTACION;
+                break;
+                //subir pala del elevador
                 case "q": 
                 vehicleState.yVelPala = +DELTA_MOVIMIENTO_PALA;
                     break;
+                //bajar pala del elevador
                 case "e":
                 vehicleState.yVelPala = - DELTA_MOVIMIENTO_PALA;
                     break;
+                //agarrar objeto con el elevador
                 case "g":
                     if(vehicleState.sujentadoObjeto)
                     {
@@ -77,38 +92,35 @@
                         
                     }
                     break;
-           
+
+               
             }               
 
         })
 
-        //se suelta la tecla
         document.addEventListener("keyup",function(e){
 
             switch ( e.key ) 
             {
-
-                case "ArrowUp": 
-                    vehicleState.xVel=0.0;
-                    break;
-                case "ArrowDown":
-                    vehicleState.xVel=0.0;
-                    break;
-                case "ArrowLeft":
-                    vehicleState.xRotVel = 0.0;
-                    break;
-                case "ArrowRight":
-                    vehicleState.xRotVel = 0.0;
-                    break;
-
+                case "ArrowUp":  case "w":
+                    vehicleState.xVelTarget=0; break;
+                
+                case "ArrowDown": case "s": 
+                    vehicleState.xVelTarget=0; break; 
+  
+                case "ArrowLeft" :case "a": 
+                    vehicleState.yRotVelTarget=0; break;
+                case "ArrowRight": case "d": 
+                    vehicleState.yRotVelTarget=0; break;
                 case "q": 
                     vehicleState.yVelPala = 0.0; 
                     break;
                 case "e":
                     vehicleState.yVelPala = 0.0;
                 break;
-
-
+                    
+                                              
+          
             }                 
             
         })
@@ -116,38 +128,63 @@
 
         this.update=function()
         {
-            /*let matrizRototraslacion = mat4.create();
-            let matrizAuxiliar = mat4.create();
-
-            mat4.translate(matrizRototraslacion,matrizRototraslacion,[vehicleState.xVel ,vehicleState.yVel,vehicleState.zVel]);
-            mat4.rotate(matrizRototraslacion,matrizRototraslacion,vehicleState.xRotVel,[0.0,1.0,0.0]);
-            mat4.multiply(matrizAuxiliar,matrizRototraslacion,autoElevador.obtenerMatrizTransformacion());
-            autoElevador.asignarMatrizTransformacion(matrizAuxiliar);
-            */
             
-            let matrizRotacion = mat4.create();
-            let translation = vec3.create();
+            vehicleState.xVel+=(vehicleState.xVelTarget-vehicleState.xVel)*FACTOR_INERCIA;
+            vehicleState.yVel+=(vehicleState.yVelTarget-vehicleState.yVel)*FACTOR_INERCIA;
+            vehicleState.zVel+=(vehicleState.zVelTarget-vehicleState.zVel)*FACTOR_INERCIA;
+            
+
+            vehicleState.xRotVel+=(vehicleState.xRotVelTarget-vehicleState.xRotVel)*FACTOR_INERCIA;
+            vehicleState.yRotVel+=(vehicleState.yRotVelTarget-vehicleState.yRotVel)*FACTOR_INERCIA;
+            vehicleState.zRotVel+=(vehicleState.zRotVelTarget-vehicleState.zRotVel)*FACTOR_INERCIA;
+
+
+            let translation=vec3.fromValues(vehicleState.xVel,vehicleState.yVel,vehicleState.zVel);                        
+            
+            if (Math.abs(vehicleState.yRotVel)>0) {
+                /*Rota al rededor del eje 'y'*/
+                mat4.rotate(rotationMatrix,rotationMatrix,vehicleState.yRotVel,vec3.fromValues(0,1,0)); 
+                let posicionActual = vec3.create();
+                mat4.getTranslation(posicionActual,autoElevador.obtenerMatrizTransformacion());
+                trasladarObjeto(autoElevador,[-1*posicionActual[0],-1*posicionActual[1]  ,-1*posicionActual[2]]);
+                rotarObjeto(autoElevador,vehicleState.yRotVel,[0.0,1.0,0.0]);
+                trasladarObjeto(autoElevador,[posicionActual[0],posicionActual[1]  ,posicionActual[2]]);
+                     
+            }
+            
+            vec3.transformMat4(translation,translation,rotationMatrix);
+            vec3.add(targetPosition,targetPosition,translation);
+            worldMatrix=mat4.create();
+            mat4.translate(worldMatrix,worldMatrix,targetPosition);        
+            mat4.multiply(worldMatrix,worldMatrix,rotationMatrix);
         
-            mat4.getTranslation(translation,autoElevador.obtenerMatrizTransformacion());
-            mat4.getRotation(matrizRotacion, autoElevador.obtenerMatrizTransformacion());
-
-            vec3.transformMat4(translation, translation, matrizRotacion);
-
-           trasladarObjeto(autoElevador,[vehicleState.xVel,vehicleState.yVel,vehicleState.zVel]);
-         //    trasladarObjeto(autoElevador,translation);
-
-           // rotarObjeto(autoElevador,vehicleState.xRotVel,[0.0,1.0,0.0]);
+            trasladarObjeto(autoElevador,[translation[0],translation[1],translation[2]]);
             trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
             if(vehicleState.sujentadoObjeto)
             {
                 trasladarObjeto(objetoImpreso,[0.0,vehicleState.yVelPala,0.0]);    
             }
+        
             
+        }
+
+
+        this.getViewMatrix=function(){
+
+            let m=mat4.clone(worldMatrix);            
+            mat4.invert(m,m);
+            return m;
+        }
+
+        this.getMatrix=function(){
+
+            return worldMatrix;
+
         }
 
     }
 
-//funcion de la impresora 3d
+    //funcion de la impresora 3d
     function imprimirObjeto()
     {
         if(!objetoEnEspera)
@@ -173,5 +210,3 @@
             objetosEscena.push(objetoImpreso);
         }
     }
-
-
