@@ -9,6 +9,7 @@
     <script src="transformacionesGeometricas.js"></script>
     <script src="curvas.js"></script>
     <script src="superficiesBarrido.js"></script>
+    <script src="superficiesRevolucion.js"></script>
     <script src="superficiesAnaliticas.js"></script>
     <script src="objeto3d.js"></script>
     <script src="cargarObjetos.js"></script>
@@ -48,6 +49,7 @@
         var modo="edges"; // wireframe, smooth, edges
         var shaderProgram;
         var time=0;
+        
 
         var gl;
         var mat4=glMatrix.mat4;
@@ -62,8 +64,8 @@
 
 
         //variables de la GUI
-        var tipoSuperficieGUI = "barrido";
-        var forma2DBarridoGUI = "B4";
+        var tipoSuperficieGUI = "Revolucion";
+        var forma2DBarridoGUI = "B1";
         var forma2DRevolucionGUI = "A1";
         var anguloTorsionGUI = 0;
         var alturaTotalGUI = 1;
@@ -71,6 +73,11 @@
         var distanciaCamara=3.24;//3
         var alturaCamara=0.84;//2
         var velocidadAngular=0.15;
+
+        //variables de impresora 3d
+        var imprimiendo = false;
+        var tiempoImprimiendo = 0;
+        var objetoEnEspera = false; // indica si se imprimio un objeto y no se coloco en la estanteria
         
         var lighting="true";
         var vertexShaderSource;
@@ -257,7 +264,25 @@
         function tick()
         {
             requestAnimFrame(tick);
-            //controladorVehiculo.update();
+            controladorVehiculo.update();
+
+            // animación de impresora 3D
+            if(imprimiendo)
+            {
+                if(tiempoImprimiendo < 240)
+                {
+                    trasladarObjeto(objetoImpreso,[0.0,0.00208,0.0]);
+                    trasladarObjeto(CabezalImpresora,[0.0,0.00208,0.0]);   
+                    tiempoImprimiendo += 1; 
+                }
+                else
+                {
+                    imprimiendo = false;
+                    tiempoImprimiendo =0; 
+                }
+                
+            }
+
             time+=1/60;
             drawScene();
         }
@@ -270,7 +295,7 @@
             gui.add(window, "modo",["wireframe","smooth","edges"]);
             gui.add(window, "velocidadAngular",0, 1).step(0.01);
             // Menu de parámetros para generacion de superficies
-            gui.add(window, "tipoSuperficieGUI",["barrido","Revolucion"]);
+            gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
             gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
             gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
             gui.add(window, "alturaTotalGUI",0.1,2.0).step(0.1);
@@ -285,15 +310,7 @@
 
     
 
-        //funcion de la impresora 3d
-        function imprimirObjeto()
-        {
-            let objetoImpreso = new objeto3D(forma2DBarridoGUI);
-            objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
-            
-            trasladarObjeto(objetoImpreso,[1.5,0.5,0.0]);
-            objetosEscena.push(objetoImpreso);
-        }
+        
 
 
 
