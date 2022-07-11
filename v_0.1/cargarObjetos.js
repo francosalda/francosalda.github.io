@@ -202,6 +202,9 @@ function cargarImpresora(objetos)
 	CabezalImpresora.agregarHijo(barraHorizontal1);
 	CabezalImpresora.agregarHijo(barraHorizontal2);
 	CabezalImpresora.agregarHijo(SujetadorPadImpresora);
+	trasladarObjeto(CabezalImpresora,[0.0,0.245,0.0]);
+	escalarObjeto(CabezalImpresora,[1.8,1.0,1.5]);
+
 	impresora.agregarHijo(tuboImpresora);
 	impresora.agregarHijo(CabezalImpresora);
 	impresora.agregarHijo(baseImpresora);

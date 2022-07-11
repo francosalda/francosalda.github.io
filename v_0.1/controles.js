@@ -63,12 +63,18 @@
                     if(vehicleState.sujentadoObjeto)
                     {
                         autoElevador.quitarUltimoHijo();
+                        objetoEnEspera = false; // ya se puede imprimir otro objeto nuevo
                         vehicleState.sujentadoObjeto = false;
                     }
                     else
                     {
-                        vehicleState.sujentadoObjeto = true;
-                        autoElevador.agregarHijo(impresora);
+                        if(!imprimiendo) // evita que se tome un objeto en proceso de impresio
+                        {
+                            vehicleState.sujentadoObjeto = true;
+                            autoElevador.agregarHijo(objetoImpreso);
+
+                        }   
+                        
                     }
                     break;
            
@@ -132,14 +138,38 @@
 
            // rotarObjeto(autoElevador,vehicleState.xRotVel,[0.0,1.0,0.0]);
             trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
+            if(vehicleState.sujentadoObjeto)
+            {
+                trasladarObjeto(objetoImpreso,[0.0,vehicleState.yVelPala,0.0]);    
+            }
             
-            
-
         }
 
+    }
 
-
-
+//funcion de la impresora 3d
+    function imprimirObjeto()
+    {
+        if(!objetoEnEspera)
+        {
+            if(tipoSuperficieGUI == "Barrido")
+            {
+                 objetoImpreso = new objeto3D(forma2DBarridoGUI); 
+                 escalarObjeto(objetoImpreso,[0.3,0.5,0.3]);   
+                 trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
+            }
+            else if (tipoSuperficieGUI == "Revolucion")
+            {
+                 objetoImpreso = new objeto3D(forma2DRevolucionGUI);
+                 escalarObjeto(objetoImpreso,[0.5,0.5,0.5]);      
+                 trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
+            }
+            trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
+            imprimiendo = true;
+            
+            objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
+            objetosEscena.push(objetoImpreso);
+        }
     }
 
 
