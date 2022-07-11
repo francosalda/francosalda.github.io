@@ -68,7 +68,7 @@
                     }
                     else
                     {
-                        if(!imprimiendo) // evita que se tome un objeto en proceso de impresio
+                        if(!imprimiendo && objetoEnEspera) // evita que se tome un objeto en proceso de impresio
                         {
                             vehicleState.sujentadoObjeto = true;
                             autoElevador.agregarHijo(objetoImpreso);
