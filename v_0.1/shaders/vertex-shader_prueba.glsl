@@ -11,10 +11,6 @@
         uniform mat4 uVMatrix;     // matriz de vista
         uniform mat4 uPMatrix;     // matriz de proyección
         uniform mat3 uNMatrix;     // matriz de normales
-
-        uniform vec3 uFixedColorObject;  // color del objeto
-        
-        
                         
         uniform float time;                 // tiempo en segundos
         
@@ -29,9 +25,7 @@
 
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
-        varying vec2 vUv;  
-
-        varying vec3 vFixedColorObject;                         
+        varying vec2 vUv;                           
         
         // constantes
         
@@ -39,10 +33,10 @@
 
         void main(void) {
                     
-            vec3 position = aPosition;		
-            vec3 normal = aNormal;	
+            vec3 position = aPosition;      
+            vec3 normal = aNormal;  
             vec2 uv = aUv;
-                                   	
+                                    
            vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t));         
             
             // **************** EDITAR A PARTIR DE AQUI *******************************
@@ -57,7 +51,5 @@
 
             vWorldPosition=worldPos.xyz;              
             vNormal=normalize(uNMatrix * aNormal);
-            vUv=uv;	
-            vFixedColorObject=uFixedColorObject;
-
+            vUv=uv; 
         }

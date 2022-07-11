@@ -2,12 +2,10 @@
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vWorldPosition;
-
-        varying vec3 vFixedColorObject;
         
 
         uniform vec3 uAmbientColor;         // color de luz ambiente
-        uniform vec3 uDirectionalColor;	    // color de luz direccional
+        uniform vec3 uDirectionalColor;     // color de luz direccional
         uniform vec3 uLightPosition;        // posición de la luz
         
         uniform bool uUseLighting;          // usar iluminacion si/no
@@ -27,7 +25,6 @@
             if (uUseLighting)
                 gl_FragColor = vec4(color,1.0);
             else
-                //gl_FragColor = vec4(0.7,0.7,0.7,1.0);
-                gl_FragColor = vec4(vFixedColorObject,1.0);
+                gl_FragColor = vec4(0.7,0.7,0.7,1.0);
             
         }
