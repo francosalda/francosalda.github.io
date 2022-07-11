@@ -23,6 +23,8 @@ class objeto3D
             this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
+
+            this.colorObjeto = [0.9,0.1,0.1];
         }
         else
         {
@@ -34,6 +36,15 @@ class objeto3D
         this.cantHijos = 0; 
         this.hijos = [];
 	}
+
+    setColor(color)
+    {
+        this.colorObjeto = color;
+    }
+    getColor()
+    {
+        return this.colorObjeto;
+    }
 
     /*Getters y setters de la clase objeto3d*/
     obtenerPosicionObjeto()

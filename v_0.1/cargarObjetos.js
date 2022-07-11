@@ -9,6 +9,9 @@ function cargarObjetosEscena(objetos)
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
 
+	
+	
+
 	asignarMallasObjetos(objetos);
 }
 
@@ -37,6 +40,8 @@ function cargarEstanteria(objetos)
 		trasladarObjeto(pataTrasera,[distanciaEntrePatas/2,altoPatas/2,-1.5+i*separacionEntrePatas]);
 		patasDelanterasEstanteria.agregarHijo(pataDelantera);
 		patasTraserasEstanteria.agregarHijo(pataTrasera)
+		pataDelantera.setColor([0.45,0.1,0.0]);
+		pataTrasera.setColor([0.45,0.1,0.0]);
 	}
 	estanteria.agregarHijo(patasDelanterasEstanteria);
 	estanteria.agregarHijo(patasTraserasEstanteria);
@@ -50,6 +55,9 @@ function cargarEstanteria(objetos)
 	escalarObjeto(estanteSuperior,[anchoEstante,altoEstante,largoEstante]);
 	trasladarObjeto(estanteSuperior,[0.0,1.5,0.0]);
 	
+	estanteInferior.setColor([0.04,0.88,0.76]);
+	estanteMedio.setColor([0.04,0.88,0.76]);
+	estanteSuperior.setColor([0.04,0.88,0.76]);
 
 	estanteria.agregarHijo(estanteInferior);
 	estanteria.agregarHijo(estanteMedio);
@@ -71,9 +79,12 @@ function cargarGalpon(objetos)
 	galpon = new objeto3D;
 	pisoGalpon = new objeto3D("plano",matrizModelado);
 
-	escalarObjeto(pisoGalpon,[anchoPiso,1.0,largoPiso]);
 
+	escalarObjeto(pisoGalpon,[anchoPiso,1.0,largoPiso]);
 	galpon.agregarHijo(pisoGalpon);
+
+	pisoGalpon.setColor([0.93,0.7,0.66]);
+
 	objetos.push(galpon);
 }
 /*Carga las formas que conforman el autoelevador*/
@@ -140,6 +151,22 @@ function cargarAutoElevador(objetos)
 	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);
 	ruedas.agregarHijo(ruedaTD);ruedas.agregarHijo(ruedaDD);
 	autoElevador.agregarHijo(ruedas);
+
+	//colores
+	chasis.setColor([0.99,0.94,0.13]);
+	palaAutoElevador.setColor([0.89,0.51,0.0]);
+	barraHorizontal1.setColor([0.67,0.15,0.72]);
+	barraHorizontal2.setColor([0.67,0.15,0.72]);
+	barraHorizontal3.setColor([0.67,0.15,0.72]);
+	barraVertical1.setColor([0.7,0.7,0.7]);	barraVertical2.setColor([0.7,0.7,0.7]);
+
+
+	ruedaTI.setColor([0.28,0.03,0.37]);ruedaTD.setColor([0.28,0.03,0.37]);
+	ruedaDI.setColor([0.28,0.03,0.37]);ruedaDD.setColor([0.28,0.03,0.37]);
+
+
+
+
 	objetos.push(autoElevador);
 }
 
@@ -195,6 +222,14 @@ function cargarImpresora(objetos)
 	impresora.agregarHijo(CabezalImpresora);
 	impresora.agregarHijo(baseImpresora);
 	
+	//colores
+	barraHorizontal1.setColor([0.1,0.1,0.8]);barraHorizontal2.setColor([0.1,0.1,0.9]);
+	SujetadorPadImpresora.setColor([0.1,0.9,0.1]);padImpresora.setColor([0.1,0.9,0.1]);
+	agarreImpresora.setColor([0.1,0.9,0.1]);
+
+	baseImpresora.setColor([0.7,0.7,0.7]);
+	tuboImpresora.setColor([0.7,0.7,0.7]);
+
 	//ubicacion de la impresora en la escena
 	trasladarObjeto(impresora,[2.0,0.6,0.0]);
 	objetos.push(impresora);

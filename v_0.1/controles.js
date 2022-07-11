@@ -168,6 +168,7 @@
             imprimiendo = true;
             objetoEnEspera = true;
             
+            objetoImpreso.setColor([0.8,0.1,0.1]);
             objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
             objetosEscena.push(objetoImpreso);
         }

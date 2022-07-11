@@ -45,6 +45,7 @@
     <script>
 
         var vertexShaderFile="vertex-shader.glsl";
+        var fragmentShaderFile = "fragment-shader.glsl"
 
         var modo="edges"; // wireframe, smooth, edges
         var shaderProgram;
@@ -79,7 +80,7 @@
         var tiempoImprimiendo = 0;
         var objetoEnEspera = false; // indica si se imprimio un objeto y no se coloco en la estanteria
         
-        var lighting="true";
+        var lighting="false";
         var vertexShaderSource;
         var fragmentShaderSource;
         //matrices
@@ -129,7 +130,7 @@
 
     function loadFS() {
         return  $.ajax({
-            url: "shaders/fragment-shader.glsl",
+            url: "shaders/"+fragmentShaderFile,
             success: function(result){
                 fragmentShaderSource=result;
             }
@@ -173,10 +174,8 @@
 
     function initShaders() 
     {
-
         var fragmentShader= getShader(gl, vertexShaderSource,"vertex");
         var vertexShader= getShader(gl, fragmentShaderSource,"fragment");
-
         shaderProgram = gl.createProgram();
         gl.attachShader(shaderProgram, vertexShader);
         gl.attachShader(shaderProgram, fragmentShader);
@@ -185,8 +184,11 @@
         if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
             alert("Could not initialise shaders");
         }
-
         gl.useProgram(shaderProgram);
+
+
+  
+  
 
         shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
         gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
@@ -207,6 +209,10 @@
         shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
         shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
         shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
+        shaderProgram.uFixedColorObject = gl.getUniformLocation(shaderProgram, "uFixedColorObject");
+
+
+        
     }
     
     
