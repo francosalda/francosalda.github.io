@@ -204,7 +204,24 @@
             trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
             imprimiendo = true;
             objetoEnEspera = true;
-            
+            var textureObjetoImpreso = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, textureObjetoImpreso);
+             //Fill the texture with a 1x1 blue pixel.
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.0,1.0,0.0,1.0]));
+            // Asynchronously load an image
+            var imageObjetoImpreso = new Image();
+            imageObjetoImpreso.src = "maps/leather_red_03_coll1_1k.jpg";
+            imageObjetoImpreso.addEventListener('load', function() {
+            // Now that the image has loaded make copy it to the texture.
+            gl.bindTexture(gl.TEXTURE_2D, textureObjetoImpreso);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imageObjetoImpreso);
+            //gl.generateMipmap(gl.TEXTURE_2D);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            });
+            objetoImpreso.setTextura(textureObjetoImpreso);
             objetoImpreso.setColor([0.8,0.1,0.1]);
             objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
             objetosEscena.push(objetoImpreso);

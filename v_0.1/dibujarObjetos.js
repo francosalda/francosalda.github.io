@@ -11,15 +11,17 @@ function dibujarObjetos(objetosEscena)
 		}
 		else
 		{
+			
 			//dibujado del objeto
 			aux = objetosEscena[i].obtenerMatrizTransformacion();
 	        objetosEscena[i].asignarMatrizTransformacion(aux);
 	        matrizModelado = aux;
-	        //color del objeto
+	        //color del objeto en caso de desactivar las luces
 	        let colorObjeto = objetosEscena[i].getColor();
 	        gl.uniform3f(shaderProgram.uFixedColorObject,colorObjeto[0],colorObjeto[1],colorObjeto[2]);
 	        setMatrixUniforms();
-	        
+	        //textura del objeto
+			gl.bindTexture(gl.TEXTURE_2D, objetosEscena[i].getTextura());	        
 	        objetosEscena[i].dibujarMalla(objetosEscena[i].obtenerMallaDeTriangulos());
     	}
 	}

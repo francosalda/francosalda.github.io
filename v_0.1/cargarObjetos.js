@@ -9,12 +9,13 @@ function cargarObjetosEscena(objetos)
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
 
-	
-	
 
 	asignarMallasObjetos(objetos);
 }
 
+function handleTextureLoaded(image, texture) {
+ 
+}
 /*carga las formas que conforman la estanteria*/
 function cargarEstanteria(objetos)
 {
@@ -30,6 +31,45 @@ function cargarEstanteria(objetos)
 	let altoPatas = 1.55,largoPatas=0.03,anchoPatas=0.03;
 	let separacionEntrePatas = 0.4; //distancia entra patas consecutivas delanteras o traseras
 	let distanciaEntrePatas = 0.25; //distancia entre patas traseras y delanteras
+
+	/*texturas*/
+	var texturePataEstanteria = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, texturePataEstanteria);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.45,0.1,0.0,0.5]));
+	// Asynchronously load an image
+	var image = new Image();
+	image.src = "maps/Wood06_1K_BaseColor.png";
+	image.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, texturePataEstanteria);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+
+	var textureEstante = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureEstante);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.0,1.5,0.0,1.0]));
+	// Asynchronously load an image
+	var image2 = new Image();
+	image2.src = "maps/ScratchedPaintedMetal01_1K_BaseColor.png";
+	image2.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureEstante);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image2);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+
+
 	for(let i = 0 ; i < 9 ; i++)
 	{
 		let pataDelantera = GenerarCubo();
@@ -40,8 +80,8 @@ function cargarEstanteria(objetos)
 		trasladarObjeto(pataTrasera,[distanciaEntrePatas/2,altoPatas/2,-1.5+i*separacionEntrePatas]);
 		patasDelanterasEstanteria.agregarHijo(pataDelantera);
 		patasTraserasEstanteria.agregarHijo(pataTrasera)
-		pataDelantera.setColor([0.45,0.1,0.0]);
-		pataTrasera.setColor([0.45,0.1,0.0]);
+		pataDelantera.setColor([0.45,0.1,0.0]);pataDelantera.setTextura(texturePataEstanteria);
+		pataTrasera.setColor([0.45,0.1,0.0]);pataTrasera.setTextura(texturePataEstanteria);
 	}
 	estanteria.agregarHijo(patasDelanterasEstanteria);
 	estanteria.agregarHijo(patasTraserasEstanteria);
@@ -55,9 +95,9 @@ function cargarEstanteria(objetos)
 	escalarObjeto(estanteSuperior,[anchoEstante,altoEstante,largoEstante]);
 	trasladarObjeto(estanteSuperior,[0.0,1.5,0.0]);
 	
-	estanteInferior.setColor([0.04,0.88,0.76]);
-	estanteMedio.setColor([0.04,0.88,0.76]);
-	estanteSuperior.setColor([0.04,0.88,0.76]);
+	estanteInferior.setColor([0.04,0.88,0.76]); estanteInferior.setTextura(textureEstante);
+	estanteMedio.setColor([0.04,0.88,0.76]);estanteMedio.setTextura(textureEstante);
+	estanteSuperior.setColor([0.04,0.88,0.76]);estanteSuperior.setTextura(textureEstante);
 
 	estanteria.agregarHijo(estanteInferior);
 	estanteria.agregarHijo(estanteMedio);
@@ -84,6 +124,38 @@ function cargarGalpon(objetos)
 	galpon.agregarHijo(pisoGalpon);
 
 	pisoGalpon.setColor([0.93,0.7,0.66]);
+
+
+
+	var texture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, texture);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 255, 255]));
+
+	// Asynchronously load an image
+	var image = new Image();
+	image.src = "maps/StoneTilesFloor01_1K_BaseColor.png";
+	image.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, texture);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+	pisoGalpon.setTextura(texture);
+
+
+
+
+
+
+
+
+
 
 	objetos.push(galpon);
 }
@@ -134,6 +206,46 @@ function cargarAutoElevador(objetos)
 	estructuraPala.agregarHijo(palaAutoElevador);
 	autoElevador.agregarHijo(estructuraPala);
 	autoElevador.agregarHijo(chasis);
+
+
+	var textureChasis = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureChasis);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 255, 255]));
+	// Asynchronously load an image
+	var image = new Image();
+	image.src = "maps/Pattern05_1K_VarC.png";
+	image.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureChasis);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+	chasis.setTextura(textureChasis);
+
+	var textureRueda = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureRueda);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 0, 255]));
+	var imageRueda = new Image();
+	imageRueda.src = "maps/rueda.jpg";
+	imageRueda.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureRueda);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imageRueda);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S,  gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T,  gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+
 	
 	trasladarObjeto(autoElevador,[0.0,0.25,0.0]);
 
@@ -147,18 +259,80 @@ function cargarAutoElevador(objetos)
 	escalarObjeto(ruedaTD,[0.3,0.1,0.3]);escalarObjeto(ruedaDD,[0.3,0.1,0.3]);
 	rotarObjeto(ruedaTD,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,Math.PI/2,[1.0,0.0,0.0]);
 	trasladarObjeto(ruedaTD,[-0.3,0.18,-0.28]);trasladarObjeto(ruedaDD,[0.3,0.18,-0.28]);
+	ruedaTI.setTextura(textureRueda);ruedaTD.setTextura(textureRueda);
+	ruedaDI.setTextura(textureRueda);ruedaDD.setTextura(textureRueda);
 
 	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);
 	ruedas.agregarHijo(ruedaTD);ruedas.agregarHijo(ruedaDD);
 	autoElevador.agregarHijo(ruedas);
 
+	var textureBarras = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureBarras);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 255, 255]));
+	// Asynchronously load an image
+	var imageBarra = new Image();
+	imageBarra.src = "maps/Marble03_1K_BaseColor.png";
+	imageBarra.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureBarras);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imageBarra);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+
+
+
+	var texturePala = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, texturePala);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 255, 255]));
+	// Asynchronously load an image
+	var imagePala = new Image();
+	imagePala.src = "maps/patron3.png";
+	imagePala.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, texturePala);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imagePala);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+	palaAutoElevador.setTextura(texturePala);
+
+	var textureBarras2 = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureBarras2);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 255, 255]));
+	// Asynchronously load an image
+	var imageBarras2= new Image();
+	imageBarras2.src = "maps/Marble09_1K_BaseColor.png";
+	imageBarras2.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureBarras2);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imageBarras2);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T,  gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
 	//colores
 	chasis.setColor([0.99,0.94,0.13]);
 	palaAutoElevador.setColor([0.89,0.51,0.0]);
-	barraHorizontal1.setColor([0.67,0.15,0.72]);
-	barraHorizontal2.setColor([0.67,0.15,0.72]);
-	barraHorizontal3.setColor([0.67,0.15,0.72]);
+	barraHorizontal1.setColor([0.67,0.15,0.72]);barraHorizontal1.setTextura(textureBarras2);
+	barraHorizontal2.setColor([0.67,0.15,0.72]);barraHorizontal2.setTextura(textureBarras2);
+	barraHorizontal3.setColor([0.67,0.15,0.72]);barraHorizontal3.setTextura(textureBarras2);
 	barraVertical1.setColor([0.7,0.7,0.7]);	barraVertical2.setColor([0.7,0.7,0.7]);
+	barraVertical1.setTextura(textureBarras);barraVertical2.setTextura(textureBarras);
 
 
 	ruedaTI.setColor([0.28,0.03,0.37]);ruedaTD.setColor([0.28,0.03,0.37]);
@@ -173,6 +347,45 @@ function cargarAutoElevador(objetos)
 
 function cargarImpresora(objetos)
 {
+
+	var textureMetalVerde = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureMetalVerde);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.0,1.0,0.0,1.0]));
+	// Asynchronously load an image
+	var image3 = new Image();
+	image3.src = "maps/green_metal_rust_diff_1k.png";
+	image3.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureMetalVerde);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image3);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+	var textureOxido = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, textureOxido);
+	 //Fill the texture with a 1x1 blue pixel.
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.0,1.0,0.0,1.0]));
+	// Asynchronously load an image
+	var image4 = new Image();
+	image4.src = "maps/metal_grate_rusty_diff_1k.jpg";
+	image4.addEventListener('load', function() {
+  	// Now that the image has loaded make copy it to the texture.
+  	gl.bindTexture(gl.TEXTURE_2D, textureOxido);
+  	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image4);
+  	//gl.generateMipmap(gl.TEXTURE_2D);
+  	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+	});
+
+
+
+
 	console.log("[DEBUG] Cargando objetos de la impresora");
 	impresora = new objeto3D;//contenedor
 	tuboImpresora = new objeto3D("cilindro",matrizModelado);
@@ -225,10 +438,16 @@ function cargarImpresora(objetos)
 	//colores
 	barraHorizontal1.setColor([0.1,0.1,0.8]);barraHorizontal2.setColor([0.1,0.1,0.9]);
 	SujetadorPadImpresora.setColor([0.1,0.9,0.1]);padImpresora.setColor([0.1,0.9,0.1]);
+	barraHorizontal1.setTextura(textureMetalVerde);
+	barraHorizontal2.setTextura(textureMetalVerde);
+	SujetadorPadImpresora.setTextura(textureMetalVerde);
+	padImpresora.setTextura(textureMetalVerde);
 	agarreImpresora.setColor([0.1,0.9,0.1]);
+	agarreImpresora.setTextura(textureMetalVerde);
 
-	baseImpresora.setColor([0.7,0.7,0.7]);
-	tuboImpresora.setColor([0.7,0.7,0.7]);
+	
+	baseImpresora.setColor([0.7,0.7,0.7]);baseImpresora.setTextura(textureOxido);
+	tuboImpresora.setColor([0.7,0.7,0.7]);tuboImpresora.setTextura(textureOxido);
 
 	//ubicacion de la impresora en la escena
 	trasladarObjeto(impresora,[2.0,0.6,0.0]);
@@ -245,41 +464,67 @@ function GenerarCubo()
 
 function cargarObjetosPrueba(objetos)
 {
+	 var textureObjetoPrueba = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, textureObjetoPrueba);
+     //Fill the texture with a 1x1 blue pixel.
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.0,1.0,0.0,1.0]));
+    // Asynchronously load an image
+    var imageObjetoPrueba = new Image();
+    imageObjetoPrueba.src = "maps/leather_red_03_coll1_1k.jpg";
+    imageObjetoPrueba.addEventListener('load', function() {
+    // Now that the image has loaded make copy it to the texture.
+    gl.bindTexture(gl.TEXTURE_2D, textureObjetoPrueba);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imageObjetoPrueba);
+    //gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    });
+
 
 	let B1 = new objeto3D("B1");
 	escalarObjeto(B1,[0.5,0.5,0.5]);
 	trasladarObjeto(B1,[-2.0,0.25,-3.0]);
+	B1.setTextura(textureObjetoPrueba);
 	objetos.push(B1);
 
 	let B2 = new objeto3D("B2");
 	escalarObjeto(B2,[0.5,0.5,0.5]);
 	trasladarObjeto(B2,[-4.0,0.25,-3.0]);
+	B2.setTextura(textureObjetoPrueba);
 	objetos.push(B2);
 
 	let B3 = new objeto3D("B3");
 	escalarObjeto(B3,[0.5,0.5,0.5]);
 	trasladarObjeto(B3,[-1.0,0.25,-3.0]);
+	B3.setTextura(textureObjetoPrueba);
 	objetos.push(B3);
 
 	let B4 = new objeto3D("B4");
 	escalarObjeto(B4,[0.5,0.5,0.5]);
 	trasladarObjeto(B4,[-3.0,0.25,-3.0]);
+	B4.setTextura(textureObjetoPrueba);
 	objetos.push(B4);
 
 	// de revolucion
 	let A1 = new objeto3D("A1");
 	trasladarObjeto(A1,[0.0,0.5,-3.0]);
+	A1.setTextura(textureObjetoPrueba);
 	objetos.push(A1);
 
 	let A2 = new objeto3D("A2");
+	A2.setTextura(textureObjetoPrueba);
 	trasladarObjeto(A2,[1.0,0.5,-3.0]);
 	objetos.push(A2);
 
 	let A3 = new objeto3D("A3");
 	trasladarObjeto(A3,[2.0,0.5,-3.0]);
+	A3.setTextura(textureObjetoPrueba);
 	objetos.push(A3);
 	let A4 = new objeto3D("A4");
 	trasladarObjeto(A4,[3.0,0.5,-3.0]);
+	A4.setTextura(textureObjetoPrueba);
 	objetos.push(A4);
 
 }

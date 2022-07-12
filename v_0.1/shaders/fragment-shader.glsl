@@ -12,7 +12,7 @@
         
         uniform bool uUseLighting;          // usar iluminacion si/no
 
-        uniform sampler2D uSampler;
+        uniform sampler2D uSampler_0;
 
         void main(void) {
             
@@ -25,7 +25,8 @@
            color.z=0.0;
            
             if (uUseLighting)
-                gl_FragColor = vec4(color,1.0);
+               // gl_FragColor = vec4(color,1.0);
+               gl_FragColor = texture2D(uSampler_0, vUv);
             else
                 //gl_FragColor = vec4(0.7,0.7,0.7,1.0);
                 gl_FragColor = vec4(vFixedColorObject,1.0);

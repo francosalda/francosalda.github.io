@@ -23,7 +23,7 @@ class objeto3D
             this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
-
+            this.textura = null;
             this.colorObjeto = [0.9,0.1,0.1];
         }
         else
@@ -36,6 +36,15 @@ class objeto3D
         this.cantHijos = 0; 
         this.hijos = [];
 	}
+
+    setTextura(textura)
+    {
+        this.textura = textura;
+    }
+    getTextura()
+    {
+        return this.textura;
+    }
 
     setColor(color)
     {
@@ -127,7 +136,7 @@ class objeto3D
         if(superficie == "plano")
         {
             console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-            this.superficie3D = new Plano(1,1);
+            this.superficie3D = new Plano(3,3);
             this.filas = 1; this.columnas = 1;
         }
         else if (superficie == 'esfera')

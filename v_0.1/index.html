@@ -47,6 +47,9 @@
         var vertexShaderFile="vertex-shader.glsl";
         var fragmentShaderFile = "fragment-shader.glsl"
 
+
+       
+
         var modo="edges"; // wireframe, smooth, edges
         var shaderProgram;
         var time=0;
@@ -80,7 +83,7 @@
         var tiempoImprimiendo = 0;
         var objetoEnEspera = false; // indica si se imprimio un objeto y no se coloco en la estanteria
         
-        var lighting="false";
+        var lighting="true";
         var vertexShaderSource;
         var fragmentShaderSource;
         //matrices
@@ -203,7 +206,7 @@
         shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
         shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
         shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-        shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+        
         shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
         shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
         shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
@@ -265,7 +268,8 @@
             
         var lightPosition = [10.0,0.0, 3.0];  
         gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
-        
+
+
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);
 
@@ -322,10 +326,15 @@
     
 
 
+
     function webGLStart() {
         var canvas = document.getElementById("myCanvas");
         initGL(canvas);
         initShaders();
+       
+
+       
+
         cargarObjetosEscena(objetosEscena);
         gl.clearColor(66.2, 0.2, 0.2, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
