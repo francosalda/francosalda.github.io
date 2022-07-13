@@ -66,13 +66,13 @@ var tipoCamaraActual = "orbital";
 
         let vehicleState=Object.assign({},vehicleInitialState);
 
+
         if(tipoCamaraActual == "orbital")
         {
              /*Eventos del Mouse*/
             document.addEventListener('mousemove', function(e)
             {
-            if(isMouseDown)
-            {
+            
                mouse.x = e.clientX || e.pageX; 
                mouse.y = e.clientY || e.pageY ;
                var deltaX=0;
@@ -94,7 +94,7 @@ var tipoCamaraActual = "orbital";
                 if (beta>maximiumBeta){beta=maximiumBeta};
                
                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
-            }   
+            
         });
 
         }
@@ -162,32 +162,35 @@ var tipoCamaraActual = "orbital";
                 case "1":
                     console.log("[Debug] Cámara orbital general: apunta al centro de la escena");
                     posicionEyeCamara = vec3.fromValues(0.0,1.0,2.0);
+
                     deltaXOffset = 0.0;
                     deltaYOffset = 0.0;
                     deltaZOffset = 0.0;
+                    radio = 2.5;
                     posicionCenterCamara  = vec3.fromValues(0.0,0.0,0.0);
                     tipoCamaraActual = "orbital";
                 break;
                 case "2":
                     console.log("[Debug]  Cámara orbital impresora: su objetivo esta centrado en la impresora");
                     tipoCamaraActual = "orbital";
-                    deltaXOffset = 1.5;
+                    
+                    deltaXOffset = 1.7;
                     deltaYOffset = 0.0;
                     deltaZOffset = 0.0;
-                    posicionCenterCamara = vec3.fromValues(1.5,0.0,0.0);
-                    posicionEyeCamara = vec3.fromValues(1.5,1.0,1.0);
+                    radio = 2.5;
+                    posicionCenterCamara = vec3.fromValues(1.7,0.3,0.0);
+                    posicionEyeCamara = vec3.fromValues(1.7,1.0,1.0);
                 break;
                 case "3":
                     console.log("[Debug] Cámara orbital estantería: su objetivo está centrado en la estantería");
                     tipoCamaraActual = "orbital";
+                    
                     deltaXOffset = -3.5;
                     deltaYOffset = 0.0;
                     deltaZOffset = 0.0;
+                    radio = 2.5;
                     posicionEyeCamara = vec3.fromValues(-3.5,1.0,2.5);
                     posicionCenterCamara = vec3.fromValues(-3.5,0.0,0.0);
-                    
-
-
                 break;
                 case "4":
                     console.log("[Debug] Cámara de conductor: muestra la vista hacia adelante que tendría el conductor del autoelevador");
@@ -197,6 +200,16 @@ var tipoCamaraActual = "orbital";
                 break;
                 case "6":
                     console.log("[Debug] Cámara de seguimiento auto elevador lateral: sigue al vehículo de costado");
+                break;
+                case "o":
+                radio = radio-0.1;
+                if (radio < 0.1) radio = 0.1;
+                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
+                break;
+                case "p":
+                radio = radio+0.1;
+                if (radio > 2.5) radio = 2.5;
+                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
                 break;
 
                
