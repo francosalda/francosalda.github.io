@@ -1,9 +1,31 @@
+/*control de la camara*/
+var previousClientX = 0;
+var previousClientY = 0;
+var radio = 2.5;
+var alfa = 0;
+var beta = Math.PI/4;
+var factorVelocidad = 0.005;
 
-    function AutoElevadorControl(initialPos){
+var minimunBeta = 5 * Math.PI/180;
+var maximiumBeta = 85* Math.PI/180;
+
+var deltaXOffset = 0.0;
+var deltaYOffset = 0.0;
+var deltaZOffset = 0.0;
+var deltaAlfa = 0.0;
+var isMouseDown = false;
+var actualEvent;
+
+var mouse = {x: 0, y: 0};
+var tipoCamaraActual = "orbital";
+
+
+    function AutoElevadorControl(initialPos)
+    {
 
         let MIN_Y=1;
 
-        let DELTA_TRASLACION=0.05;        // velocidad de traslacion 
+        let DELTA_TRASLACION=0.03;        // velocidad de traslacion 
         let DELTA_ROTACION=0.02;         // velocidad de rotacion
         let DELTA_MOVIMIENTO_PALA = 0.002; 
         let FACTOR_INERCIA=0.05;
@@ -13,7 +35,8 @@
 
         if (!initialPos) initialPos=[0,0,0];
 
-        let targetPosition=vec3.fromValues(initialPos[0],initialPos[1],initialPos[2]);
+        let position=vec3.fromValues(initialPos[0],initialPos[1],initialPos[2]);
+        
         let rotation=vec3.create();
 
         let rotationMatrix=mat4.create();       
@@ -43,8 +66,50 @@
 
         let vehicleState=Object.assign({},vehicleInitialState);
 
+        if(tipoCamaraActual == "orbital")
+        {
+             /*Eventos del Mouse*/
+            document.addEventListener('mousemove', function(e)
+            {
+            if(isMouseDown)
+            {
+               mouse.x = e.clientX || e.pageX; 
+               mouse.y = e.clientY || e.pageY ;
+               var deltaX=0;
+               var deltaY=0;
+
+
+                if (previousClientX) deltaX = mouse.x - previousClientX;
+                if (previousClientY) deltaY = mouse.y - previousClientY;
+
+                previousClientX = mouse.x;
+                previousClientY = mouse.y;
+
+                alfa = alfa + deltaX * factorVelocidad;
+                beta = beta + deltaY * factorVelocidad;
+
+                if (beta< minimunBeta ) {beta=minimunBeta};
+
+
+                if (beta>maximiumBeta){beta=maximiumBeta};
+               
+               posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
+            }   
+        });
+
+        }
         
-        // Eventos de teclado **********************************************
+         document.addEventListener('mousedown', function(e)
+         {
+            isMouseDown = true;
+         });
+         document.addEventListener('mouseup', function(e)
+         {
+            isMouseDown = false;
+         });
+
+
+        /* Eventos de teclado */
 
         document.addEventListener("keydown",function(e){
             switch ( e.key ) {
@@ -91,12 +156,53 @@
                         }   
                         
                     }
-                    break;
+                break;
+
+                //control de camaras
+                case "1":
+                    console.log("[Debug] Cámara orbital general: apunta al centro de la escena");
+                    posicionEyeCamara = vec3.fromValues(0.0,1.0,2.0);
+                    deltaXOffset = 0.0;
+                    deltaYOffset = 0.0;
+                    deltaZOffset = 0.0;
+                    posicionCenterCamara  = vec3.fromValues(0.0,0.0,0.0);
+                    tipoCamaraActual = "orbital";
+                break;
+                case "2":
+                    console.log("[Debug]  Cámara orbital impresora: su objetivo esta centrado en la impresora");
+                    tipoCamaraActual = "orbital";
+                    deltaXOffset = 1.5;
+                    deltaYOffset = 0.0;
+                    deltaZOffset = 0.0;
+                    posicionCenterCamara = vec3.fromValues(1.5,0.0,0.0);
+                    posicionEyeCamara = vec3.fromValues(1.5,1.0,1.0);
+                break;
+                case "3":
+                    console.log("[Debug] Cámara orbital estantería: su objetivo está centrado en la estantería");
+                    tipoCamaraActual = "orbital";
+                    deltaXOffset = -3.5;
+                    deltaYOffset = 0.0;
+                    deltaZOffset = 0.0;
+                    posicionEyeCamara = vec3.fromValues(-3.5,1.0,2.5);
+                    posicionCenterCamara = vec3.fromValues(-3.5,0.0,0.0);
+                    
+
+
+                break;
+                case "4":
+                    console.log("[Debug] Cámara de conductor: muestra la vista hacia adelante que tendría el conductor del autoelevador");
+                break;
+                case "5":
+                    console.log("[Debug] Cámara de seguimiento auto elevador trasera: sigue al vehículo desde atrás");
+                break;
+                case "6":
+                    console.log("[Debug] Cámara de seguimiento auto elevador lateral: sigue al vehículo de costado");
+                break;
 
                
             }               
 
-        })
+        });
 
         document.addEventListener("keyup",function(e){
 
@@ -123,7 +229,7 @@
           
             }                 
             
-        })
+        });
         
 
         this.update=function()
@@ -153,9 +259,9 @@
             }
             
             vec3.transformMat4(translation,translation,rotationMatrix);
-            vec3.add(targetPosition,targetPosition,translation);
+            vec3.add(position,position,translation);
             worldMatrix=mat4.create();
-            mat4.translate(worldMatrix,worldMatrix,targetPosition);        
+            mat4.translate(worldMatrix,worldMatrix,position);        
             mat4.multiply(worldMatrix,worldMatrix,rotationMatrix);
         
             trasladarObjeto(autoElevador,[translation[0],translation[1],translation[2]]);
@@ -204,24 +310,7 @@
             trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
             imprimiendo = true;
             objetoEnEspera = true;
-            var textureObjetoImpreso = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, textureObjetoImpreso);
-             //Fill the texture with a 1x1 blue pixel.
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0.0,1.0,0.0,1.0]));
-            // Asynchronously load an image
-            var imageObjetoImpreso = new Image();
-            imageObjetoImpreso.src = "maps/leather_red_03_coll1_1k.jpg";
-            imageObjetoImpreso.addEventListener('load', function() {
-            // Now that the image has loaded make copy it to the texture.
-            gl.bindTexture(gl.TEXTURE_2D, textureObjetoImpreso);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, imageObjetoImpreso);
-            //gl.generateMipmap(gl.TEXTURE_2D);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.bindTexture(gl.TEXTURE_2D, null);
-            });
-            objetoImpreso.setTextura(textureObjetoImpreso);
+            
             objetoImpreso.setColor([0.8,0.1,0.1]);
             objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
             objetosEscena.push(objetoImpreso);

@@ -93,9 +93,11 @@
         //objetos de la escena
         objetosEscena = [];
         //controladores
-        //let controladorVehiculo=new AutoElevadorControl([0,0,0]);
-        //var matrizVehiculo = mat4.create();
         let controladorVehiculo = new AutoElevadorControl([0.0,0.0,0.0]);
+         //camara
+        var posicionEyeCamara = vec3.fromValues(0.0,1.0,2.0);
+        var posicionCenterCamara  = vec3.fromValues(0.0,0.0,0.0);
+
 
 
 
@@ -259,12 +261,12 @@
         gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
         
         // Definimos la ubicación de la camara                        
-        
-        mat4.lookAt(matrizVista,
+        mat4.lookAt(matrizVista,posicionEyeCamara,posicionCenterCamara,vec3.fromValues(0,1,0));
+        /*mat4.lookAt(matrizVista,
             vec3.fromValues(0,alturaCamara,distanciaCamara),
             vec3.fromValues(0,0,0),
             vec3.fromValues(0,1,0)
-        );
+        );*/
             
         var lightPosition = [10.0,0.0, 3.0];  
         gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
@@ -272,6 +274,7 @@
 
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);
+        
 
     }
         
@@ -279,7 +282,7 @@
     {
         requestAnimFrame(tick);
         controladorVehiculo.update();        
-        
+
 
         // animación de impresora 3D
         if(imprimiendo)
@@ -333,7 +336,6 @@
         initShaders();
        
 
-       
 
         cargarObjetosEscena(objetosEscena);
         gl.clearColor(66.2, 0.2, 0.2, 1.0);
