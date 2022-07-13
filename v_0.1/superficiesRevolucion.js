@@ -16,7 +16,7 @@ function superficieRevolucion(radio)
         return normal;
     }
     this.getCoordenadasTextura=function(u,v){
-        return [1.0,0.1];
+        return [u,v];
     }	
 }
 

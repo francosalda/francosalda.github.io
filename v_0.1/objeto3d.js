@@ -36,12 +36,11 @@ class objeto3D
         this.cantHijos = 0; 
         this.hijos = [];
 	}
-
-    setTextura(textura)
+    setTexture(texture)
     {
-        this.textura = textura;
+        this.textura =texture; 
     }
-    getTextura()
+    getTexture()
     {
         return this.textura;
     }
@@ -136,7 +135,7 @@ class objeto3D
         if(superficie == "plano")
         {
             console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-            this.superficie3D = new Plano(3,3);
+            this.superficie3D = new Plano(9,9);
             this.filas = 1; this.columnas = 1;
         }
         else if (superficie == 'esfera')
@@ -496,7 +495,7 @@ class objeto3D
                     this.normalBuffer.push(nrm[1]);
                     this.normalBuffer.push(nrm[2]);
 
-                    var uvs=superficie.getCoordenadasTextura(u,v);
+                    var uvs=superficie.getCoordenadasTextura(u,i/filas,this.curvaGeometrica);
                     this.uvBuffer.push(uvs[0]);
                     this.uvBuffer.push(uvs[1]);
                 }
@@ -523,7 +522,7 @@ class objeto3D
                     this.normalBuffer.unshift(nrm[0]);this.normalBuffer.push(-1*nrm[0]);
                     this.normalBuffer.unshift(nrm[1]);this.normalBuffer.push(-1*nrm[1]);
                     this.normalBuffer.unshift(nrm[2]);this.normalBuffer.push(-1*nrm[2]);
-                     uvs = [0.0,0.0];
+                     uvs = [1.0,1.0];
                     this.uvBuffer.unshift(uvs[0]); this.uvBuffer.push(uvs[0]);
                     this.uvBuffer.unshift(uvs[1]);this.uvBuffer.push(uvs[1]);
                 }

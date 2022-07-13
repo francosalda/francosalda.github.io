@@ -17,8 +17,8 @@ function superficieBarrido(altura)
         return normal;
     }
 
-    this.getCoordenadasTextura=function(u,v){
-        return [1.0,0.1];
+    this.getCoordenadasTextura=function(u,v,curvaGeometrica){
+        return [u,v];
     }
 }
 
