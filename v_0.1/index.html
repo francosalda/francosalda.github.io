@@ -343,11 +343,9 @@
         srcTexturesMap.set("textRocasArenosas","maps/medieval_blocks_02_diff_1k.jpg");    
         srcTexturesMap.set("textCueroRojo","maps/leather_red_03_coll1_1k.jpg");
         srcTexturesMap.set("textMetalOxidado2","maps/rust_coarse_01_diff_1k.jpg");
+        srcTexturesMap.set("MetalParedes","maps/CorrugatedMetalPanel02_1K_BaseColor2.png");
         
-        
-        
-        
-        
+    
         srcTexturesMap.forEach((scrTextura,nombreTextura)=>{
         loadTexture(nombreTextura,scrTextura);
       });
@@ -364,7 +362,6 @@
         initGL(canvas);
         initShaders();
         initTextures();
-        //loadTextures();
         
         cargarObjetosEscena(objetosEscena);
         gl.clearColor(66.2, 0.2, 0.2, 1.0);

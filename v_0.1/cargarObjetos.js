@@ -9,6 +9,10 @@ function cargarObjetosEscena(objetos)
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
 
+	/*let cuboPrueba = GenerarCubo();
+	cuboPrueba.setTexture(textures[mapaTexturas.get("textGruaMetalica")]);
+	objetos.push(cuboPrueba);*/
+
 	asignarMallasObjetos(objetos);
 }
 
@@ -80,15 +84,46 @@ function cargarGalpon(objetos)
 
 	galpon = new objeto3D;
 	pisoGalpon = new objeto3D("plano",matrizModelado);
-
+	paredTrasera = new objeto3D("plano",matrizModelado);
+	paredDelantera = new objeto3D("plano",matrizModelado);
+	paredLateralDerecha = new objeto3D("plano",matrizModelado);
+	paredLateralIzquierda = new objeto3D("plano",matrizModelado);
 
 	escalarObjeto(pisoGalpon,[anchoPiso,1.0,largoPiso]);
 	galpon.agregarHijo(pisoGalpon);
 
 
+	rotarObjeto(paredTrasera,Math.PI/2,[1.0,0.0,0.0]);
+	escalarObjeto(paredTrasera,[4.0,1.0,4.0]);
+	trasladarObjeto(paredTrasera,[0.0,0.0,-3.5]);
+	galpon.agregarHijo(paredTrasera);
+
+	rotarObjeto(paredLateralDerecha,Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(paredLateralDerecha,Math.PI/2,[0.0,1.0,0.0]);
+	escalarObjeto(paredLateralDerecha,[4.0,1.0,4.0]);
+	trasladarObjeto(paredLateralDerecha,[-4.5,0.0,0.0]);
+	galpon.agregarHijo(paredLateralDerecha);
+
+	rotarObjeto(paredLateralIzquierda,Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(paredLateralIzquierda,-Math.PI/2,[0.0,1.0,0.0]);
+	escalarObjeto(paredLateralIzquierda,[4.0,1.0,4.0]);
+	trasladarObjeto(paredLateralIzquierda,[4.5,0.0,0.0]);
+	galpon.agregarHijo(paredLateralIzquierda);
+
+	rotarObjeto(paredDelantera,-Math.PI/2,[1.0,0.0,0.0]);
+	escalarObjeto(paredDelantera,[4.0,1.0,4.0]);
+	trasladarObjeto(paredDelantera,[0.0,0.0,3.5]);
+	galpon.agregarHijo(paredDelantera);
+
+
 	/*texturas y colores*/
 	pisoGalpon.setColor([0.93,0.7,0.66]);
 	pisoGalpon.setTexture(textures[mapaTexturas.get("textPisoPiedra")]);
+	paredTrasera.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	paredLateralDerecha.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	paredLateralIzquierda.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	paredDelantera.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	
 	objetos.push(galpon);
 }
 /*Carga las formas que conforman el autoelevador*/

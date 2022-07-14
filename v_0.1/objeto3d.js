@@ -19,12 +19,15 @@ class objeto3D
             this.filas=50; // indica que hay 'filas+1' filas de vertices para la malla de triangulos por defecto
             this.columnas=50; // indica que hay 'columnas+1' columnas de vertices para la malla de triangulos por defecto
             this.Id = "none"; // tag identificador del objeto
+            
             this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la función que calculara los vertices
             this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
             this.textura = null;
             this.colorObjeto = [0.9,0.1,0.1];
+            
+            
         }
         else
         {
@@ -44,7 +47,7 @@ class objeto3D
     {
         return this.textura;
     }
-
+   
     setColor(color)
     {
         this.colorObjeto = color;
@@ -135,7 +138,7 @@ class objeto3D
         if(superficie == "plano")
         {
             console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-            this.superficie3D = new Plano(9,9);
+            this.superficie3D = new Plano(8,8);
             this.filas = 1; this.columnas = 1;
         }
         else if (superficie == 'esfera')
@@ -160,7 +163,8 @@ class objeto3D
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
-            this.asignarSuperficieCerrada();
+            //this.asignarSuperficieCerrada();
+            this.superficieDeUnaCara  = true;
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
@@ -508,10 +512,18 @@ class objeto3D
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
+
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
-            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
-    
+            let verticesTapaInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice)
+            let verticesTapaSuperior = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
+            let posVerticeInf = this.calcularPuntoCentral(verticesTapaInferior);
+            let postVerticeSup = this.calcularPuntoCentral(verticesTapaSuperior);
+            
+            /*let coordMinTapaSuperior = this.buscarMinimos(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
+            let coordMaxTapaSuperior = this.buscarMaximos(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
+            let coordMinTapaInferior = this.buscarMinimos(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
+            let coordMaxTapaInferior = this.buscarMaximos(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));*/
+
     
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
@@ -522,16 +534,28 @@ class objeto3D
                     this.normalBuffer.unshift(nrm[0]);this.normalBuffer.push(-1*nrm[0]);
                     this.normalBuffer.unshift(nrm[1]);this.normalBuffer.push(-1*nrm[1]);
                     this.normalBuffer.unshift(nrm[2]);this.normalBuffer.push(-1*nrm[2]);
-                     uvs = [1.0,1.0];
-                    this.uvBuffer.unshift(uvs[0]); this.uvBuffer.push(uvs[0]);
-                    this.uvBuffer.unshift(uvs[1]);this.uvBuffer.push(uvs[1]);
+                    
+                   
+                   /* let uvsXInferior = (posVerticeInf[0]-coordMinTapaInferior[0])/(coordMaxTapaInferior[0]-coordMinTapaInferior[0]);
+                    let uvsYInferior = (posVerticeInf[1]-coordMinTapaInferior[1])/(coordMaxTapaInferior[1]-coordMinTapaInferior[1]);
+                    let uvsXSuperior = (postVerticeSup[0]-coordMinTapaSuperior[0])/(coordMaxTapaSuperior[0]-coordMinTapaSuperior[0]);
+                    let uvsYSuperior = (postVerticeSup[1]-coordMinTapaSuperior[1])/(coordMaxTapaSuperior[1]-coordMinTapaSuperior[1]);
+                    console.log("[Cubo]Tapa Superior: ux:",uvsXSuperior, "vy:",uvsYSuperior);*/
+                    
+                    this.uvBuffer.unshift(0.5);
+                    this.uvBuffer.unshift(0.5); 
+                    this.uvBuffer.push(0.5);
+                    this.uvBuffer.push(0.5);
+
+                    
                 }
             filas = filas + 2; // se agregaron 2 tapas
         }
         else if(this.superficieDeUnaCara)
         {
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
+            let verticesSuperficieInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice); 
+            let posVerticeCentral = this.calcularPuntoCentral(verticesSuperficieInferior);
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeCentral[0]);
@@ -541,7 +565,7 @@ class objeto3D
                     this.normalBuffer.unshift(nrm[0]);
                     this.normalBuffer.unshift(nrm[1]);
                     this.normalBuffer.unshift(nrm[2]);
-                    uvs = [0.0,0.0];
+                    uvs = [0.5,0.5];
                     this.uvBuffer.unshift(uvs[0]); 
                     this.uvBuffer.unshift(uvs[1]);
 
@@ -568,6 +592,48 @@ class objeto3D
         }
         return [x/cantidadVertices,y/cantidadVertices,z/cantidadVertices];
     }
-    
+/*retorna el xMin Ymin Zmin de un conjuntos de vertices*/
+    buscarMinimos(vertices)
+    {
+        let cantidadCoordenadasPorVertice = 3; // (x,y,z)
+        let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice;
+        let xMin =vertices[0] ,yMin = vertices[1], zMin = vertices[2]; 
+
+        for(let i = 0; i < (cantidadVertices);i++)
+        {   
+            let xVertice = vertices[3*i];
+            let yVertice = vertices[3*i+1];
+            let zVertice = vertices[3*i+2];
+            if(xVertice<xMin) {xMin = xVertice};
+            if(yVertice<yMin) {yMin = yVertice};
+            if(zVertice<zMin) {zMin = zVertice};
+         
+        }
+        return [xMin,yMin,zMin];
+    }    
+    /*retorna el xMax YMax zMax de un conjuntos de vertices*/
+    buscarMaximos(vertices)
+    {
+        let cantidadCoordenadasPorVertice = 3; // (x,y,z)
+        let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice;
+        let xMax =vertices[0] ,yMax = vertices[1], zMax = vertices[2]; 
+
+        for(let i = 0; i < (cantidadVertices);i++)
+        {   
+            let xVertice = vertices[3*i];
+            let yVertice = vertices[3*i+1];
+            let zVertice = vertices[3*i+2];
+            if(xVertice>xMax) {xMax = xVertice};
+            if(yVertice>yMax) {yMax = yVertice};
+            if(zVertice>zMax) {zMax = zVertice};
+         
+        }
+        return [xMax,yMax,zMax];
+    }    
+
+
+
 }   //fin de la clase objeto3D
+
+
 

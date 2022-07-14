@@ -44,7 +44,7 @@ function Plano(ancho,largo)
         return [0,1,0];
     }
     this.getCoordenadasTextura=function(u,v){
-        return [u*ancho*5,v*largo*5];
+        return [u*ancho*6.0,v*largo*6.0];
     }
 }
 
