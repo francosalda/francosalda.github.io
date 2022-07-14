@@ -3,22 +3,17 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	//cargarAutoElevador(objetos);
+	
+
+
+	cargarAutoElevador(objetos);
+	
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
-
-
+	cargarObjetosPrueba(objetos);
 	asignarMallasObjetos(objetos);
 }
-
-
-
-
-
-
-
-
 
 /*carga las formas que conforman la estanteria*/
 function cargarEstanteria(objetos)
@@ -45,6 +40,10 @@ function cargarEstanteria(objetos)
 		trasladarObjeto(pataTrasera,[distanciaEntrePatas/2,altoPatas/2,-1.5+i*separacionEntrePatas]);
 		patasDelanterasEstanteria.agregarHijo(pataDelantera);
 		patasTraserasEstanteria.agregarHijo(pataTrasera)
+		pataDelantera.setColor([0.45,0.1,0.0]);
+		pataTrasera.setColor([0.45,0.1,0.0]);
+		pataDelantera.setTexture(textures[mapaTexturas.get("textMadera")]);
+		pataTrasera.setTexture(textures[mapaTexturas.get("textMadera")]);
 	}
 	estanteria.agregarHijo(patasDelanterasEstanteria);
 	estanteria.agregarHijo(patasTraserasEstanteria);
@@ -58,13 +57,19 @@ function cargarEstanteria(objetos)
 	escalarObjeto(estanteSuperior,[anchoEstante,altoEstante,largoEstante]);
 	trasladarObjeto(estanteSuperior,[0.0,1.5,0.0]);
 	
+	estanteInferior.setColor([0.04,0.88,0.76]);
+	estanteInferior.setTexture(textures[mapaTexturas.get("textMaderaRayada")]);
+	estanteMedio.setColor([0.04,0.88,0.76]);
+	estanteMedio.setTexture(textures[mapaTexturas.get("textMaderaRayada")]);
+	estanteSuperior.setColor([0.04,0.88,0.76]);
+	estanteSuperior.setTexture(textures[mapaTexturas.get("textMaderaRayada")]);
 
 	estanteria.agregarHijo(estanteInferior);
 	estanteria.agregarHijo(estanteMedio);
 	estanteria.agregarHijo(estanteSuperior);
 
 	//ubicacion de la estanteria en la escena
-	trasladarObjeto(estanteria,[-1.5,0.0,0.0]);
+	trasladarObjeto(estanteria,[-3.5,0.0,0.0]);
 	objetos.push(estanteria);
 
 }
@@ -78,10 +83,46 @@ function cargarGalpon(objetos)
 
 	galpon = new objeto3D;
 	pisoGalpon = new objeto3D("plano",matrizModelado);
+	paredTrasera = new objeto3D("plano",matrizModelado);
+	paredDelantera = new objeto3D("plano",matrizModelado);
+	paredLateralDerecha = new objeto3D("plano",matrizModelado);
+	paredLateralIzquierda = new objeto3D("plano",matrizModelado);
 
 	escalarObjeto(pisoGalpon,[anchoPiso,1.0,largoPiso]);
-
 	galpon.agregarHijo(pisoGalpon);
+
+
+	rotarObjeto(paredTrasera,Math.PI/2,[1.0,0.0,0.0]);
+	escalarObjeto(paredTrasera,[4.0,1.0,4.0]);
+	trasladarObjeto(paredTrasera,[0.0,0.0,-3.5]);
+	galpon.agregarHijo(paredTrasera);
+
+	rotarObjeto(paredLateralDerecha,Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(paredLateralDerecha,Math.PI/2,[0.0,1.0,0.0]);
+	escalarObjeto(paredLateralDerecha,[4.0,1.0,4.0]);
+	trasladarObjeto(paredLateralDerecha,[-4.5,0.0,0.0]);
+	galpon.agregarHijo(paredLateralDerecha);
+
+	rotarObjeto(paredLateralIzquierda,Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(paredLateralIzquierda,-Math.PI/2,[0.0,1.0,0.0]);
+	escalarObjeto(paredLateralIzquierda,[4.0,1.0,4.0]);
+	trasladarObjeto(paredLateralIzquierda,[4.5,0.0,0.0]);
+	galpon.agregarHijo(paredLateralIzquierda);
+
+	rotarObjeto(paredDelantera,-Math.PI/2,[1.0,0.0,0.0]);
+	escalarObjeto(paredDelantera,[4.0,1.0,4.0]);
+	trasladarObjeto(paredDelantera,[0.0,0.0,3.5]);
+	galpon.agregarHijo(paredDelantera);
+
+
+	/*texturas y colores*/
+	pisoGalpon.setColor([0.93,0.7,0.66]);
+	pisoGalpon.setTexture(textures[mapaTexturas.get("textPisoPiedra")]);
+	paredTrasera.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	paredLateralDerecha.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	paredLateralIzquierda.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	paredDelantera.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	
 	objetos.push(galpon);
 }
 /*Carga las formas que conforman el autoelevador*/
@@ -90,6 +131,7 @@ function cargarAutoElevador(objetos)
 	console.log("[DEBUG] Cargando objetos del autoElevador");
 	autoElevador = new objeto3D(); autoElevador.asignarIdentificadorObjeto("CAutoelevador");
 	estructuraPala = new objeto3D;
+	ruedas = new objeto3D;
 	barraVertical1  = GenerarCubo();
 	barraVertical2 = GenerarCubo();
 	barraHorizontal1  = GenerarCubo();
@@ -103,7 +145,7 @@ function cargarAutoElevador(objetos)
 	//pala que sostendra los objetos
 	palaAutoElevador = GenerarCubo();
 	escalarObjeto(palaAutoElevador,[0.4,0.01,0.3]);
-	trasladarObjeto(palaAutoElevador,[0.85,0.3,0.0]);
+	trasladarObjeto(palaAutoElevador,[0.85,0.10,0.0]);
 	
 	//barras de la estructura de la pala
 	trasladarObjeto(barraVertical1,[0.65,0.6,0.1]);
@@ -121,7 +163,6 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(barraHorizontal3,[0.65,1.1,0.0]);
 	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
-	
 	//relacion entre objetos del autoElevador
 	estructuraPala.agregarHijo(barraHorizontal1);
 	estructuraPala.agregarHijo(barraHorizontal2);
@@ -131,7 +172,48 @@ function cargarAutoElevador(objetos)
 	estructuraPala.agregarHijo(palaAutoElevador);
 	autoElevador.agregarHijo(estructuraPala);
 	autoElevador.agregarHijo(chasis);
-	trasladarObjeto(autoElevador,[0.0,0.2,0.0]);
+	
+	trasladarObjeto(autoElevador,[0.0,0.25,0.0]);
+
+	//ruedas
+	let ruedaTI = new objeto3D("rueda");let ruedaTD = new objeto3D("rueda");
+	let ruedaDI = new objeto3D("rueda");let ruedaDD = new objeto3D("rueda");
+	escalarObjeto(ruedaTI,[0.3,0.1,0.3]);escalarObjeto(ruedaDI,[0.3,0.1,0.3]);
+	rotarObjeto(ruedaTI,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDI,Math.PI/2,[1.0,0.0,0.0]);
+	trasladarObjeto(ruedaTI,[-0.3,0.18,0.28]);trasladarObjeto(ruedaDI,[0.3,0.18,0.28]);
+
+	escalarObjeto(ruedaTD,[0.3,0.1,0.3]);escalarObjeto(ruedaDD,[0.3,0.1,0.3]);
+	rotarObjeto(ruedaTD,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,Math.PI/2,[1.0,0.0,0.0]);
+	trasladarObjeto(ruedaTD,[-0.3,0.18,-0.28]);trasladarObjeto(ruedaDD,[0.3,0.18,-0.28]);
+
+	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);
+	ruedas.agregarHijo(ruedaTD);ruedas.agregarHijo(ruedaDD);
+	autoElevador.agregarHijo(ruedas);
+
+	//colores
+	chasis.setColor([0.99,0.94,0.13]);
+	palaAutoElevador.setColor([0.89,0.51,0.0]);
+	barraHorizontal1.setColor([0.67,0.15,0.72]);
+	barraHorizontal2.setColor([0.67,0.15,0.72]);
+	barraHorizontal3.setColor([0.67,0.15,0.72]);
+	barraVertical1.setColor([0.7,0.7,0.7]);	barraVertical2.setColor([0.7,0.7,0.7]);
+	ruedaTI.setColor([0.28,0.03,0.37]);ruedaTD.setColor([0.28,0.03,0.37]);
+	ruedaDI.setColor([0.28,0.03,0.37]);ruedaDD.setColor([0.28,0.03,0.37]);
+	//texturas
+	ruedaDI.setTexture(textures[mapaTexturas.get("textRueda")]);
+	ruedaDD.setTexture(textures[mapaTexturas.get("textRueda")]);
+	ruedaTI.setTexture(textures[mapaTexturas.get("textRueda")]);
+	ruedaTD.setTexture(textures[mapaTexturas.get("textRueda")]);
+	chasis.setTexture(textures[mapaTexturas.get("textGruaMetalica")]);
+	palaAutoElevador.setTexture(textures[mapaTexturas.get("textMetalAzul")]);
+	barraVertical1.setTexture(textures[mapaTexturas.get("textCueroRojo")]);
+	barraVertical2.setTexture(textures[mapaTexturas.get("textCueroRojo")]);
+	barraHorizontal1.setTexture(textures[mapaTexturas.get("textMetalOxidado2")]);
+	barraHorizontal2.setTexture(textures[mapaTexturas.get("textMetalOxidado2")]);
+	barraHorizontal3.setTexture(textures[mapaTexturas.get("textMetalOxidado2")]);
+
+
+
 
 	objetos.push(autoElevador);
 }
@@ -170,21 +252,44 @@ function cargarImpresora(objetos)
 	barraHorizontal2 = GenerarCubo();
 	escalarObjeto(barraHorizontal2,[0.15,0.005,0.005]);
 	trasladarObjeto(barraHorizontal2,[-0.075,0.03,-0.01]);
-	
 
+
+	baseImpresora = new objeto3D("baseImpresora");
+	escalarObjeto(baseImpresora,[0.5,0.8,0.5]);
+	trasladarObjeto(baseImpresora,[-0.23,-0.45,0.0]);
+	/*relacion entre objetos que conforman la impresora*/
 	CabezalImpresora.agregarHijo(agarreImpresora);
 	CabezalImpresora.agregarHijo(padImpresora);
 	CabezalImpresora.agregarHijo(barraHorizontal1);
 	CabezalImpresora.agregarHijo(barraHorizontal2);
 	CabezalImpresora.agregarHijo(SujetadorPadImpresora);
+	trasladarObjeto(CabezalImpresora,[0.0,0.245,0.0]);
+	escalarObjeto(CabezalImpresora,[1.8,1.0,1.5]);
+
 	impresora.agregarHijo(tuboImpresora);
 	impresora.agregarHijo(CabezalImpresora);
+	impresora.agregarHijo(baseImpresora);
 	
-	//ubicacion de la impresora en la escena
-	trasladarObjeto(impresora,[1.5,0.6,0.0]);
-	
-	objetos.push(impresora);
+	//colores
+	barraHorizontal1.setColor([0.1,0.1,0.8]);barraHorizontal2.setColor([0.1,0.1,0.9]);
+	SujetadorPadImpresora.setColor([0.1,0.9,0.1]);padImpresora.setColor([0.1,0.9,0.1]);
+	agarreImpresora.setColor([0.1,0.9,0.1]);
+	baseImpresora.setColor([0.7,0.7,0.7]);
+	tuboImpresora.setColor([0.7,0.7,0.7]);
 
+	//texturas
+	barraHorizontal1.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	barraHorizontal2.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	agarreImpresora.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	padImpresora.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	SujetadorPadImpresora.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	baseImpresora.setTexture(textures[mapaTexturas.get("textMetalGris")]);
+	tuboImpresora.setTexture(textures[mapaTexturas.get("textMetalGris")]);
+
+
+	//ubicacion de la impresora en la escena
+	trasladarObjeto(impresora,[2.0,0.6,0.0]);
+	objetos.push(impresora);
 }
 
 
@@ -195,3 +300,51 @@ function GenerarCubo()
 }
 
 
+function cargarObjetosPrueba(objetos)
+{
+
+	let B1 = new objeto3D("B1");
+	escalarObjeto(B1,[0.5,0.5,0.5]);
+	trasladarObjeto(B1,[-2.0,0.25,-3.0]);
+	B1.setTexture(textures[mapaTexturas.get("textAjedrez")]);
+	objetos.push(B1);
+
+	let B2 = new objeto3D("B2");
+	escalarObjeto(B2,[0.5,0.5,0.5]);
+	trasladarObjeto(B2,[-4.0,0.25,-3.0]);
+	B2.setTexture(textures[mapaTexturas.get("textAjedrez")]);
+	objetos.push(B2);
+
+	let B3 = new objeto3D("B3");
+	escalarObjeto(B3,[0.5,0.5,0.5]);
+	trasladarObjeto(B3,[-1.0,0.25,-3.0]);
+	B3.setTexture(textures[mapaTexturas.get("textAjedrez")]);
+	objetos.push(B3);
+
+	let B4 = new objeto3D("B4");
+	escalarObjeto(B4,[0.5,0.5,0.5]);
+	trasladarObjeto(B4,[-3.0,0.25,-3.0]);
+	B4.setTexture(textures[mapaTexturas.get("textAjedrez")]);
+	objetos.push(B4);
+
+	// de revolucion
+	let A1 = new objeto3D("A1");
+	trasladarObjeto(A1,[0.0,0.5,-3.0]);
+	A1.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	objetos.push(A1);
+
+	let A2 = new objeto3D("A2");
+	trasladarObjeto(A2,[1.0,0.5,-3.0]);
+	A2.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	objetos.push(A2);
+
+	let A3 = new objeto3D("A3");
+	trasladarObjeto(A3,[2.0,0.5,-3.0]);
+	A3.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	objetos.push(A3);
+	let A4 = new objeto3D("A4");
+	A4.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	trasladarObjeto(A4,[3.0,0.5,-3.0]);
+	objetos.push(A4);
+
+}

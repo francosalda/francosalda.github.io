@@ -51,3 +51,35 @@ function escalarObjeto(objeto,vectorEscala)
 
 
 }
+
+function transformarObjeto(objeto,matriz)
+{
+	let nuevaMatriz = mat4.create();
+	mat4.multiply(nuevaMatriz,matriz,objeto.obtenerMatrizTransformacion());
+
+	objeto.asignarMatrizTransformacion(nuevaMatriz);
+	//en caso de ser un contenedor, deben rotarse tambien sus hijos
+	if(objeto.esUnContenedor())
+	{
+		for(let i = 0 ; i <objeto.obtenerHijos().length ; i++ )
+		{
+			transformarObjeto((objeto.obtenerHijos())[i],matriz);
+		}
+	}
+	
+}
+/*function transformarObjeto(objeto,matriz)
+{
+	
+	mat4.multiply(objeto.obtenerMatrizTransformacion(),matriz,objeto.obtenerMatrizTransformacion());
+	
+	//en caso de ser un contenedor, deben rotarse tambien sus hijos
+	if(objeto.esUnContenedor())
+	{
+		for(let i = 0 ; i <objeto.obtenerHijos().length ; i++ )
+		{
+			transformarObjeto((objeto.obtenerHijos())[i],matriz);
+		}
+	}
+	
+}*/

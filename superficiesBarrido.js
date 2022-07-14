@@ -1,8 +1,5 @@
 
 /*Contiene los vertices y funciones de las superficies de barrido*/
-
-
-
 function superficieBarrido(altura)
 {
      this.getPosicion=function(u,curvaGeometrica,tramo)
@@ -20,110 +17,10 @@ function superficieBarrido(altura)
         return normal;
     }
 
-    this.getCoordenadasTextura=function(u,v){
-        return [1.0,0.1];
-    }
-
-}
-
-
-function paredCubo(altura)
-{
-    // el parametro 'u' recorre la curva geometrica de la forma 2D de extrusion
-    this.getPosicion=function(u,curvaGeometrica,tramo)
-    {
-        let punto = curvaGeometrica.calcularPuntoCurva(u,tramo); 
-        return [punto.x,punto.y-altura/2,punto.z,1.0];
-    }
-
-    // el parametro 'v' barre  la curva de trayectoria de extrusion, el 'u' la forma geometrica 2D 
-    this.getNormal=function(u,v,curvaGeometrica,curvaTrayectoria,tramo)
-    {
-        let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
-        let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
-        let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
-       /* let puntoDer = curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
-        var modulo=Math.sqrt(puntoDer.x*puntoDer.x+puntoDer.y*puntoDer.y+puntoDer.z+puntoDer.z);
-        //vector normal
-        puntoDer.x=puntoDer.x/modulo;puntoDer.y=puntoDer.y/modulo;puntoDer.z=puntoDer.z/modulo;
-        let normal = [puntoDer.x,-puntoDer.y,puntoDer.z];*/
-        normal.y = normal.y - altura/2;
-        return normal;
-    }
-
-    this.getCoordenadasTextura=function(u,v){
+    this.getCoordenadasTextura=function(u,v,curvaGeometrica){
         return [u,v];
     }
-
 }
-function chasis(altura)
-{
-    this.getPosicion=function(u,curvaGeometrica,tramo)
-    {
-       
-        let punto = curvaGeometrica.calcularPuntoCurva(u,tramo);
-        return [punto.x,punto.y-altura/2 ,punto.z,1];
-    }
-    this.getNormal=function(u,v,curvaGeometrica,curvaTrayectoria,tramo)
-    {
-        let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
-        let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
-        let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
-        normal.y = normal.y - altura/2;
-        return normal;
-    }
-
-    this.getCoordenadasTextura=function(u,v){
-        return [0.5,0.9];
-    }
-}
-
-function B2(altura)
-{
-    this.getPosicion=function(u,curvaGeometrica,tramo)
-    {
-       
-        let punto = curvaGeometrica.calcularPuntoCurva(u,tramo);
-        return [punto.x,punto.y-altura/2 ,punto.z,1];
-    }
-    this.getNormal=function(u,v,curvaGeometrica,curvaTrayectoria,tramo)
-    {
-        let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
-        let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
-        let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
-        normal.y = normal.y - altura/2;
-        return normal;
-    }
-
-    this.getCoordenadasTextura=function(u,v){
-        return [0.2,-0.37];
-    }
-
-}
-
-function B4(altura)
-{
-    this.getPosicion=function(u,curvaGeometrica,tramo)
-    {
-       
-        let punto = curvaGeometrica.calcularPuntoCurva(u,tramo);
-        return [punto.x,punto.y-altura/2 ,punto.z,1];
-    }
-    this.getNormal=function(u,v,curvaGeometrica,curvaTrayectoria,tramo)
-    {
-        let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
-        let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
-        let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
-        normal.y = normal.y - altura/2;
-        return normal;
-    }
-
-    this.getCoordenadasTextura=function(u,v){
-        return [0.2,-0.37];
-    }
-
-}
-
 
 /* Vertices de las curvas de bezier de figuras geometricas */
 function verticesCuadrado()
@@ -134,7 +31,6 @@ function verticesCuadrado()
                         [0.5,0.0,-0.5],[0.5,0.0,-0.25],[0.5,0.0,0.25],[0.5,0.0,0.5]];
     return puntosControl;
 }
-
 
 function verticesB1()
 {
@@ -161,15 +57,26 @@ function verticesB2()
 }
 function verticesB3()
 {
-    /*let puntosControl = [[0.2,0.0,-0.2],[0.2,0.0,-0.2],[0.2,0.0,0.2],[0.2,0.0,0.2],
-                        [0.2,0.0,0.2],[0.2,0.0,0.2],[0.4,0.0,0.2],[0.4,0.0,0.2],
-                        [0.5,0.0,0.2],[0.4,0.0,0.5],[0.4,0.0,0.5],[0.2,0.0,0.2],
-                        [0.2,0.0,0.2],[0.2,0.0,0.2],[0.2,0.0,0.05],[0.2,0.0,0.05],
-                        [0.2,0.0,0.05],[0.2,0.0,0.05],[-0.2,0.0,0.05],[-0.2,0.0,0.05],
-                        [-0.2,0.0,0.05],[-0.2,0.0,0.05],[-0.2,0.0,0.3],[-0.2,0.0,0.3],
-                        [-0.2,0.0,0.3],[-0.4,0.0,0.3],[-0.4,0.0,0.3],[-0.4,0.0,0.05]
+    let puntosControl = [
+    [-0.1,0.0,-0.2],[-0.1,0.0,-0.2],[0.1,0.0,-0.2],[0.1,0.0,-0.2],
+    [0.1,0.0,-0.2],[0.1,0.0,-0.2],[0.1,0.0,-0.5],[0.1,0.0,-0.5],
+    [0.1,0.0,-0.5],[0.3,0.0,-0.5],[0.4,0.0,-0.4],[0.5,0.0,-0.1],
+    [0.5,0.0,-0.1],[0.5,0.0,-0.1],[0.2,0.0,-0.1],[0.2,0.0,-0.1],
+    [0.2,0.0,-0.1],[0.2,0.0,-0.1],[0.2,0.0,0.1],[0.2,0.0,0.1],
+    [0.2,0.0,0.1],[0.2,0.0,0.1],[0.5,0.0,0.1],[0.5,0.0,0.1],
+    [0.5,0.0,0.1],[0.5,0.0,0.4],[0.3,0.0,0.5],[0.1,0.0,0.5],
+    [0.1,0.0,0.5],[0.1,0.0,0.5],[0.1,0.0,0.1],[0.1,0.0,0.1],
+    [0.1,0.0,0.1],[0.1,0.0,0.1],[-0.1,0.0,0.1],[-0.1,0.0,0.1],
+    [-0.1,0.0,0.1],[-0.1,0.0,0.1],[-0.1,0.0,0.5],[-0.1,0.0,0.5],
+    [-0.1,0.0,0.5],[-0.3,0.0,0.5],[-0.5,0.0,0.4],[-0.5,0.0,0.1],
+    [-0.5,0.0,0.1],[-0.5,0.0,0.1],[-0.1,0.0,0.1],[-0.1,0.0,0.1],
+    [-0.1,0.0,0.1],[-0.1,0.0,0.1],[-0.1,0.0,-0.1],[-0.1,0.0,-0.1],
+    [-0.1,0.0,-0.1],[-0.1,0.0,-0.1],[-0.5,0.0,-0.1],[-0.5,0.0,-0.1],
+    [-0.5,0.0,-0.1],[-0.5,0.0,-0.4],[-0.3,0.0,-0.5],[-0.1,0.0,-0.5],
+    [-0.1,0.0,-0.5],[-0.1,0.0,-0.5],[-0.1,0.0,-0.1],[-0.1,0.0,-0.1]
 
-    ];*/
+
+    ];
     return puntosControl;
 }
 function verticesB4()
@@ -181,12 +88,6 @@ function verticesB4()
     return puntosControl;
 }
 
-
-
-
-
-
-
 function verticesChasis()
 {
     let puntosControl = [[-0.25,0.0,-0.2],[-0.15,0.0,-0.2],[0.15,0.0,-0.2],[0.25,0.0,-0.2],
@@ -196,3 +97,30 @@ function verticesChasis()
     return puntosControl;
 }
 
+
+/* Trayectoria Lineal eje Y UP*/
+function recorridoLinealEjeY(t)
+{
+    this.getPosicion=function(t)
+    {
+        /* [x(t),y(t),z(t)]*/
+        let punto = [0.0,t,0.0];
+        return punto;
+    }
+    this.getTangente = function(t)
+    {
+        /* [dx(t)/dx, dy(t)/dy, dz(t)/dz]*/
+        let puntoDer = [0.0,1.0,0.0];
+        return puntoDer;
+    }
+    this.getNormal = function(t)
+    {
+        let puntoNormal = [1.0,0.0,0.0];
+        return puntoNormal;
+    }
+    this.getBiNormal = function(normal,tangente,t)
+    {
+        let puntoBiNormal = productoVectorial(normal,tangente);
+        return puntoBiNormal;
+    }
+}

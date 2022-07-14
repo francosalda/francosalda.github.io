@@ -19,10 +19,15 @@ class objeto3D
             this.filas=50; // indica que hay 'filas+1' filas de vertices para la malla de triangulos por defecto
             this.columnas=50; // indica que hay 'columnas+1' columnas de vertices para la malla de triangulos por defecto
             this.Id = "none"; // tag identificador del objeto
-            this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la funcion que calculara los vertices
+            
+            this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la función que calculara los vertices
             this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
+            this.textura = null;
+            this.colorObjeto = [0.9,0.1,0.1];
+            
+            
         }
         else
         {
@@ -34,6 +39,23 @@ class objeto3D
         this.cantHijos = 0; 
         this.hijos = [];
 	}
+    setTexture(texture)
+    {
+        this.textura =texture; 
+    }
+    getTexture()
+    {
+        return this.textura;
+    }
+   
+    setColor(color)
+    {
+        this.colorObjeto = color;
+    }
+    getColor()
+    {
+        return this.colorObjeto;
+    }
 
     /*Getters y setters de la clase objeto3d*/
     obtenerPosicionObjeto()
@@ -60,8 +82,6 @@ class objeto3D
     {
         this.columnas = cantColumnas;
     }
-
-
     esSuperficieCerrada()
     {
         return this.SuperficieCerrada;
@@ -89,12 +109,10 @@ class objeto3D
     {
     return this.hijos;
     }
-
-
     asignarMatrizTransformacion(matriz)
     {
         
-        this.matrizTransformacion =mat4.clone(matriz); ;
+        this.matrizTransformacion =mat4.clone(matriz) ;
     }
     obtenerMatrizTransformacion()
     {
@@ -111,19 +129,7 @@ class objeto3D
     }
     asignarMallaDeTriangulos()
     {
-        if(this.claseDeSuperficie == "analitica")
-        {
-           this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);            
-        }
-        else if(this.claseDeSuperficie == "barrido")
-        {
-            this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);               
-        }
-        else if (this.claseDeSuperficie == "revolucion")
-        {
-
-        }
-        
+        this.mallaDeTriangulos = this.generarSuperficie3dParametrica(this.superficie3D,this.filas,this.columnas);                  
     }
 
     /*asigna al objeto3d la funcion que generara los vertices */
@@ -132,7 +138,7 @@ class objeto3D
         if(superficie == "plano")
         {
             console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
-            this.superficie3D = new Plano(1,1);
+            this.superficie3D = new Plano(8,8);
             this.filas = 1; this.columnas = 1;
         }
         else if (superficie == 'esfera')
@@ -156,12 +162,11 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadrado(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
+            this.curvaTrayectoria = new recorridoLinealEjeY();
             this.asignarSuperficieCerrada();
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
-             
         else if (superficie == "chasis")
         {
             let cantidadTramos =4;
@@ -170,9 +175,81 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesChasis(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
+            this.curvaTrayectoria = new recorridoLinealEjeY();
             this.asignarSuperficieCerrada();
             this.filas = 1;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+         else if (superficie == "rueda")
+        {
+            let cantidadTramos =7;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesRueda(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+         else if (superficie == "baseImpresora")
+        {
+            let cantidadTramos =6;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesBaseImpresora(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        else if (superficie == "A1")
+        {
+            let cantidadTramos =7;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA1(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        else if (superficie == "A2")
+        {
+            let cantidadTramos =3;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA2(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        else if (superficie == "A3")
+        {
+            let cantidadTramos =6;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA3(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+        else if (superficie == "A4")
+        {
+            let cantidadTramos =5;
+            let cantidadPuntosPorTramo = 16;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA4(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieRevolucion(1); //radio
+            this.claseDeSuperficie = "revolucion";
+            this.curvaTrayectoria = new recorridoCircular();
+            this.filas = 360;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
          else if (superficie == "B1")
@@ -183,8 +260,8 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB1(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else if (superficie == "B2")
@@ -195,8 +272,20 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB2(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
+            this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
+        }
+         else if (superficie == "B3")
+        {
+            let cantidadTramos =16;
+            let cantidadPuntosPorTramo = 9;
+            let gradoCurva = 3;
+            this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB3(),cantidadTramos,cantidadPuntosPorTramo);
+            this.superficie3D = new superficieBarrido(1);
+            this.claseDeSuperficie = "barrido";
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else if (superficie == "B4")
@@ -207,8 +296,8 @@ class objeto3D
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB4(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
-            this.curvaTrayectoria = new recorridoLineal();
-            this.filas = 1;
+            this.curvaTrayectoria = new recorridoLinealEjeY();
+            this.filas = 10;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else 
@@ -319,7 +408,7 @@ class objeto3D
 
 }
 
-/*Genera los vertices de la superficie 3d*/
+    /*Genera los vertices de la superficie 3d*/
 	generarSuperficie3dParametrica(superficie,filas,columnas)
     {
         this.positionBuffer = [];
@@ -328,70 +417,7 @@ class objeto3D
         var contador = 0;
         let cantidad_columnas = columnas+1;
 
-        if(this.claseDeSuperficie == "barrido")
-        {
-                //recorro los niveles
-                for(let i = 0 ; i <=filas;i++)
-                {
-                    //para cada nivel calculo la matriz de nivel
-        
-                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i/filas);
-                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i/filas);
-                    let normalTrayectoria = this.curvaTrayectoria.getNormal(i/filas);
-                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(normalTrayectoria,tangenteTrayectoria,i/filas);
-
-
-
-
-                    //original
-                    /*let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                     normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
-                      normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
-                       0, 0, 0, 1); */
-
-                       /* changed normal by binormal let matrizNivel = mat4.fromValues(binormalTrayectoria[0],normalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                      binormalTrayectoria[1],normalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
-                       binormalTrayectoria[2],normalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
-                       0, 0, 0, 1);*/
-
-                       let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
-                     normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[1],
-                      normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[2],
-                       0, 0, 0, 1); 
-                       let matrizNivelTranspuesta = mat4.create();
-                       mat4.transpose(matrizNivelTranspuesta,matrizNivel);
-                    
-
-                    //recorro los tramos de la curva
-                    for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
-                    {    
-                        //recorro el tramo de la curva
-                        for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
-                        {
-
-                            let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
-                            
-                            vec4.transformMat4(pos, pos, matrizNivelTranspuesta);                    
-                            this.positionBuffer.push(pos[0]);
-                            this.positionBuffer.push(pos[1]);
-                            this.positionBuffer.push(pos[2]);
-
-                            var nrm=superficie.getNormal(u,i/filas,this.curvaGeometrica,this.curvaTrayectoria,tramo);
-                            
-                            this.normalBuffer.push(nrm[0]);
-                            this.normalBuffer.push(nrm[1]);
-                            this.normalBuffer.push(nrm[2]);
-
-                            var uvs=superficie.getCoordenadasTextura(u,v);
-                            this.uvBuffer.push(uvs[0]);
-                            this.uvBuffer.push(uvs[1]);
-                            contador++;                              
-                        }
-                 
-                    }
-                }
-        }
-        else if(this.claseDeSuperficie == "analitica")
+        if(this.claseDeSuperficie == "analitica")
         {
             for (var i=0; i <= filas; i++) 
             {
@@ -418,34 +444,177 @@ class objeto3D
                 }        
             }
         }
+        else 
+        {
+        //recorro los niveles
+            for(let i = 0 ; i <=filas;i++)
+            {
+            //Calculo la matriz del nivel
+            let matrizNivelTranspuesta = mat4.create();
+            if(this.claseDeSuperficie == "revolucion")
+            {
+                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i);
+                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i);
+                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(i);
+                    let normalTrayectoria = this.curvaTrayectoria.getNormal(binormalTrayectoria,tangenteTrayectoria,i);
+                    let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                    normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[1],
+                    normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[2],
+                    0, 0, 0, 1);
+                    mat4.transpose(matrizNivelTranspuesta,matrizNivel);
+            }
+            else if (this.claseDeSuperficie == "barrido")
+            {
+
+                    let puntoTrayectoria = this.curvaTrayectoria.getPosicion(i/filas);
+                    let tangenteTrayectoria = this.curvaTrayectoria.getTangente(i/filas);
+                    let normalTrayectoria = this.curvaTrayectoria.getNormal(i/filas);
+                    let binormalTrayectoria = this.curvaTrayectoria.getBiNormal(normalTrayectoria,tangenteTrayectoria,i/filas);   
+                    let matrizNivel = mat4.fromValues(normalTrayectoria[0],binormalTrayectoria[0], tangenteTrayectoria[0],puntoTrayectoria[0],
+                    normalTrayectoria[2], binormalTrayectoria[2], tangenteTrayectoria[2], puntoTrayectoria[1],
+                    normalTrayectoria[1], binormalTrayectoria[1], tangenteTrayectoria[1], puntoTrayectoria[2],
+                    0, 0, 0, 1); 
+                    if(imprimiendo)
+                    {
+                        mat4.rotate(matrizNivel, matrizNivel, anguloTorsionGUI*i*2*Math.PI/360, [0.0,1.0,0.0]);    
+                    }
+                    
+                    mat4.transpose(matrizNivelTranspuesta,matrizNivel);            
+            }
+            //recorro los tramos dela curva
+            let largoCurva = this.curvaGeometrica.obtenerCantidadTramos();
+            for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
+            {    
+                
+                //recorro un tramo de la curva
+                for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
+                {
+                     
+                    let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
+                    vec4.transformMat4(pos, pos, matrizNivelTranspuesta);                    
+                    this.positionBuffer.push(pos[0]);
+                    this.positionBuffer.push(pos[1]);
+                    this.positionBuffer.push(pos[2]);
+
+                    var nrm=superficie.getNormal(u,i/filas,this.curvaGeometrica,this.curvaTrayectoria,tramo);
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
+
+                    var uvs=superficie.getCoordenadasTextura(u,i/filas,this.curvaGeometrica);
+                    this.uvBuffer.push(uvs[0]);
+                    this.uvBuffer.push(uvs[1]);
+                }
+         
+            }
+            
+        }   
+    }
 
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
+            console.log("[Debug]: chequeando si es una superficie cerrada o no");
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeInf = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
-            let postVerticeSup = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
-    
-    
+            let verticesTapaInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice);
+            let verticesTapaSuperior = this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice);
+            let posVerticeInf = this.calcularPuntoCentral(verticesTapaInferior);
+            console.log("[Debug] el Vinfcentral es:",posVerticeInf);
+            let postVerticeSup = this.calcularPuntoCentral(verticesTapaSuperior);
+           console.log("[Debug] el Vsupcentral es:",postVerticeSup);
+           
+            //duplico los vertices de la tapa superior
+            for(let i = 0 ; i < cantidad_columnas; i++)
+            {
+                this.positionBuffer.push(verticesTapaSuperior[0+i*3]);
+                this.positionBuffer.push(verticesTapaSuperior[1+i*3]);
+                this.positionBuffer.push(verticesTapaSuperior[2+i*3]);
+                 nrm = [0.0,1.0,0.0];
+                this.normalBuffer.push(nrm[0]);
+                this.normalBuffer.push(nrm[1]);
+                this.normalBuffer.push(nrm[2]);
+                let coordMinimas = this.buscarMinimos(verticesTapaSuperior);
+                let coordMaximas = this.buscarMaximos(verticesTapaSuperior);
+                 let ux = (verticesTapaSuperior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
+                let uz = (verticesTapaSuperior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
+
+                this.uvBuffer.push(ux); 
+                this.uvBuffer.push(uz);
+            }
+   
+            //Vertice central de colapso superior
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
-                    this.positionBuffer.unshift(posVerticeInf[0]);this.positionBuffer.push(postVerticeSup[0]);
-                    this.positionBuffer.unshift(posVerticeInf[1]);this.positionBuffer.push(postVerticeSup[1]);
-                    this.positionBuffer.unshift(posVerticeInf[2]);this.positionBuffer.push(postVerticeSup[2]);
-                    nrm = [0.0,-1.0,0.0];
-                    this.normalBuffer.unshift(nrm[0]);this.normalBuffer.push(-1*nrm[0]);
-                    this.normalBuffer.unshift(nrm[1]);this.normalBuffer.push(-1*nrm[1]);
-                    this.normalBuffer.unshift(nrm[2]);this.normalBuffer.push(-1*nrm[2]);
-                     uvs = [0.0,0.0];
-                    this.uvBuffer.unshift(uvs[0]); this.uvBuffer.push(uvs[0]);
-                    this.uvBuffer.unshift(uvs[1]);this.uvBuffer.push(uvs[1]);
+                    this.positionBuffer.push(postVerticeSup[0]);
+                    this.positionBuffer.push(postVerticeSup[1]);
+                    this.positionBuffer.push(postVerticeSup[2]);
+                    nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
+                    this.uvBuffer.push(0.5);
+                    this.uvBuffer.push(0.5); 
                 }
-            filas = filas + 2; // se agregaron 2 tapas
+                //Vertice central de colapso inferior
+                for(let i = 0 ; i < cantidad_columnas; i++)
+                {
+                    this.positionBuffer.unshift(posVerticeInf[2]);
+                    this.positionBuffer.unshift(posVerticeInf[1]);
+                    this.positionBuffer.unshift(posVerticeInf[0]);
+                    nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.unshift(-1*nrm[2]);
+                    this.normalBuffer.unshift(-1*nrm[1]);
+                    this.normalBuffer.unshift(-1*nrm[0]);
+                    this.uvBuffer.unshift(0.5);
+                    this.uvBuffer.unshift(0.5);
+                }
+            //duplico los vertices de la tapa inferior
+            for(let i = 0 ; i < cantidad_columnas; i++)
+            {
+                this.positionBuffer.unshift(verticesTapaInferior[2+i*3]);
+                this.positionBuffer.unshift(verticesTapaInferior[1+i*3]);
+                this.positionBuffer.unshift(verticesTapaInferior[0+i*3]);
+                nrm = [0.0,-1.0,0.0];
+                this.normalBuffer.unshift(nrm[2]);
+                this.normalBuffer.unshift(nrm[1]);
+                this.normalBuffer.unshift(nrm[0]);
+                let coordMinimas = this.buscarMinimos(verticesTapaInferior);
+                let coordMaximas = this.buscarMaximos(verticesTapaInferior);
+                let ux = (verticesTapaInferior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
+                let uz = (verticesTapaInferior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
+                this.uvBuffer.unshift(uz); 
+                this.uvBuffer.unshift(ux);
+            }
+
+            filas = filas + 4; // se agregaron 2 tapas + 2 filas de punto de colapso
         }
-        else if(this.superficieDeUnaCara)
+      /*  else if(this.superficieDeUnaCara)
         {
             let cantidadCoordenadasPorVertice = 3;
-            let posVerticeCentral = this.calcularPuntoCentral(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
+            let verticesSuperficieInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice); 
+            let posVerticeCentral = this.calcularPuntoCentral(verticesSuperficieInferior);
+            
+             for(let i = 0 ; i < cantidad_columnas; i++)
+                {
+                    this.positionBuffer.unshift(verticesSuperficieInferior[0+i*3]);
+                    this.positionBuffer.unshift(verticesSuperficieInferior[1+i*3]);
+                    this.positionBuffer.unshift(verticesSuperficieInferior[2+i*3]);
+                     nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.unshift(nrm[0]);
+                    this.normalBuffer.unshift(nrm[1]);
+                    this.normalBuffer.unshift(nrm[2]);
+                    //uvs = [0.1,0.1];
+
+                    let coordMinimas = this.buscarMinimos(verticesSuperficieInferior);
+                    let coordMaximas = this.buscarMaximos(verticesSuperficieInferior);
+
+                    let ux = (verticesSuperficieInferior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
+                    let uz = (verticesSuperficieInferior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
+
+                    this.uvBuffer.unshift(ux); 
+                    this.uvBuffer.unshift(uz);
+
+                }
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeCentral[0]);
@@ -455,15 +624,19 @@ class objeto3D
                     this.normalBuffer.unshift(nrm[0]);
                     this.normalBuffer.unshift(nrm[1]);
                     this.normalBuffer.unshift(nrm[2]);
-                    uvs = [0.0,0.0];
+                    uvs = [0.5,0.5];
                     this.uvBuffer.unshift(uvs[0]); 
                     this.uvBuffer.unshift(uvs[1]);
 
                 }
-            filas = filas + 1; // se agregaron 1 tapa
-       }
+
+
+
+            filas = filas + 2; // se agregaron 1 fila de colapso + 1 tapa 
+       }*/
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
+
 
 /*Calcula el punto central del poligono descripto por un conjunto de
  vertices en formato x,y,z  */
@@ -481,6 +654,48 @@ class objeto3D
         }
         return [x/cantidadVertices,y/cantidadVertices,z/cantidadVertices];
     }
-    
+/*retorna el xMin Ymin Zmin de un conjuntos de vertices*/
+    buscarMinimos(vertices)
+    {
+        let cantidadCoordenadasPorVertice = 3; // (x,y,z)
+        let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice;
+        let xMin =vertices[0] ,yMin = vertices[1], zMin = vertices[2]; 
+
+        for(let i = 0; i < (cantidadVertices);i++)
+        {   
+            let xVertice = vertices[3*i];
+            let yVertice = vertices[3*i+1];
+            let zVertice = vertices[3*i+2];
+            if(xVertice<xMin) {xMin = xVertice};
+            if(yVertice<yMin) {yMin = yVertice};
+            if(zVertice<zMin) {zMin = zVertice};
+         
+        }
+        return [xMin,yMin,zMin];
+    }    
+    /*retorna el xMax YMax zMax de un conjuntos de vertices*/
+    buscarMaximos(vertices)
+    {
+        let cantidadCoordenadasPorVertice = 3; // (x,y,z)
+        let cantidadVertices = vertices.length/cantidadCoordenadasPorVertice;
+        let xMax =vertices[0] ,yMax = vertices[1], zMax = vertices[2]; 
+
+        for(let i = 0; i < (cantidadVertices);i++)
+        {   
+            let xVertice = vertices[3*i];
+            let yVertice = vertices[3*i+1];
+            let zVertice = vertices[3*i+2];
+            if(xVertice>xMax) {xMax = xVertice};
+            if(yVertice>yMax) {yMax = yVertice};
+            if(zVertice>zMax) {zMax = zVertice};
+         
+        }
+        return [xMax,yMax,zMax];
+    }    
+
+
+
 }   //fin de la clase objeto3D
+
+
 

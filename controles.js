@@ -1,64 +1,146 @@
+/*control de la camara*/
+var previousClientX = 0;
+var previousClientY = 0;
+var radio = 2.5;
+var alfa = 0;
+var beta = Math.PI/4;
+var factorVelocidad = 0.005;
+
+var minimunBeta = 5 * Math.PI/180;
+var maximiumBeta = 85* Math.PI/180;
+
+var deltaXOffset = 0.0;
+var deltaYOffset = 0.0;
+var deltaZOffset = 0.0;
+var deltaAlfa = 0.0;
+var isMouseDown = false;
+var actualEvent;
+
+var mouse = {x: 0, y: 0};
+var tipoCamaraActual = "orbital";
+
 
     function AutoElevadorControl(initialPos)
     {
 
-        let vec3=glMatrix.vec3;         
+        let MIN_Y=1;
+
+        let DELTA_TRASLACION=0.03;        // velocidad de traslacion 
+        let DELTA_ROTACION=0.02;         // velocidad de rotacion
+        let DELTA_MOVIMIENTO_PALA = 0.002; 
+        let FACTOR_INERCIA=0.05;
+
+        let vec3=glMatrix.vec3;          // defino vec3 para no tener que escribir glMatrix.vec3
         let mat4=glMatrix.mat4;
 
-        
-        let DELTA_VELOCIDAD = 0.01; 
-        let DELTA_MOVIMIENTO_PALA = 0.001;
-        let DELTA_ROTACION=0.02;        
-
-        //let FACTOR_AMORTIGUAMIENTO = 0.01;
-        //if (!initialPos) initialPos=[0,0,0];
+        if (!initialPos) initialPos=[0,0,0];
 
         let position=vec3.fromValues(initialPos[0],initialPos[1],initialPos[2]);
+        
         let rotation=vec3.create();
 
+        let rotationMatrix=mat4.create();       
+
+        let worldMatrix=mat4.create();
+
         let vehicleInitialState={
-            deltaX:0,
             xVel:0,
             zVel:0,
             yVel:0,
+            xVelTarget:0,
+            zVelTarget:0,
+            yVelTarget:0,
             yVelPala:0,
-            
+          
+
+
+            yRotVelTarget:0,
             yRotVel:0,
+            zRotVelTarget:0,
             zRotVel:0,
+            xRotVelTarget:0,
             xRotVel:0,
-            rightAxisMode:"move",
-            sujentadoObjeto : false
+            
+            rightAxisMode:"move"
         }
 
         let vehicleState=Object.assign({},vehicleInitialState);
 
-        
-        // Manejo de eventos del teclado
-        document.addEventListener("keydown",function(e) //tecla presionada 
-        {
-            
 
+        if(tipoCamaraActual == "orbital")
+        {
+             /*Eventos del Mouse*/
+            document.addEventListener('mousemove', function(e)
+            {
+            
+               mouse.x = e.clientX || e.pageX; 
+               mouse.y = e.clientY || e.pageY ;
+               var deltaX=0;
+               var deltaY=0;
+
+
+                if (previousClientX) deltaX = mouse.x - previousClientX;
+                if (previousClientY) deltaY = mouse.y - previousClientY;
+
+                previousClientX = mouse.x;
+                previousClientY = mouse.y;
+
+                alfa = alfa + deltaX * factorVelocidad;
+                beta = beta + deltaY * factorVelocidad;
+
+                if (beta< minimunBeta ) {beta=minimunBeta};
+
+
+                if (beta>maximiumBeta){beta=maximiumBeta};
+               
+               posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
+            
+        });
+
+        }
+        
+         document.addEventListener('mousedown', function(e)
+         {
+            isMouseDown = true;
+         });
+         document.addEventListener('mouseup', function(e)
+         {
+            isMouseDown = false;
+         });
+
+
+        /* Eventos de teclado */
+
+        document.addEventListener("keydown",function(e){
             switch ( e.key ) {
 
-                case "ArrowUp": // up
-                    vehicleState.xVel = +DELTA_VELOCIDAD;
-                    break;
-                case "ArrowDown":
-                    vehicleState.xVel = -DELTA_VELOCIDAD;
-                    break;
-                case "ArrowLeft":
-                    vehicleState.xRotVel = +DELTA_ROTACION;
-                    break;
-                case "ArrowRight":
-                    vehicleState.xRotVel = -DELTA_ROTACION;
+                //avanzar
+                case "ArrowUp": case"w":
+                    vehicleState.xVelTarget=DELTA_TRASLACION;
                     break;
 
+                break;
+                //retroceder
+                case "ArrowDown": case"s":
+                    vehicleState.xVelTarget=-DELTA_TRASLACION;break;
+                break;
+                //girar sobre el eje 'y' horario
+                case "d": case "ArrowRight":
+                    vehicleState.yRotVelTarget=DELTA_ROTACION;
+                break;
+                //girar sobre el eje 'y' antihorario
+                case "a":  case "ArrowLeft":
+                    vehicleState.yRotVelTarget=-DELTA_ROTACION;
+                break;
+                //subir pala del elevador
                 case "q": 
                 vehicleState.yVelPala = +DELTA_MOVIMIENTO_PALA;
                     break;
+                //bajar pala del elevador
                 case "e":
                 vehicleState.yVelPala = - DELTA_MOVIMIENTO_PALA;
                     break;
+                //agarrar objeto con el elevador
                 case "g":
                     if(vehicleState.sujentadoObjeto)
                     {
@@ -68,7 +150,7 @@
                     }
                     else
                     {
-                        if(!imprimiendo) // evita que se tome un objeto en proceso de impresio
+                        if(!imprimiendo && objetoEnEspera) // evita que se tome un objeto en proceso de impresio
                         {
                             vehicleState.sujentadoObjeto = true;
                             autoElevador.agregarHijo(objetoImpreso);
@@ -76,78 +158,154 @@
                         }   
                         
                     }
-                    break;
-           
+                break;
+
+                //control de camaras
+                case "1":
+                    console.log("[Debug] Cámara orbital general: apunta al centro de la escena");
+                    posicionEyeCamara = vec3.fromValues(0.0,1.0,2.0);
+
+                    deltaXOffset = 0.0;
+                    deltaYOffset = 0.0;
+                    deltaZOffset = 0.0;
+                    radio = 2.5;
+                    posicionCenterCamara  = vec3.fromValues(0.0,0.0,0.0);
+                    tipoCamaraActual = "orbital";
+                break;
+                case "2":
+                    console.log("[Debug]  Cámara orbital impresora: su objetivo esta centrado en la impresora");
+                    tipoCamaraActual = "orbital";
+                    
+                    deltaXOffset = 1.7;
+                    deltaYOffset = 0.0;
+                    deltaZOffset = 0.0;
+                    radio = 1.5;
+                    posicionCenterCamara = vec3.fromValues(1.7,0.3,0.0);
+                    posicionEyeCamara = vec3.fromValues(1.7,1.0,1.0);
+                break;
+                case "3":
+                    console.log("[Debug] Cámara orbital estantería: su objetivo está centrado en la estantería");
+                    tipoCamaraActual = "orbital";
+                    
+                    deltaXOffset = -3.5;
+                    deltaYOffset = 0.0;
+                    deltaZOffset = 0.0;
+                    radio = 2.5;
+                    posicionEyeCamara = vec3.fromValues(-3.5,1.0,2.5);
+                    posicionCenterCamara = vec3.fromValues(-3.5,0.0,0.0);
+                break;
+                case "4":
+                    console.log("[Debug] Cámara de conductor: muestra la vista hacia adelante que tendría el conductor del autoelevador");
+                break;
+                case "5":
+                    console.log("[Debug] Cámara de seguimiento auto elevador trasera: sigue al vehículo desde atrás");
+                break;
+                case "6":
+                    console.log("[Debug] Cámara de seguimiento auto elevador lateral: sigue al vehículo de costado");
+                break;
+                case "o":
+                radio = radio-0.1;
+                if (radio < 0.1) radio = 0.1;
+                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
+                break;
+                case "p":
+                radio = radio+0.1;
+                if (radio > 2.5) radio = 2.5;
+                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
+                break;
+
+               
             }               
 
-        })
+        });
 
-        //se suelta la tecla
         document.addEventListener("keyup",function(e){
 
             switch ( e.key ) 
             {
-
-                case "ArrowUp": 
-                    vehicleState.xVel=0.0;
-                    break;
-                case "ArrowDown":
-                    vehicleState.xVel=0.0;
-                    break;
-                case "ArrowLeft":
-                    vehicleState.xRotVel = 0.0;
-                    break;
-                case "ArrowRight":
-                    vehicleState.xRotVel = 0.0;
-                    break;
-
+                case "ArrowUp":  case "w":
+                    vehicleState.xVelTarget=0; break;
+                
+                case "ArrowDown": case "s": 
+                    vehicleState.xVelTarget=0; break; 
+  
+                case "ArrowLeft" :case "a": 
+                    vehicleState.yRotVelTarget=0; break;
+                case "ArrowRight": case "d": 
+                    vehicleState.yRotVelTarget=0; break;
                 case "q": 
                     vehicleState.yVelPala = 0.0; 
                     break;
                 case "e":
                     vehicleState.yVelPala = 0.0;
                 break;
-
-
+                    
+                                              
+          
             }                 
             
-        })
+        });
         
 
         this.update=function()
         {
-            /*let matrizRototraslacion = mat4.create();
-            let matrizAuxiliar = mat4.create();
-
-            mat4.translate(matrizRototraslacion,matrizRototraslacion,[vehicleState.xVel ,vehicleState.yVel,vehicleState.zVel]);
-            mat4.rotate(matrizRototraslacion,matrizRototraslacion,vehicleState.xRotVel,[0.0,1.0,0.0]);
-            mat4.multiply(matrizAuxiliar,matrizRototraslacion,autoElevador.obtenerMatrizTransformacion());
-            autoElevador.asignarMatrizTransformacion(matrizAuxiliar);
-            */
             
-            let matrizRotacion = mat4.create();
-            let translation = vec3.create();
+            vehicleState.xVel+=(vehicleState.xVelTarget-vehicleState.xVel)*FACTOR_INERCIA;
+            vehicleState.yVel+=(vehicleState.yVelTarget-vehicleState.yVel)*FACTOR_INERCIA;
+            vehicleState.zVel+=(vehicleState.zVelTarget-vehicleState.zVel)*FACTOR_INERCIA;
+            
+
+            vehicleState.xRotVel+=(vehicleState.xRotVelTarget-vehicleState.xRotVel)*FACTOR_INERCIA;
+            vehicleState.yRotVel+=(vehicleState.yRotVelTarget-vehicleState.yRotVel)*FACTOR_INERCIA;
+            vehicleState.zRotVel+=(vehicleState.zRotVelTarget-vehicleState.zRotVel)*FACTOR_INERCIA;
+
+
+            let translation=vec3.fromValues(vehicleState.xVel,vehicleState.yVel,vehicleState.zVel);                        
+            
+            if (Math.abs(vehicleState.yRotVel)>0) {
+                /*Rota al rededor del eje 'y'*/
+                mat4.rotate(rotationMatrix,rotationMatrix,vehicleState.yRotVel,vec3.fromValues(0,1,0)); 
+                let posicionActual = vec3.create();
+                mat4.getTranslation(posicionActual,autoElevador.obtenerMatrizTransformacion());
+                trasladarObjeto(autoElevador,[-1*posicionActual[0],-1*posicionActual[1]  ,-1*posicionActual[2]]);
+                rotarObjeto(autoElevador,vehicleState.yRotVel,[0.0,1.0,0.0]);
+                trasladarObjeto(autoElevador,[posicionActual[0],posicionActual[1]  ,posicionActual[2]]);
+                     
+            }
+            
+            vec3.transformMat4(translation,translation,rotationMatrix);
+            vec3.add(position,position,translation);
+            worldMatrix=mat4.create();
+            mat4.translate(worldMatrix,worldMatrix,position);        
+            mat4.multiply(worldMatrix,worldMatrix,rotationMatrix);
         
-            mat4.getTranslation(translation,autoElevador.obtenerMatrizTransformacion());
-            mat4.getRotation(matrizRotacion, autoElevador.obtenerMatrizTransformacion());
-
-            vec3.transformMat4(translation, translation, matrizRotacion);
-
-           trasladarObjeto(autoElevador,[vehicleState.xVel,vehicleState.yVel,vehicleState.zVel]);
-         //    trasladarObjeto(autoElevador,translation);
-
-           // rotarObjeto(autoElevador,vehicleState.xRotVel,[0.0,1.0,0.0]);
+            trasladarObjeto(autoElevador,[translation[0],translation[1],translation[2]]);
             trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
             if(vehicleState.sujentadoObjeto)
             {
                 trasladarObjeto(objetoImpreso,[0.0,vehicleState.yVelPala,0.0]);    
             }
+        
             
+        }
+
+
+        this.getViewMatrix=function(){
+
+            let m=mat4.clone(worldMatrix);            
+            mat4.invert(m,m);
+            return m;
+        }
+
+        this.getMatrix=function(){
+
+            return worldMatrix;
+
         }
 
     }
 
-//funcion de la impresora 3d
+    //funcion de la impresora 3d
     function imprimirObjeto()
     {
         if(!objetoEnEspera)
@@ -157,20 +315,22 @@
                  objetoImpreso = new objeto3D(forma2DBarridoGUI); 
                  escalarObjeto(objetoImpreso,[0.3,0.5,0.3]);   
                  trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
+                 objetoImpreso.setTexture(textures[mapaTexturas.get("textAjedrez")]);
             }
             else if (tipoSuperficieGUI == "Revolucion")
             {
                  objetoImpreso = new objeto3D(forma2DRevolucionGUI);
                  escalarObjeto(objetoImpreso,[0.5,0.5,0.5]);      
                  trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
+                 objetoImpreso.setTexture(textures[mapaTexturas.get("textMarmol")]);
             }
             trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
             imprimiendo = true;
             objetoEnEspera = true;
             
+            objetoImpreso.setColor([0.8,0.1,0.1]);
+
             objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
             objetosEscena.push(objetoImpreso);
         }
     }
-
-

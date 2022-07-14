@@ -25,7 +25,6 @@ class CurvaBezier
 		return this.cantidadPuntosPorTramo;
 	}
 
-
 	/* u: parámetro para recorrer un tramo de  curva [0,1]
 	   tramo: indica el tramo de la curva {0,1,2,3...N}
 	*/
@@ -41,24 +40,22 @@ class CurvaBezier
         Base1=function(u) { return 3*(1-u)*(1-u)*u; } // 3*(1-u)*(u-u2) , 3*(u-u2-u2+u3), 3u -6u2+2u3
         Base2=function(u) { return 3*(1-u)*u*u;} //3u2-3u3
         Base3=function(u) { return u*u*u; }
-        
 		}
 		else {Console.log("[ERROR CURVAS]: Grado de curva no soportado"); return false;}
-		      	
-		
+
 		var p0=puntosDeControlTramo[0];
         var p1=puntosDeControlTramo[1];
         var p2=puntosDeControlTramo[2];
         var p3=puntosDeControlTramo[3];
 
         var punto=new Object();
-
         punto.x=Base0(u)*p0[0]+Base1(u)*p1[0]+Base2(u)*p2[0]+Base3(u)*p3[0];
         punto.y=Base0(u)*p0[1]+Base1(u)*p1[1]+Base2(u)*p2[1]+Base3(u)*p3[1];
         punto.z=Base0(u)*p0[2]+Base1(u)*p1[2]+Base2(u)*p2[2]+Base3(u)*p3[2];
         return punto;
 	}
 
+	/* u: [0,1] , tramo :{0,1,2,3,....,N} */
 	calcularPuntoCurvaDerivada(u,tramo)
 	{
 		var Base0der,Base1der,Base2der,Base3der;
@@ -77,41 +74,9 @@ class CurvaBezier
         puntoDer.x = Base0der(u)*p0[0]+Base1der(u)*p1[0]+Base2der(u)*p2[0]+Base3der(u)*p3[0];
         puntoDer.y = Base0der(u)*p0[1]+Base1der(u)*p1[1]+Base2der(u)*p2[1]+Base3der(u)*p3[1];
         puntoDer.z = Base0der(u)*p0[2]+Base1der(u)*p1[2]+Base2der(u)*p2[2]+Base3der(u)*p3[2];
-
         return puntoDer;
-
 	}
 };
-
-/* Trayectorias*/
-function recorridoLineal(t)
-{
-	this.getPosicion=function(t)
-	{
-		/* [x(t),y(t),z(t)]*/
-		let punto = [0.0,t,0.0];
-		return punto;
-	}
-	this.getTangente = function(t)
-	{
-		/* [dx(t)/dx, dy(t)/dy, dz(t)/dz]*/
-		let puntoDer = [0.0,1.0,0.0];
-		return puntoDer;
-	}
-	this.getNormal = function(t)
-	{
-		let puntoNormal = [1.0,0.0,0.0];
-		return puntoNormal;
-	}
-	this.getBiNormal = function(normal,tangente,t)
-	{
-		let puntoBiNormal = productoVectorial(normal,tangente);
-		return puntoBiNormal;
-	}
-
-}
-
-
 
 function productoVectorial(vectorA,vectorB)
 {
