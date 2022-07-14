@@ -3,15 +3,14 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
+	
+
+
 	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
-
-	/*let cuboPrueba = GenerarCubo();
-	cuboPrueba.setTexture(textures[mapaTexturas.get("textGruaMetalica")]);
-	objetos.push(cuboPrueba);*/
 
 	asignarMallasObjetos(objetos);
 }

@@ -280,7 +280,7 @@
     function tick()
     {
         requestAnimFrame(tick);
-        controladorVehiculo.update();        
+       controladorVehiculo.update();        
         
 
         // animación de impresora 3D
@@ -344,6 +344,8 @@
         srcTexturesMap.set("textCueroRojo","maps/leather_red_03_coll1_1k.jpg");
         srcTexturesMap.set("textMetalOxidado2","maps/rust_coarse_01_diff_1k.jpg");
         srcTexturesMap.set("MetalParedes","maps/CorrugatedMetalPanel02_1K_BaseColor2.png");
+        srcTexturesMap.set("textTest","maps/test.jpg");
+
         
     
         srcTexturesMap.forEach((scrTextura,nombreTextura)=>{

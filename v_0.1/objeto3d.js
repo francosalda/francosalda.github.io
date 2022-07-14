@@ -163,8 +163,7 @@ class objeto3D
             this.superficie3D = new superficieBarrido(1);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
-            //this.asignarSuperficieCerrada();
-            this.superficieDeUnaCara  = true;
+            this.asignarSuperficieCerrada();
             this.filas = 1;
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
@@ -512,50 +511,107 @@ class objeto3D
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
-
+            console.log("[Debug]: chequeando si es una superficie cerrada o no");
             let cantidadCoordenadasPorVertice = 3;
-            let verticesTapaInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice)
-            let verticesTapaSuperior = this.calcularPuntoCentral(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
+            let verticesTapaInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice);
+            let verticesTapaSuperior = this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice);
             let posVerticeInf = this.calcularPuntoCentral(verticesTapaInferior);
+            console.log("[Debug] el Vinfcentral es:",posVerticeInf);
             let postVerticeSup = this.calcularPuntoCentral(verticesTapaSuperior);
-            
-            /*let coordMinTapaSuperior = this.buscarMinimos(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
-            let coordMaxTapaSuperior = this.buscarMaximos(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));
-            let coordMinTapaInferior = this.buscarMinimos(this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice));
-            let coordMaxTapaInferior = this.buscarMaximos(this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice));*/
+           console.log("[Debug] el Vsupcentral es:",postVerticeSup);
+           
+            //duplico los vertices de la tapa superior
+            for(let i = 0 ; i < cantidad_columnas; i++)
+            {
+                this.positionBuffer.push(verticesTapaSuperior[0+i*3]);
+                this.positionBuffer.push(verticesTapaSuperior[1+i*3]);
+                this.positionBuffer.push(verticesTapaSuperior[2+i*3]);
+                 nrm = [0.0,1.0,0.0];
+                this.normalBuffer.push(nrm[0]);
+                this.normalBuffer.push(nrm[1]);
+                this.normalBuffer.push(nrm[2]);
+                let coordMinimas = this.buscarMinimos(verticesTapaSuperior);
+                let coordMaximas = this.buscarMaximos(verticesTapaSuperior);
+                 let ux = (verticesTapaSuperior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
+                let uz = (verticesTapaSuperior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
 
-    
+                this.uvBuffer.push(ux); 
+                this.uvBuffer.push(uz);
+            }
+   
+            //Vertice central de colapso superior
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
-                    this.positionBuffer.unshift(posVerticeInf[0]);this.positionBuffer.push(postVerticeSup[0]);
-                    this.positionBuffer.unshift(posVerticeInf[1]);this.positionBuffer.push(postVerticeSup[1]);
-                    this.positionBuffer.unshift(posVerticeInf[2]);this.positionBuffer.push(postVerticeSup[2]);
-                    nrm = [0.0,-1.0,0.0];
-                    this.normalBuffer.unshift(nrm[0]);this.normalBuffer.push(-1*nrm[0]);
-                    this.normalBuffer.unshift(nrm[1]);this.normalBuffer.push(-1*nrm[1]);
-                    this.normalBuffer.unshift(nrm[2]);this.normalBuffer.push(-1*nrm[2]);
-                    
-                   
-                   /* let uvsXInferior = (posVerticeInf[0]-coordMinTapaInferior[0])/(coordMaxTapaInferior[0]-coordMinTapaInferior[0]);
-                    let uvsYInferior = (posVerticeInf[1]-coordMinTapaInferior[1])/(coordMaxTapaInferior[1]-coordMinTapaInferior[1]);
-                    let uvsXSuperior = (postVerticeSup[0]-coordMinTapaSuperior[0])/(coordMaxTapaSuperior[0]-coordMinTapaSuperior[0]);
-                    let uvsYSuperior = (postVerticeSup[1]-coordMinTapaSuperior[1])/(coordMaxTapaSuperior[1]-coordMinTapaSuperior[1]);
-                    console.log("[Cubo]Tapa Superior: ux:",uvsXSuperior, "vy:",uvsYSuperior);*/
-                    
-                    this.uvBuffer.unshift(0.5);
-                    this.uvBuffer.unshift(0.5); 
+                    this.positionBuffer.push(postVerticeSup[0]);
+                    this.positionBuffer.push(postVerticeSup[1]);
+                    this.positionBuffer.push(postVerticeSup[2]);
+                    nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.push(nrm[0]);
+                    this.normalBuffer.push(nrm[1]);
+                    this.normalBuffer.push(nrm[2]);
                     this.uvBuffer.push(0.5);
-                    this.uvBuffer.push(0.5);
-
-                    
+                    this.uvBuffer.push(0.5); 
                 }
-            filas = filas + 2; // se agregaron 2 tapas
+                //Vertice central de colapso inferior
+                for(let i = 0 ; i < cantidad_columnas; i++)
+                {
+                    this.positionBuffer.unshift(posVerticeInf[2]);
+                    this.positionBuffer.unshift(posVerticeInf[1]);
+                    this.positionBuffer.unshift(posVerticeInf[0]);
+                    nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.unshift(-1*nrm[2]);
+                    this.normalBuffer.unshift(-1*nrm[1]);
+                    this.normalBuffer.unshift(-1*nrm[0]);
+                    this.uvBuffer.unshift(0.5);
+                    this.uvBuffer.unshift(0.5);
+                }
+            //duplico los vertices de la tapa inferior
+            for(let i = 0 ; i < cantidad_columnas; i++)
+            {
+                this.positionBuffer.unshift(verticesTapaInferior[2+i*3]);
+                this.positionBuffer.unshift(verticesTapaInferior[1+i*3]);
+                this.positionBuffer.unshift(verticesTapaInferior[0+i*3]);
+                nrm = [0.0,-1.0,0.0];
+                this.normalBuffer.unshift(nrm[2]);
+                this.normalBuffer.unshift(nrm[1]);
+                this.normalBuffer.unshift(nrm[0]);
+                let coordMinimas = this.buscarMinimos(verticesTapaInferior);
+                let coordMaximas = this.buscarMaximos(verticesTapaInferior);
+                let ux = (verticesTapaInferior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
+                let uz = (verticesTapaInferior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
+                this.uvBuffer.unshift(uz); 
+                this.uvBuffer.unshift(ux);
+            }
+
+            filas = filas + 4; // se agregaron 2 tapas + 2 filas de punto de colapso
         }
-        else if(this.superficieDeUnaCara)
+      /*  else if(this.superficieDeUnaCara)
         {
             let cantidadCoordenadasPorVertice = 3;
             let verticesSuperficieInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice); 
             let posVerticeCentral = this.calcularPuntoCentral(verticesSuperficieInferior);
+            
+             for(let i = 0 ; i < cantidad_columnas; i++)
+                {
+                    this.positionBuffer.unshift(verticesSuperficieInferior[0+i*3]);
+                    this.positionBuffer.unshift(verticesSuperficieInferior[1+i*3]);
+                    this.positionBuffer.unshift(verticesSuperficieInferior[2+i*3]);
+                     nrm = [0.0,1.0,0.0];
+                    this.normalBuffer.unshift(nrm[0]);
+                    this.normalBuffer.unshift(nrm[1]);
+                    this.normalBuffer.unshift(nrm[2]);
+                    //uvs = [0.1,0.1];
+
+                    let coordMinimas = this.buscarMinimos(verticesSuperficieInferior);
+                    let coordMaximas = this.buscarMaximos(verticesSuperficieInferior);
+
+                    let ux = (verticesSuperficieInferior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
+                    let uz = (verticesSuperficieInferior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
+
+                    this.uvBuffer.unshift(ux); 
+                    this.uvBuffer.unshift(uz);
+
+                }
             for(let i = 0 ; i < cantidad_columnas; i++)
                 {
                     this.positionBuffer.unshift(posVerticeCentral[0]);
@@ -570,8 +626,11 @@ class objeto3D
                     this.uvBuffer.unshift(uvs[1]);
 
                 }
-            filas = filas + 1; // se agregaron 1 tapa
-       }
+
+
+
+            filas = filas + 2; // se agregaron 1 fila de colapso + 1 tapa 
+       }*/
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
 
