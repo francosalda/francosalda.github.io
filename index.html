@@ -70,10 +70,18 @@
         var forma2DRevolucionGUI = "A1";
         var anguloTorsionGUI = 0;
         var alturaTotalGUI = 1;
+        var textura= "marmol1";
+        let mapaOpcionATextura=new Map();
+        mapaOpcionATextura.set("marmol1","textMarmol");
+        mapaOpcionATextura.set("marmol2","textMarmolNegro");
+        mapaOpcionATextura.set("patron1","textPatron1");
+        mapaOpcionATextura.set("patron2","textPatron2");
+        mapaOpcionATextura.set("patron3","textPatron3");
+        mapaOpcionATextura.set("ajedrez","textAjedrez");
 
-        var distanciaCamara=3.24;//3
-        var alturaCamara=0.84;//2
-        var velocidadAngular=0.15;
+
+
+
 
         //variables de impresora 3d
         var imprimiendo = false;
@@ -280,10 +288,10 @@
     function tick()
     {
         requestAnimFrame(tick);
-       controladorVehiculo.update();        
+        controladorVehiculo.update();        
         
 
-        // animación de impresora 3D
+        //animación de impresora 3D
         if(imprimiendo)
         {
             if(tiempoImprimiendo < 240)
@@ -308,11 +316,10 @@
     {
         var gui = new dat.GUI();
         //Menu de control de la escena
-        gui.add(window, "distanciaCamara",0.01,5).step(0.01);
-        gui.add(window, "alturaCamara",-4,4).step(0.01);;
+        
         gui.add(window, "modo",["wireframe","smooth","edges"]);
-        gui.add(window, "velocidadAngular",0, 1).step(0.01);
         // Menu de parámetros para generacion de superficies
+        gui.add(window, "textura",["marmol1","marmol2","patron1","patron2","patron3","ajedrez"]);
         gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
         gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
         gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
@@ -333,9 +340,10 @@
         srcTexturesMap.set("textPisoPiedra","maps/StoneTilesFloor01_1K_BaseColor.png");
         srcTexturesMap.set("textMetalOxidado","maps/metal_grate_rusty_diff_1k.jpg");
         srcTexturesMap.set("textGruaMetalica","maps/texturaGrua.png");
-        srcTexturesMap.set("textRueda","maps/rueda.png");
+        srcTexturesMap.set("textRueda","maps/rueda2.jpg");
         srcTexturesMap.set("textMetalAzul","maps/ScratchedPaintedMetal01_1K_BaseColor.png");
         srcTexturesMap.set("textMarmol","maps/Marble09_1K_BaseColor.png");
+        srcTexturesMap.set("textMarmolNegro","maps/Marble03_1K_BaseColor.png");
         srcTexturesMap.set("textMetalVerde","maps/green_metal_rust_diff_1k.png");
         srcTexturesMap.set("textMetalGris","maps/metallic_textured_background.png");
         srcTexturesMap.set("textMadera","maps/wood_table_worn_diff_1k.jpg");
@@ -346,10 +354,10 @@
         srcTexturesMap.set("MetalParedes","maps/CorrugatedMetalPanel02_1K_BaseColor2.png");
         srcTexturesMap.set("textTest","maps/test.jpg");
         srcTexturesMap.set("textMaderaRayada","maps/wood_peeling_paint_weathered_diff_1k.jpg");
-        srcTexturesMap.set("textPatron3","maps/patron3.png");
+        srcTexturesMap.set("textPatron1","maps/Pattern02_1K_VarA.png");
+        srcTexturesMap.set("textPatron2","maps/patron3.png");
+        srcTexturesMap.set("textPatron3","maps/Pattern05_1K_VarC.png");
 
-        
-    
         srcTexturesMap.forEach((scrTextura,nombreTextura)=>{
         loadTexture(nombreTextura,scrTextura);
       });

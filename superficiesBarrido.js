@@ -1,6 +1,6 @@
 
 /*Contiene los vertices y funciones de las superficies de barrido*/
-function superficieBarrido(altura)
+function superficieBarrido(altura,uScale,vScale)
 {
      this.getPosicion=function(u,curvaGeometrica,tramo)
     {
@@ -17,8 +17,9 @@ function superficieBarrido(altura)
         return normal;
     }
 
-    this.getCoordenadasTextura=function(u,v,curvaGeometrica){
-        return [u,v];
+    this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){
+        let largoCurva = curvaGeometrica.obtenerCantidadTramos();
+        return [u,v/vScale];
     }
 }
 
