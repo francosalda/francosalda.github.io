@@ -18,8 +18,8 @@ function superficieBarrido(altura,uScale,vScale)
     }
 
     this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){
-        let largoCurva = curvaGeometrica.obtenerCantidadTramos();
-        return [u,v/vScale];
+       
+        return [((u+tramo)/uScale),v/vScale];
     }
 }
 

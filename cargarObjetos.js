@@ -100,13 +100,13 @@ function cargarGalpon(objetos)
 	rotarObjeto(paredLateralDerecha,Math.PI/2,[1.0,0.0,0.0]);
 	rotarObjeto(paredLateralDerecha,Math.PI/2,[0.0,1.0,0.0]);
 	escalarObjeto(paredLateralDerecha,[4.0,1.0,4.0]);
-	trasladarObjeto(paredLateralDerecha,[-4.5,0.0,0.0]);
+	trasladarObjeto(paredLateralDerecha,[-6.0,0.0,0.0]);
 	galpon.agregarHijo(paredLateralDerecha);
 
 	rotarObjeto(paredLateralIzquierda,Math.PI/2,[1.0,0.0,0.0]);
 	rotarObjeto(paredLateralIzquierda,-Math.PI/2,[0.0,1.0,0.0]);
 	escalarObjeto(paredLateralIzquierda,[4.0,1.0,4.0]);
-	trasladarObjeto(paredLateralIzquierda,[4.5,0.0,0.0]);
+	trasladarObjeto(paredLateralIzquierda,[6.0,0.0,0.0]);
 	galpon.agregarHijo(paredLateralIzquierda);
 
 	rotarObjeto(paredDelantera,-Math.PI/2,[1.0,0.0,0.0]);
@@ -183,7 +183,7 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(ruedaTI,[-0.3,0.18,0.28]);trasladarObjeto(ruedaDI,[0.3,0.18,0.28]);
 
 	escalarObjeto(ruedaTD,[0.3,0.1,0.3]);escalarObjeto(ruedaDD,[0.3,0.1,0.3]);
-	rotarObjeto(ruedaTD,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(ruedaTD,-Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,-Math.PI/2,[1.0,0.0,0.0]);
 	trasladarObjeto(ruedaTD,[-0.3,0.18,-0.28]);trasladarObjeto(ruedaDD,[0.3,0.18,-0.28]);
 
 	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);

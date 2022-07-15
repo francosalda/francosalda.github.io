@@ -294,7 +294,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 9;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB4(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1,1,4);
+            this.superficie3D = new superficieBarrido(1,4,4);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.filas = 10;

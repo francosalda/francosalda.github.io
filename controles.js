@@ -315,21 +315,20 @@ var tipoCamaraActual = "orbital";
                  objetoImpreso = new objeto3D(forma2DBarridoGUI); 
                  escalarObjeto(objetoImpreso,[0.3,0.5,0.3]);   
                  trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
-                 objetoImpreso.setTexture(textures[mapaTexturas.get("textAjedrez")]);
+                 
             }
             else if (tipoSuperficieGUI == "Revolucion")
             {
                  objetoImpreso = new objeto3D(forma2DRevolucionGUI);
                  escalarObjeto(objetoImpreso,[0.5,0.5,0.5]);      
                  trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
-                 objetoImpreso.setTexture(textures[mapaTexturas.get("textMarmol")]);
+                 
             }
             trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
             imprimiendo = true;
             objetoEnEspera = true;
-            
             objetoImpreso.setColor([0.8,0.1,0.1]);
-
+            objetoImpreso.setTexture(textures[mapaTexturas.get(mapaOpcionATextura.get(textura))]);
             objetoImpreso.asignarMallaDeTriangulos(objetoImpreso);
             objetosEscena.push(objetoImpreso);
         }
