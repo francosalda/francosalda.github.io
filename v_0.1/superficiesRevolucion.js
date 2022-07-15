@@ -17,7 +17,7 @@ function superficieRevolucion(radio,altura)
     }
     this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){
     	let largoCurva = curvaGeometrica.obtenerCantidadTramos();
-        return [((u+tramo)/largoCurva),v/360];
+        return [((u+tramo)/largoCurva),(v/360)];
 
     }	
 }

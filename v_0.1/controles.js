@@ -1,3 +1,5 @@
+
+
 /*control de la camara*/
 var previousClientX = 0;
 var previousClientY = 0;
@@ -5,6 +7,7 @@ var radio = 2.5;
 var alfa = 0;
 var beta = Math.PI/4;
 var factorVelocidad = 0.005;
+
 
 var minimunBeta = 5 * Math.PI/180;
 var maximiumBeta = 85* Math.PI/180;
@@ -22,16 +25,21 @@ var tipoCamaraActual = "orbital";
 
     function AutoElevadorControl(initialPos)
     {
-
+        let vec3=glMatrix.vec3;          // defino vec3 para no tener que escribir glMatrix.vec3
+        let mat4=glMatrix.mat4;
+        
         let MIN_Y=1;
-
         let DELTA_TRASLACION=0.03;        // velocidad de traslacion 
         let DELTA_ROTACION=0.02;         // velocidad de rotacion
         let DELTA_MOVIMIENTO_PALA = 0.002; 
         let FACTOR_INERCIA=0.05;
 
-        let vec3=glMatrix.vec3;          // defino vec3 para no tener que escribir glMatrix.vec3
-        let mat4=glMatrix.mat4;
+        //camaras que siguen al autoelevador
+        var posicionCamaraLateral = vec3.fromValues(0.0,1.0,1.5);
+        var posicionCamaraConductor = vec3.fromValues(-0.5,0.8,0.0);
+        var posicionTargetConductor = vec3.fromValues(1.5,1.0,0.0);
+        var posicionCamaraTrasera = vec3.fromValues(-1.5,1.4,0.0);    
+        
 
         if (!initialPos) initialPos=[0,0,0];
 
@@ -67,12 +75,15 @@ var tipoCamaraActual = "orbital";
         let vehicleState=Object.assign({},vehicleInitialState);
 
 
-        if(tipoCamaraActual == "orbital")
-        {
+        
              /*Eventos del Mouse*/
             document.addEventListener('mousemove', function(e)
             {
-            
+
+            if(tipoCamaraActual == "orbital")
+            {
+                
+
                mouse.x = e.clientX || e.pageX; 
                mouse.y = e.clientY || e.pageY ;
                var deltaX=0;
@@ -94,10 +105,10 @@ var tipoCamaraActual = "orbital";
                 if (beta>maximiumBeta){beta=maximiumBeta};
                
                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
-            
+        }    
         });
 
-        }
+        
         
          document.addEventListener('mousedown', function(e)
          {
@@ -196,12 +207,31 @@ var tipoCamaraActual = "orbital";
                 break;
                 case "4":
                     console.log("[Debug] Cámara de conductor: muestra la vista hacia adelante que tendría el conductor del autoelevador");
+                     tipoCamaraActual = "firstPerson4";
+                    beta = Math.PI/4;
+                    radio = 1.5;
+                    posicionCenterCamara = posicionTargetConductor;
+                    posicionEyeCamara = posicionCamaraConductor;
+
                 break;
                 case "5":
                     console.log("[Debug] Cámara de seguimiento auto elevador trasera: sigue al vehículo desde atrás");
+                    tipoCamaraActual = "firstPerson5";
+                    beta = Math.PI/3;
+                    radio = 1.5;
+                    posicionCenterCamara = position;
+                    posicionEyeCamara = posicionCamaraTrasera;
+
                 break;
                 case "6":
                     console.log("[Debug] Cámara de seguimiento auto elevador lateral: sigue al vehículo de costado");
+                    tipoCamaraActual = "firstPerson6";
+                    beta = Math.PI/4;
+                    radio = 1.5;
+                    posicionCenterCamara = position;
+                    
+                    posicionEyeCamara = posicionCamaraLateral;
+                    
                 break;
                 case "o":
                 radio = radio-0.1;
@@ -270,6 +300,11 @@ var tipoCamaraActual = "orbital";
                 trasladarObjeto(autoElevador,[-1*posicionActual[0],-1*posicionActual[1]  ,-1*posicionActual[2]]);
                 rotarObjeto(autoElevador,vehicleState.yRotVel,[0.0,1.0,0.0]);
                 trasladarObjeto(autoElevador,[posicionActual[0],posicionActual[1]  ,posicionActual[2]]);
+                //roto las camaras acorde a la rotacion del vehiculo
+                vec3.rotateY(posicionCamaraLateral,posicionCamaraLateral,[posicionActual[0],posicionActual[1] ,posicionActual[2]],vehicleState.yRotVel);
+                vec3.rotateY(posicionCamaraTrasera,posicionCamaraTrasera,[posicionActual[0],posicionActual[1] ,posicionActual[2]],vehicleState.yRotVel);        
+                vec3.rotateY(posicionCamaraConductor,posicionCamaraConductor,[posicionActual[0],posicionActual[1] ,posicionActual[2]],vehicleState.yRotVel);        
+                vec3.rotateY(posicionTargetConductor,posicionTargetConductor,[posicionActual[0],posicionActual[1] ,posicionActual[2]],vehicleState.yRotVel);        
                      
             }
             
@@ -281,12 +316,38 @@ var tipoCamaraActual = "orbital";
         
             trasladarObjeto(autoElevador,[translation[0],translation[1],translation[2]]);
             trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
+            //traslado las camaras acorde a la traslacion del vehiculo
+            vec3.add(posicionCamaraLateral,posicionCamaraLateral,[translation[0],translation[1],translation[2]]); 
+            vec3.add(posicionCamaraTrasera,posicionCamaraTrasera,[translation[0],translation[1],translation[2]]); 
+            vec3.add(posicionCamaraConductor,posicionCamaraConductor,[translation[0],translation[1],translation[2]]); 
+            vec3.add(posicionTargetConductor,posicionTargetConductor,[translation[0],translation[1],translation[2]]);
+
             if(vehicleState.sujentadoObjeto)
             {
                 trasladarObjeto(objetoImpreso,[0.0,vehicleState.yVelPala,0.0]);    
             }
-        
+            //actualizo la camara actual de las camaras firsPerson
             
+            if (tipoCamaraActual == "firstPerson4")
+             {
+                posicionEyeCamara = posicionCamaraConductor;
+                posicionCenterCamara = posicionTargetConductor;
+             }
+            else if (tipoCamaraActual == "firstPerson5")
+             {
+                posicionEyeCamara = posicionCamaraTrasera;
+                posicionCenterCamara = position;
+             }
+            else if(tipoCamaraActual == "firstPerson6")   
+             {
+                posicionCenterCamara = position;
+                posicionEyeCamara = posicionCamaraLateral;
+             }
+             
+
+
+
+
         }
 
 

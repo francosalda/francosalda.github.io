@@ -160,7 +160,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesCuadrado(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1);
+            this.superficie3D = new superficieBarrido(1,1,1);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.asignarSuperficieCerrada();
@@ -173,7 +173,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 4;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesChasis(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1);
+            this.superficie3D = new superficieBarrido(1,1,1);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.asignarSuperficieCerrada();
@@ -258,7 +258,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 4;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB1(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1);
+            this.superficie3D = new superficieBarrido(1,1,4);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.filas = 10;
@@ -270,7 +270,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 9;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB2(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1);
+            this.superficie3D = new superficieBarrido(1,1,4);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.filas = 10;
@@ -282,7 +282,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 9;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB3(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1);
+            this.superficie3D = new superficieBarrido(1,1,4);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.filas = 10;
@@ -294,7 +294,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 9;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB4(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieBarrido(1);
+            this.superficie3D = new superficieBarrido(1,4,4);
             this.claseDeSuperficie = "barrido";
             this.curvaTrayectoria = new recorridoLinealEjeY();
             this.filas = 10;
@@ -506,7 +506,7 @@ class objeto3D
 
                      var uvs=superficie.getCoordenadasTextura(u,i,tramo,this.curvaGeometrica);
                     }else{
-                        var uvs=superficie.getCoordenadasTextura(u,i/filas,tramo,this.curvaGeometrica);
+                        var uvs=superficie.getCoordenadasTextura(u,i,tramo,this.curvaGeometrica);
                     }
                  
                     
