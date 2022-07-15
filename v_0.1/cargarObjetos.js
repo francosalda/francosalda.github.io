@@ -183,7 +183,7 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(ruedaTI,[-0.3,0.18,0.28]);trasladarObjeto(ruedaDI,[0.3,0.18,0.28]);
 
 	escalarObjeto(ruedaTD,[0.3,0.1,0.3]);escalarObjeto(ruedaDD,[0.3,0.1,0.3]);
-	rotarObjeto(ruedaTD,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(ruedaTD,-Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDD,-Math.PI/2,[1.0,0.0,0.0]);
 	trasladarObjeto(ruedaTD,[-0.3,0.18,-0.28]);trasladarObjeto(ruedaDD,[0.3,0.18,-0.28]);
 
 	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);

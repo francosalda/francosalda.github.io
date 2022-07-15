@@ -1,5 +1,5 @@
 
-function superficieRevolucion(radio)
+function superficieRevolucion(radio,altura)
 {
 	 this.getPosicion=function(u,curvaGeometrica,tramo)
     {
@@ -15,8 +15,10 @@ function superficieRevolucion(radio)
         normal.x = normal.x-radio ;
         return normal;
     }
-    this.getCoordenadasTextura=function(u,v,curvaGeometrica){
-        return [0.75+u,0.75+v];
+    this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){
+    	let largoCurva = curvaGeometrica.obtenerCantidadTramos();
+        return [((u+tramo)/largoCurva),v/360];
+
     }	
 }
 

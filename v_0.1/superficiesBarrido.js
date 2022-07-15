@@ -17,8 +17,9 @@ function superficieBarrido(altura)
         return normal;
     }
 
-    this.getCoordenadasTextura=function(u,v,curvaGeometrica){
-        return [u,v];
+    this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){
+        let largoCurva = curvaGeometrica.obtenerCantidadTramos();
+        return [(u)*largoCurva,v];
     }
 }
 
