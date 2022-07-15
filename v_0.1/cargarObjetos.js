@@ -3,15 +3,12 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
-	
-
-
 	cargarAutoElevador(objetos);
-	
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
+
 	asignarMallasObjetos(objetos);
 }
 
@@ -82,6 +79,7 @@ function cargarGalpon(objetos)
 	let largoParedLateral = 8.0,anchoParedLateral = 1.0,altoParedGalpon = 2.5;
 
 	galpon = new objeto3D;
+	techo = new objeto3D("techo");
 	pisoGalpon = new objeto3D("plano",matrizModelado);
 	paredTrasera = new objeto3D("plano",matrizModelado);
 	paredDelantera = new objeto3D("plano",matrizModelado);
@@ -90,6 +88,12 @@ function cargarGalpon(objetos)
 
 	escalarObjeto(pisoGalpon,[anchoPiso,1.0,largoPiso]);
 	galpon.agregarHijo(pisoGalpon);
+
+	rotarObjeto(techo,-Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(techo,Math.PI/2,[0.0,1.0,0.0]);
+	trasladarObjeto(techo,[0.0,3.5,0.0]);
+	escalarObjeto(techo,[12.1,1.0,7.0]);
+	galpon.agregarHijo(techo);
 
 
 	rotarObjeto(paredTrasera,Math.PI/2,[1.0,0.0,0.0]);
@@ -122,6 +126,7 @@ function cargarGalpon(objetos)
 	paredLateralDerecha.setTexture(textures[mapaTexturas.get("MetalParedes")]);
 	paredLateralIzquierda.setTexture(textures[mapaTexturas.get("MetalParedes")]);
 	paredDelantera.setTexture(textures[mapaTexturas.get("MetalParedes")]);
+	techo.setTexture(textures[mapaTexturas.get("MetalParedes")]);
 	
 	objetos.push(galpon);
 }
@@ -132,6 +137,8 @@ function cargarAutoElevador(objetos)
 	autoElevador = new objeto3D(); autoElevador.asignarIdentificadorObjeto("CAutoelevador");
 	estructuraPala = new objeto3D;
 	ruedas = new objeto3D;
+	asiento = new objeto3D("asiento");
+	salpicadero = new objeto3D("asiento"); // tiene la misma forma geometrica que el asiento
 	barraVertical1  = GenerarCubo();
 	barraVertical2 = GenerarCubo();
 	barraHorizontal1  = GenerarCubo();
@@ -142,6 +149,9 @@ function cargarAutoElevador(objetos)
 	//chasis del autoElevador
 	rotarObjeto(chasis,Math.PI/2,[1.0,0.0,0.0]);
 	escalarObjeto(chasis,[1.5,1.0,0.5]);
+	//asiento del conductor
+
+
 	//pala que sostendra los objetos
 	palaAutoElevador = GenerarCubo();
 	escalarObjeto(palaAutoElevador,[0.4,0.01,0.3]);
@@ -163,6 +173,18 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(barraHorizontal3,[0.65,1.1,0.0]);
 	mat4.scale(barraHorizontal3.obtenerMatrizTransformacion(),barraHorizontal3.obtenerMatrizTransformacion(),[0.015,0.02,0.25]);
 
+	//asiento
+	rotarObjeto(asiento,-Math.PI/2,[1.0,0.0,0.0]);
+	rotarObjeto(asiento,Math.PI,[0.0,1.0,0.0]);
+	trasladarObjeto(asiento,[-0.8,0.8,0.0]);
+	escalarObjeto(asiento,[0.3,0.4,0.3]);
+	//salpicadero
+	rotarObjeto(salpicadero,-Math.PI/2,[1.0,0.0,0.0]);
+	trasladarObjeto(salpicadero,[0.5,1.0,0.0]);
+	escalarObjeto(salpicadero,[0.5,0.2,0.3]);
+
+	
+
 	//relacion entre objetos del autoElevador
 	estructuraPala.agregarHijo(barraHorizontal1);
 	estructuraPala.agregarHijo(barraHorizontal2);
@@ -170,14 +192,16 @@ function cargarAutoElevador(objetos)
 	estructuraPala.agregarHijo(barraVertical1);
 	estructuraPala.agregarHijo(barraVertical2);
 	estructuraPala.agregarHijo(palaAutoElevador);
+	autoElevador.agregarHijo(salpicadero);
+	autoElevador.agregarHijo(asiento);
 	autoElevador.agregarHijo(estructuraPala);
 	autoElevador.agregarHijo(chasis);
 	
 	trasladarObjeto(autoElevador,[0.0,0.25,0.0]);
 
 	//ruedas
-	let ruedaTI = new objeto3D("rueda");let ruedaTD = new objeto3D("rueda");
-	let ruedaDI = new objeto3D("rueda");let ruedaDD = new objeto3D("rueda");
+	var ruedaTI = new objeto3D("rueda");var ruedaTD = new objeto3D("rueda");
+	var ruedaDI = new objeto3D("rueda");var ruedaDD = new objeto3D("rueda");
 	escalarObjeto(ruedaTI,[0.3,0.1,0.3]);escalarObjeto(ruedaDI,[0.3,0.1,0.3]);
 	rotarObjeto(ruedaTI,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDI,Math.PI/2,[1.0,0.0,0.0]);
 	trasladarObjeto(ruedaTI,[-0.3,0.18,0.28]);trasladarObjeto(ruedaDI,[0.3,0.18,0.28]);
@@ -211,7 +235,8 @@ function cargarAutoElevador(objetos)
 	barraHorizontal1.setTexture(textures[mapaTexturas.get("textMetalOxidado2")]);
 	barraHorizontal2.setTexture(textures[mapaTexturas.get("textMetalOxidado2")]);
 	barraHorizontal3.setTexture(textures[mapaTexturas.get("textMetalOxidado2")]);
-
+	asiento.setTexture(textures[mapaTexturas.get("textAsiento")]);
+	salpicadero.setTexture(textures[mapaTexturas.get("textCueroBlanco")]);
 
 
 

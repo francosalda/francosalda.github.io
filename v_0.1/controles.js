@@ -29,14 +29,22 @@ var tipoCamaraActual = "orbital";
         let mat4=glMatrix.mat4;
         
         let MIN_Y=1;
+        let MIN_X = -4.5;
+        let MAX_X =  4.7;
+        let MIN_Z = -2.5;
+        let MAX_Z = 2.5;
         let DELTA_TRASLACION=0.03;        // velocidad de traslacion 
         let DELTA_ROTACION=0.02;         // velocidad de rotacion
         let DELTA_MOVIMIENTO_PALA = 0.002; 
         let FACTOR_INERCIA=0.05;
 
+
+
+
+
         //camaras que siguen al autoelevador
         var posicionCamaraLateral = vec3.fromValues(0.0,1.0,1.5);
-        var posicionCamaraConductor = vec3.fromValues(-0.5,0.8,0.0);
+        var posicionCamaraConductor = vec3.fromValues(-0.2,0.8,0.0);
         var posicionTargetConductor = vec3.fromValues(1.5,1.0,0.0);
         var posicionCamaraTrasera = vec3.fromValues(-1.5,1.4,0.0);    
         
@@ -120,7 +128,7 @@ var tipoCamaraActual = "orbital";
          });
 
 
-        /* Eventos de teclado */
+
 
         document.addEventListener("keydown",function(e){
             switch ( e.key ) {
@@ -128,12 +136,15 @@ var tipoCamaraActual = "orbital";
                 //avanzar
                 case "ArrowUp": case"w":
                     vehicleState.xVelTarget=DELTA_TRASLACION;
-                    break;
+                 break;
+                
 
-                break;
+            
                 //retroceder
                 case "ArrowDown": case"s":
-                    vehicleState.xVelTarget=-DELTA_TRASLACION;break;
+
+                    vehicleState.xVelTarget=-DELTA_TRASLACION;
+
                 break;
                 //girar sobre el eje 'y' horario
                 case "d": case "ArrowRight":
@@ -280,6 +291,13 @@ var tipoCamaraActual = "orbital";
         this.update=function()
         {
             
+            //limites de la escena
+            if(position[0] > MAX_X ||position[0] <MIN_X ||position[2] > MAX_Z || position[2] <MIN_Z )
+            {
+               vehicleState.xVel = -1*vehicleState.xVel ;
+            }
+            
+
             vehicleState.xVel+=(vehicleState.xVelTarget-vehicleState.xVel)*FACTOR_INERCIA;
             vehicleState.yVel+=(vehicleState.yVelTarget-vehicleState.yVel)*FACTOR_INERCIA;
             vehicleState.zVel+=(vehicleState.zVelTarget-vehicleState.zVel)*FACTOR_INERCIA;
@@ -343,11 +361,6 @@ var tipoCamaraActual = "orbital";
                 posicionCenterCamara = position;
                 posicionEyeCamara = posicionCamaraLateral;
              }
-             
-
-
-
-
         }
 
 
@@ -394,3 +407,4 @@ var tipoCamaraActual = "orbital";
             objetosEscena.push(objetoImpreso);
         }
     }
+
