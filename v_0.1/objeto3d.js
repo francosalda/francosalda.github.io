@@ -482,11 +482,14 @@ class objeto3D
                     mat4.transpose(matrizNivelTranspuesta,matrizNivel);            
             }
             //recorro los tramos dela curva
+            let largoCurva = this.curvaGeometrica.obtenerCantidadTramos();
             for (let tramo=0; tramo < this.curvaGeometrica.obtenerCantidadTramos(); tramo++) 
             {    
+                
                 //recorro un tramo de la curva
                 for(var u = 0 ; u <= 1; u += 1/ (this.curvaGeometrica.obtenerCantidadPuntosPorTramo()-1))
                 {
+                     
                     let pos =superficie.getPosicion(u,this.curvaGeometrica,tramo);
                     vec4.transformMat4(pos, pos, matrizNivelTranspuesta);                    
                     this.positionBuffer.push(pos[0]);

@@ -116,7 +116,9 @@ var tipoCamaraActual = "orbital";
 
                 //avanzar
                 case "ArrowUp": case"w":
-                    vehicleState.xVelTarget=DELTA_TRASLACION;break;
+                    vehicleState.xVelTarget=DELTA_TRASLACION;
+                    break;
+
                 break;
                 //retroceder
                 case "ArrowDown": case"s":

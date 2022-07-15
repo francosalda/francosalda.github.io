@@ -7,11 +7,11 @@ function cargarObjetosEscena(objetos)
 
 
 	cargarAutoElevador(objetos);
+	
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
-
 	asignarMallasObjetos(objetos);
 }
 
@@ -58,11 +58,11 @@ function cargarEstanteria(objetos)
 	trasladarObjeto(estanteSuperior,[0.0,1.5,0.0]);
 	
 	estanteInferior.setColor([0.04,0.88,0.76]);
-	estanteInferior.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	estanteInferior.setTexture(textures[mapaTexturas.get("textMaderaRayada")]);
 	estanteMedio.setColor([0.04,0.88,0.76]);
-	estanteMedio.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	estanteMedio.setTexture(textures[mapaTexturas.get("textMaderaRayada")]);
 	estanteSuperior.setColor([0.04,0.88,0.76]);
-	estanteSuperior.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
+	estanteSuperior.setTexture(textures[mapaTexturas.get("textMaderaRayada")]);
 
 	estanteria.agregarHijo(estanteInferior);
 	estanteria.agregarHijo(estanteMedio);
@@ -100,13 +100,13 @@ function cargarGalpon(objetos)
 	rotarObjeto(paredLateralDerecha,Math.PI/2,[1.0,0.0,0.0]);
 	rotarObjeto(paredLateralDerecha,Math.PI/2,[0.0,1.0,0.0]);
 	escalarObjeto(paredLateralDerecha,[4.0,1.0,4.0]);
-	trasladarObjeto(paredLateralDerecha,[-4.5,0.0,0.0]);
+	trasladarObjeto(paredLateralDerecha,[-6.0,0.0,0.0]);
 	galpon.agregarHijo(paredLateralDerecha);
 
 	rotarObjeto(paredLateralIzquierda,Math.PI/2,[1.0,0.0,0.0]);
 	rotarObjeto(paredLateralIzquierda,-Math.PI/2,[0.0,1.0,0.0]);
 	escalarObjeto(paredLateralIzquierda,[4.0,1.0,4.0]);
-	trasladarObjeto(paredLateralIzquierda,[4.5,0.0,0.0]);
+	trasladarObjeto(paredLateralIzquierda,[6.0,0.0,0.0]);
 	galpon.agregarHijo(paredLateralIzquierda);
 
 	rotarObjeto(paredDelantera,-Math.PI/2,[1.0,0.0,0.0]);
