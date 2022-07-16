@@ -6,7 +6,7 @@ function Esfera(radio)
     this.getPosicion=function(u,v)
     {
         u = u *2*Math.PI;
-        v = v *Math.PI;
+        v = v  *Math.PI;
         var x = radio*((Math.cos(u))*(Math.sin(v)));
         var y = radio*((Math.sin(u))*(Math.sin(v)));
         var z = radio*(Math.cos(v));
@@ -15,7 +15,7 @@ function Esfera(radio)
     this.getNormal=function(u,v)
     {
         u = u * 2*Math.PI;
-        v = v * 2*Math.PI;
+        v = v *Math.PI;
         //calculo del vector normal a la superficie
         var nx = Math.pow(radio,2)*Math.cos(v)*Math.cos(u)*Math.cos(v);
         var ny = Math.pow(radio,2)*Math.cos(v)*Math.sin(u)*Math.cos(v);

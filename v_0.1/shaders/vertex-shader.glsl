@@ -6,19 +6,18 @@
         attribute vec2 aUv;         //coordenadas de texture (x,y)  x e y (en este caso) van de 0 a 1
 
         // variables Uniform (son globales a todos los vértices y de solo-lectura)
-
         uniform mat4 uMMatrix;     // matriz de modelado
         uniform mat4 uVMatrix;     // matriz de vista
         uniform mat4 uPMatrix;     // matriz de proyección
         uniform mat3 uNMatrix;     // matriz de normales
 
-        uniform vec3 uFixedColorObject;  // color del objeto
+        uniform vec3 uFixedColorObject;  // color del objeto para cuando no se usa iluminación
         
-        
-                        
+
         uniform float time;                 // tiempo en segundos
+        uniform sampler2D uSampler_0;         // sampler de textura 
+
         
-        uniform sampler2D uSampler_0;         // sampler de textura de la tierra
 
         // variables varying (comunican valores entre el vertex-shader y el fragment-shader)
         // Es importante remarcar que no hay una relacion 1 a 1 entre un programa de vertices y uno de fragmentos
@@ -29,12 +28,18 @@
 
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
-        varying vec2 vUv;  
+        varying vec2 vUv;
+      
 
-        varying vec3 vFixedColorObject;                         
-        
+    
+    
+
+
+        varying vec3 vFixedColorObject;   
+
+
+
         // constantes
-        
         const float PI=3.141592653;
 
         void main(void) {
@@ -43,21 +48,14 @@
             vec3 normal = aNormal;	
             vec2 uv = aUv;
                                    	
-           vec4 textureColor = texture2D(uSampler_0, vec2(uv.s, uv.t));         
-            
-            // **************** EDITAR A PARTIR DE AQUI *******************************
-            
-            //position+=normal*(1.0+sin(uv.x*18.0*PI+time*20.0))*0.03; 
-
-            // ************************************************************************
-
+            vec4 textureColor = texture2D(uSampler_0, vec2(uv.s, uv.t));                     
             vec4 worldPos = uMMatrix*vec4(position, 1.0);                        
 
             gl_Position = uPMatrix*uVMatrix*worldPos;
-
             vWorldPosition=worldPos.xyz;              
             vNormal=normalize(uNMatrix * aNormal);
             vUv=uv;	
             vFixedColorObject=uFixedColorObject;
 
+        
         }

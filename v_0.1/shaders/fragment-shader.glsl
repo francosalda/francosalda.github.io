@@ -1,34 +1,46 @@
         precision mediump float;
+
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vWorldPosition;
-
         varying vec3 vFixedColorObject;
+    
+         
+    
         
+  
 
+        //Iluminacion
         uniform vec3 uAmbientColor;         // color de luz ambiente
-        uniform vec3 uDirectionalColor;	    // color de luz direccional
-        uniform vec3 uLightPosition;        // posición de la luz
-        
+        uniform vec3 uLightPositionLoc; // posicion del spot de luz
+        uniform vec3 uLightDirectionLoc; // direccion del spot
+        uniform float uLightInnerCutOffLoc; // angulo interno 
+        uniform float uLightOutterCutOffLoc; // angulo externo
         uniform bool uUseLighting;          // usar iluminacion si/no
 
-        uniform sampler2D uSampler_0;
+        uniform sampler2D uSampler_0;       //sampler de textura
 
-        void main(void) {
-            
-            vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
-            
-            vec3 color=(uAmbientColor+uDirectionalColor*max(dot(vNormal,lightDirection), 0.0));
-           
-           color.x=vUv.x;
-           color.y=vUv.y;
-           color.z=0.0;
-           
+
+        void main(void) {        
+
             if (uUseLighting)
-               // gl_FragColor = vec4(color,1.0);
-               gl_FragColor = texture2D(uSampler_0, vUv);
+            {
+
+            vec3 pointToLightOffset =  uLightPositionLoc -vWorldPosition;
+            vec3 pointToLightDirection = normalize(pointToLightOffset);
+            vec3 lightToPointDirection = -pointToLightDirection;
+            //spotlight
+            float diffuse = max(0.0,dot(pointToLightDirection,vNormal));
+            float angleToSurface = dot(uLightDirectionLoc,lightToPointDirection);
+            float spot = smoothstep(uLightOutterCutOffLoc,uLightInnerCutOffLoc,angleToSurface);
+            float brightness = diffuse * spot;
+            gl_FragColor = (texture2D(uSampler_0, vUv)*(uAmbientColor,1.0))*.2+(texture2D(uSampler_0, vUv)* brightness) * 0.8; //20% luz ambiente+ 80% luz de fuentes 
+            gl_FragColor.a = 1.0;
+
+            }
+          
             else
-                //gl_FragColor = vec4(0.7,0.7,0.7,1.0);
+                //colores sólidos
                 gl_FragColor = vec4(vFixedColorObject,1.0);
             
         }

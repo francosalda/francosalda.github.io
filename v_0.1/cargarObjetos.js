@@ -3,12 +3,12 @@
 function cargarObjetosEscena(objetos)
 {
 	console.log("[DEBUG] Cargando objetos de la escena");
+	
 	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
-
 	asignarMallasObjetos(objetos);
 }
 
@@ -200,8 +200,8 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(autoElevador,[0.0,0.25,0.0]);
 
 	//ruedas
-	var ruedaTI = new objeto3D("rueda");var ruedaTD = new objeto3D("rueda");
-	var ruedaDI = new objeto3D("rueda");var ruedaDD = new objeto3D("rueda");
+	 ruedaTI = new objeto3D("rueda"); ruedaTD = new objeto3D("rueda");
+	 ruedaDI = new objeto3D("rueda"); ruedaDD = new objeto3D("rueda");
 	escalarObjeto(ruedaTI,[0.3,0.1,0.3]);escalarObjeto(ruedaDI,[0.3,0.1,0.3]);
 	rotarObjeto(ruedaTI,Math.PI/2,[1.0,0.0,0.0]);rotarObjeto(ruedaDI,Math.PI/2,[1.0,0.0,0.0]);
 	trasladarObjeto(ruedaTI,[-0.3,0.18,0.28]);trasladarObjeto(ruedaDI,[0.3,0.18,0.28]);

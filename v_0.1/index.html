@@ -219,8 +219,15 @@
         shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
         shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
         shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
-        shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
-        shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
+
+        shaderProgram.lightPositionLocUniform = gl.getUniformLocation(shaderProgram, "uLightPositionLoc");
+        shaderProgram.lightDirectionLocUniform = gl.getUniformLocation(shaderProgram, "uLightDirectionLoc");
+        shaderProgram.lightInnerCutOffLocUniform = gl.getUniformLocation(shaderProgram, "uLightInnerCutOffLoc");
+        shaderProgram.lightOutterCutOffLocUniform = gl.getUniformLocation(shaderProgram, "uLightOutterCutOffLoc");
+
+
+
+
         shaderProgram.uFixedColorObject = gl.getUniformLocation(shaderProgram, "uFixedColorObject");
 
 
@@ -263,22 +270,22 @@
         // Se inicializan las variables asociadas con la Iluminación
         
         gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
-        gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
-        gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
+
+        gl.uniform3f(shaderProgram.ambientColorUniform, 1.0, 1.0, 1.0);
+        gl.uniform3f(shaderProgram.directionalColorUniform, 0.5, 0.5, 0.5);
         gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
         
         // Definimos la ubicación de la camara                        
         
         mat4.lookAt(matrizVista,posicionEyeCamara,posicionCenterCamara,vec3.fromValues(0,1,0));
-        //mat4.lookAt(matrizVista,vec3.fromValues(0,alturaCamara,distanciaCamara),vec3.fromValues(1.5,0,0),vec3.fromValues(0,1,0));
-        /*mat4.lookAt(matrizVista,
-            vec3.fromValues(0,alturaCamara,distanciaCamara),
-            vec3.fromValues(0,0,0),
-            vec3.fromValues(0,1,0)
-        );*/
             
-        var lightPosition = [10.0,0.0, 3.0];  
-        gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
+        var lightPosition = [0.0,4.0, 0.0];  
+        
+
+        gl.uniform3f(shaderProgram.lightPositionLocUniform,0.0,2.5,0.0);
+        gl.uniform3f(shaderProgram.lightDirectionLocUniform, 0.0,-1.0,0.0);
+        gl.uniform1f(shaderProgram.lightInnerCutOffLocUniform,Math.cos(15*Math.PI/180));
+        gl.uniform1f(shaderProgram.lightOutterCutOffLocUniform, Math.cos(30*Math.PI/180));
         
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);
