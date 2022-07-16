@@ -110,7 +110,7 @@ var tipoCamaraActual = "orbital";
                 if (beta< minimunBeta ) {beta=minimunBeta};
 
 
-                if (beta>maximiumBeta){beta=maximiumBeta};
+//                if (beta>maximiumBeta){beta=maximiumBeta};
                
                posicionEyeCamara = vec3.fromValues(deltaXOffset+radio * Math.sin(alfa+deltaAlfa) * Math.sin(beta),deltaYOffset+ radio * Math.cos(beta) ,deltaZOffset+radio * Math.cos(alfa+deltaAlfa) * Math.sin(beta) );
         }    

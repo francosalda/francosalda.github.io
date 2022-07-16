@@ -235,7 +235,7 @@
     }
     
     
-    function setMatrixUniforms() 
+    function setMatrixUniforms(matrizModelado) 
     {
         
         gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, matrizModelado);
@@ -279,13 +279,10 @@
         
         mat4.lookAt(matrizVista,posicionEyeCamara,posicionCenterCamara,vec3.fromValues(0,1,0));
             
-        var lightPosition = [0.0,4.0, 0.0];  
-        
-
-        gl.uniform3f(shaderProgram.lightPositionLocUniform,0.0,2.5,0.0);
+        gl.uniform3f(shaderProgram.lightPositionLocUniform,-1.0,2.5,-1.0);
         gl.uniform3f(shaderProgram.lightDirectionLocUniform, 0.0,-1.0,0.0);
-        gl.uniform1f(shaderProgram.lightInnerCutOffLocUniform,Math.cos(15*Math.PI/180));
-        gl.uniform1f(shaderProgram.lightOutterCutOffLocUniform, Math.cos(30*Math.PI/180));
+        gl.uniform1f(shaderProgram.lightInnerCutOffLocUniform,Math.cos(20*Math.PI/180));
+        gl.uniform1f(shaderProgram.lightOutterCutOffLocUniform, Math.cos(40*Math.PI/180));
         
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);

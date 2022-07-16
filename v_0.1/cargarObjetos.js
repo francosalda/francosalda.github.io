@@ -9,6 +9,13 @@ function cargarObjetosEscena(objetos)
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
+
+	/*let objetoPrueba = new objeto3D("cubo");
+	objetoPrueba.setTexture(textures[mapaTexturas.get("textGruaMetalica")]);
+	//rotarObjeto(objetoPrueba,Math.PI/2,[1.0,0.0,0.0]);
+
+	objetos.push(objetoPrueba)	;
+*/
 	asignarMallasObjetos(objetos);
 }
 

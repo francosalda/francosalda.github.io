@@ -11,10 +11,12 @@ function superficieBarrido(altura,uScale,vScale)
     this.getNormal=function(u,v,curvaGeometrica,curvaTrayectoria,tramo)
     {
         let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
+
         let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
+
         let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
-        normal.y = normal.y - altura/2;
-        return normal;
+       
+        return [-1*normal[0],-1*normal[1],-1*normal[2]];
     }
 
     this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){

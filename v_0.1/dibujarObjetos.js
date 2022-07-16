@@ -13,9 +13,7 @@ function dibujarObjetos(objetosEscena)
 		{
 			//dibujado del objeto
 			aux = objetosEscena[i].obtenerMatrizTransformacion();
-	        objetosEscena[i].asignarMatrizTransformacion(aux);
-	        matrizModelado = aux;
-	        setMatrixUniforms();
+	        setMatrixUniforms(aux);
 	        if(lighting)
 	        {
 	        	gl.bindTexture(gl.TEXTURE_2D, objetosEscena[i].getTexture());

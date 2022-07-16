@@ -74,7 +74,7 @@ class CurvaBezier
         puntoDer.x = Base0der(u)*p0[0]+Base1der(u)*p1[0]+Base2der(u)*p2[0]+Base3der(u)*p3[0];
         puntoDer.y = Base0der(u)*p0[1]+Base1der(u)*p1[1]+Base2der(u)*p2[1]+Base3der(u)*p3[1];
         puntoDer.z = Base0der(u)*p0[2]+Base1der(u)*p1[2]+Base2der(u)*p2[2]+Base3der(u)*p3[2];
-        return puntoDer;
+        return [puntoDer.x,puntoDer.y,puntoDer.z];
 	}
 };
 
