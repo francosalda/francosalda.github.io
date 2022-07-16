@@ -9,11 +9,6 @@ function cargarObjetosEscena(objetos)
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
-
-	/* objetoPrueba = new objeto3D("asiento");
-	objetoPrueba.setTexture(textures[mapaTexturas.get("textAsiento")]);
-	objetos.push(objetoPrueba);*/
-
 	asignarMallasObjetos(objetos);
 }
 
@@ -287,6 +282,20 @@ function cargarImpresora(objetos)
 	baseImpresora = new objeto3D("baseImpresora");
 	escalarObjeto(baseImpresora,[0.5,0.8,0.5]);
 	trasladarObjeto(baseImpresora,[-0.23,-0.45,0.0]);
+
+	luzImpresoraDI =  new objeto3D("esfera");
+	escalarObjeto(luzImpresoraDI,[0.02,0.02,0.02]);
+	trasladarObjeto(luzImpresoraDI,[-0.1,0.25,0.15]);
+	luzImpresoraDD =  new objeto3D("esfera");
+	escalarObjeto(luzImpresoraDD,[0.02,0.02,0.02]);
+	trasladarObjeto(luzImpresoraDD,[-0.1,0.25,-0.15]);
+	luzImpresoraTI =  new objeto3D("esfera");
+	escalarObjeto(luzImpresoraTI,[0.02,0.02,0.02]);
+	trasladarObjeto(luzImpresoraTI,[-0.45,0.25,0.15]);
+	luzImpresoraTD =  new objeto3D("esfera");
+	escalarObjeto(luzImpresoraTD,[0.02,0.02,0.02]);
+	trasladarObjeto(luzImpresoraTD,[-0.45,0.25,-0.15]);
+
 	/*relacion entre objetos que conforman la impresora*/
 	CabezalImpresora.agregarHijo(agarreImpresora);
 	CabezalImpresora.agregarHijo(padImpresora);
@@ -295,7 +304,10 @@ function cargarImpresora(objetos)
 	CabezalImpresora.agregarHijo(SujetadorPadImpresora);
 	trasladarObjeto(CabezalImpresora,[0.0,0.245,0.0]);
 	escalarObjeto(CabezalImpresora,[1.8,1.0,1.5]);
-
+	CabezalImpresora.agregarHijo(luzImpresoraDI);
+	CabezalImpresora.agregarHijo(luzImpresoraDD);
+	CabezalImpresora.agregarHijo(luzImpresoraTI);
+	CabezalImpresora.agregarHijo(luzImpresoraTD);
 	impresora.agregarHijo(tuboImpresora);
 	impresora.agregarHijo(CabezalImpresora);
 	impresora.agregarHijo(baseImpresora);
@@ -315,7 +327,10 @@ function cargarImpresora(objetos)
 	SujetadorPadImpresora.setTexture(textures[mapaTexturas.get("textMetalVerde")]);
 	baseImpresora.setTexture(textures[mapaTexturas.get("textMetalGris")]);
 	tuboImpresora.setTexture(textures[mapaTexturas.get("textMetalGris")]);
-
+	luzImpresoraDI.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	luzImpresoraDD.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	luzImpresoraTI.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	luzImpresoraTD.setTexture(textures[mapaTexturas.get("textMarmol")]);
 
 	//ubicacion de la impresora en la escena
 	trasladarObjeto(impresora,[2.0,0.6,0.0]);

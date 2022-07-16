@@ -3,25 +3,32 @@ son descriptas totalmente de manera analiticas mediante formulas*/
 
 function Esfera(radio)
 {
-    this.getPosicion=function(u,v)
+   this.getPosicion=function(u,v)
     {
-        u = u *2*Math.PI;
+        u = u*2*Math.PI;
         v = v  *Math.PI;
-        var x = radio*((Math.cos(u))*(Math.sin(v)));
-        var y = radio*((Math.sin(u))*(Math.sin(v)));
-        var z = radio*(Math.cos(v));
+        let x = radio*(Math.cos(u)*Math.sin(v));
+        let y = radio*(Math.sin(u)*Math.sin(v));
+        let z = radio*Math.cos(v);
         return [x,y,z];
     }
     this.getNormal=function(u,v)
     {
         u = u * 2*Math.PI;
         v = v *Math.PI;
-        //calculo del vector normal a la superficie
-        var nx = Math.pow(radio,2)*Math.cos(v)*Math.cos(u)*Math.cos(v);
-        var ny = Math.pow(radio,2)*Math.cos(v)*Math.sin(u)*Math.cos(v);
-        var nz = Math.pow(radio,2)*Math.cos(v)*Math.sin(v);
-        var norma = Math.sqrt(Math.pow(nx,2)+Math.pow(ny, 2)+Math.pow(nz,2));
-        return [nx/norma,ny/norma,nz/norma];
+
+        let dux = -1*radio*Math.sin(u)*Math.sin(v);
+        let duy = radio*Math.cos(u)*Math.sin(v);
+        let duz = 0.0;
+
+        let dvx = radio*Math.cos(u)*Math.cos(v);
+        let dvy = radio*Math.sin(u)*Math.cos(v);
+        let dvz = -1*radio*Math.sin(v);
+
+        let normal = productoVectorial([dux,duy,duz],[dvx,dvy,dvz]);
+        //NORMAL ESFERA  ESTA INVERTIDA ya que las utilizare como emisoras de luz..
+        // caso contrario utlizar : return [-1*normal[0],-1*normal[1],-1*normal[2]];
+        return normal;
     }
 
     this.getCoordenadasTextura=function(u,v)

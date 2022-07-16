@@ -12,7 +12,8 @@ function superficieRevolucion(radio,altura)
         let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
         let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
         let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
-        normal.x = normal.x-radio ;
+
+        
         return normal;
     }
     this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){

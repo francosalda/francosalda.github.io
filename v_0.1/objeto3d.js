@@ -181,9 +181,9 @@ class objeto3D
             this.columnas = this.curvaGeometrica.obtenerCantidadTramos()*cantidadPuntosPorTramo - 1;
         }
         else if (superficie == "asiento")
-        {
+        { 
             let cantidadTramos =4;
-            let cantidadPuntosPorTramo = 2;
+            let cantidadPuntosPorTramo = 4;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesAsiento(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1,1,1);

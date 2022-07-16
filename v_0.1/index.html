@@ -110,7 +110,8 @@
 
         //iluminacion
         var posicionLucesSpot = [[-3.5,2.5,-1.5],[0.0,2.5,-1.5],[3.5,2.5,-1.5],[-3.5,2.5,1.5],[0.0,2.5,1.5],[3.5,2.5,1.5]];
-        var direccionLucesSpot = [0.0,-1.0,0.0]; // hacia abajo en eje 'y'
+    
+        var direccionLucesSpot = [-0.1,-1.0,0.0]; // hacia abajo en eje 'y'
         var ambientLightColor = [0.1,0.1,0.1];
         var anguloInteriorLuzSpot = 30;
         var anguloExteriorLuzSpot = 40;
@@ -225,6 +226,10 @@
         shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
         shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
         shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
+        shaderProgram.lightPositionPointUniform1 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint1");
+        shaderProgram.lightPositionPointUniform2 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint2");
+        shaderProgram.lightPositionPointUniform3 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint3");
+        shaderProgram.lightPositionPointUniform4 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint4");
         shaderProgram.lightPositionSpotUniform1 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot1");
         shaderProgram.lightPositionSpotUniform2 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot2");
         shaderProgram.lightPositionSpotUniform3 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot3");
@@ -294,7 +299,16 @@
     gl.uniform3f(shaderProgram.lightDirectionSpotUniform, direccionLucesSpot[0],direccionLucesSpot[1],direccionLucesSpot[2]);
     gl.uniform1f(shaderProgram.lightInnerCutOffSpotUniform,Math.cos(anguloInteriorLuzSpot*Math.PI/180));
     gl.uniform1f(shaderProgram.lightOutterCutOffSpotUniform, Math.cos(anguloExteriorLuzSpot*Math.PI/180));
-        
+    //luces puntuales
+    let posicionluzPuntual=vec3.create();
+    mat4.getTranslation(posicionluzPuntual,luzImpresoraDI.obtenerMatrizTransformacion());
+    gl.uniform3f(shaderProgram.lightPositionPointUniform1, posicionluzPuntual[0],posicionluzPuntual[1],posicionluzPuntual[2]);
+    mat4.getTranslation(posicionluzPuntual,luzImpresoraDD.obtenerMatrizTransformacion());
+    gl.uniform3f(shaderProgram.lightPositionPointUniform2, posicionluzPuntual[0],posicionluzPuntual[1],posicionluzPuntual[2]);
+    mat4.getTranslation(posicionluzPuntual,luzImpresoraTI.obtenerMatrizTransformacion());
+    gl.uniform3f(shaderProgram.lightPositionPointUniform3, posicionluzPuntual[0],posicionluzPuntual[1],posicionluzPuntual[2]);
+    mat4.getTranslation(posicionluzPuntual,luzImpresoraTD.obtenerMatrizTransformacion());
+    gl.uniform3f(shaderProgram.lightPositionPointUniform4, posicionluzPuntual[0],posicionluzPuntual[1],posicionluzPuntual[2]);
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);
 
@@ -303,8 +317,8 @@
     function tick()
     {
         requestAnimFrame(tick);
-       controladorVehiculo.update();        
-        
+        controladorVehiculo.update();        
+      
 
         //animación de impresora 3D
         if(imprimiendo)
