@@ -10,12 +10,10 @@ function cargarObjetosEscena(objetos)
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
 
-	/*let objetoPrueba = new objeto3D("cubo");
-	objetoPrueba.setTexture(textures[mapaTexturas.get("textGruaMetalica")]);
-	//rotarObjeto(objetoPrueba,Math.PI/2,[1.0,0.0,0.0]);
+	/* objetoPrueba = new objeto3D("asiento");
+	objetoPrueba.setTexture(textures[mapaTexturas.get("textAsiento")]);
+	objetos.push(objetoPrueba);*/
 
-	objetos.push(objetoPrueba)	;
-*/
 	asignarMallasObjetos(objetos);
 }
 
@@ -145,7 +143,7 @@ function cargarAutoElevador(objetos)
 	estructuraPala = new objeto3D;
 	ruedas = new objeto3D;
 	asiento = new objeto3D("asiento");
-	salpicadero = new objeto3D("asiento"); // tiene la misma forma geometrica que el asiento
+	salpicadero = GenerarCubo(); 
 	barraVertical1  = GenerarCubo();
 	barraVertical2 = GenerarCubo();
 	barraHorizontal1  = GenerarCubo();
@@ -156,7 +154,7 @@ function cargarAutoElevador(objetos)
 	//chasis del autoElevador
 	rotarObjeto(chasis,Math.PI/2,[1.0,0.0,0.0]);
 	escalarObjeto(chasis,[1.5,1.0,0.5]);
-	//asiento del conductor
+	
 
 
 	//pala que sostendra los objetos
@@ -186,9 +184,9 @@ function cargarAutoElevador(objetos)
 	trasladarObjeto(asiento,[-0.8,0.8,0.0]);
 	escalarObjeto(asiento,[0.3,0.4,0.3]);
 	//salpicadero
-	rotarObjeto(salpicadero,-Math.PI/2,[1.0,0.0,0.0]);
-	trasladarObjeto(salpicadero,[0.5,1.0,0.0]);
-	escalarObjeto(salpicadero,[0.5,0.2,0.3]);
+	escalarObjeto(salpicadero,[0.10,0.05,0.4]);
+	trasladarObjeto(salpicadero,[0.3,0.20,0.0]);
+	
 
 	
 
