@@ -108,6 +108,12 @@
         var mapaTexturas= new Map();
         var cantTexturas = 0;
 
+        //iluminacion
+        var posicionLucesSpot = [[-3.5,2.5,-1.5],[0.0,2.5,-1.5],[3.5,2.5,-1.5],[-3.5,2.5,1.5],[0.0,2.5,1.5],[3.5,2.5,1.5]];
+        var direccionLucesSpot = [0.0,-1.0,0.0]; // hacia abajo en eje 'y'
+        var ambientLightColor = [0.1,0.1,0.1];
+        var anguloInteriorLuzSpot = 30;
+        var anguloExteriorLuzSpot = 40;
 
     /* Inicializacion de WebGl*/
     function initGL(canvas) 
@@ -219,11 +225,15 @@
         shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
         shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
         shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
-
-        shaderProgram.lightPositionLocUniform = gl.getUniformLocation(shaderProgram, "uLightPositionLoc");
-        shaderProgram.lightDirectionLocUniform = gl.getUniformLocation(shaderProgram, "uLightDirectionLoc");
-        shaderProgram.lightInnerCutOffLocUniform = gl.getUniformLocation(shaderProgram, "uLightInnerCutOffLoc");
-        shaderProgram.lightOutterCutOffLocUniform = gl.getUniformLocation(shaderProgram, "uLightOutterCutOffLoc");
+        shaderProgram.lightPositionSpotUniform1 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot1");
+        shaderProgram.lightPositionSpotUniform2 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot2");
+        shaderProgram.lightPositionSpotUniform3 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot3");
+        shaderProgram.lightPositionSpotUniform4 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot4");
+        shaderProgram.lightPositionSpotUniform5 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot5");
+        shaderProgram.lightPositionSpotUniform6 = gl.getUniformLocation(shaderProgram, "uLightPositionSpot6");
+        shaderProgram.lightDirectionSpotUniform = gl.getUniformLocation(shaderProgram, "uLightDirectionSpot");
+        shaderProgram.lightInnerCutOffSpotUniform = gl.getUniformLocation(shaderProgram, "uLightInnerCutOffSpot");
+        shaderProgram.lightOutterCutOffSpotUniform = gl.getUniformLocation(shaderProgram, "uLightOutterCutOffSpot");
 
 
 
@@ -266,23 +276,24 @@
         mat4.identity(matrizProyeccion);
         mat4.perspective(matrizProyeccion, 30, aspect, 0.1, 100.0);
         mat4.scale(matrizProyeccion,matrizProyeccion,[1,-1,1]); // parche para hacer un flip de Y, parece haber un bug en glmatrix
-           
-        // Se inicializan las variables asociadas con la Iluminación
-        
         gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
-
-        gl.uniform3f(shaderProgram.ambientColorUniform, 1.0, 1.0, 1.0);
-        gl.uniform3f(shaderProgram.directionalColorUniform, 0.5, 0.5, 0.5);
-        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
-        
         // Definimos la ubicación de la camara                        
-        
         mat4.lookAt(matrizVista,posicionEyeCamara,posicionCenterCamara,vec3.fromValues(0,1,0));
-            
-        gl.uniform3f(shaderProgram.lightPositionLocUniform,-1.0,2.5,-1.0);
-        gl.uniform3f(shaderProgram.lightDirectionLocUniform, 0.0,-1.0,0.0);
-        gl.uniform1f(shaderProgram.lightInnerCutOffLocUniform,Math.cos(20*Math.PI/180));
-        gl.uniform1f(shaderProgram.lightOutterCutOffLocUniform, Math.cos(40*Math.PI/180));
+        
+
+        // Se inicializan las variables asociadas con la Iluminación
+        gl.uniform3f(shaderProgram.ambientColorUniform, ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]);
+        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
+    //luces spot
+    gl.uniform3f(shaderProgram.lightPositionSpotUniform1,posicionLucesSpot[0][0],posicionLucesSpot[0][1],posicionLucesSpot[0][2]);
+    gl.uniform3f(shaderProgram.lightPositionSpotUniform2,posicionLucesSpot[1][0],posicionLucesSpot[1][1],posicionLucesSpot[1][2]);
+    gl.uniform3f(shaderProgram.lightPositionSpotUniform3,posicionLucesSpot[2][0],posicionLucesSpot[2][1],posicionLucesSpot[2][2]);
+    gl.uniform3f(shaderProgram.lightPositionSpotUniform4,posicionLucesSpot[3][0],posicionLucesSpot[3][1],posicionLucesSpot[3][2]);
+    gl.uniform3f(shaderProgram.lightPositionSpotUniform5,posicionLucesSpot[4][0],posicionLucesSpot[4][1],posicionLucesSpot[4][2]);
+    gl.uniform3f(shaderProgram.lightPositionSpotUniform6,posicionLucesSpot[5][0],posicionLucesSpot[5][1],posicionLucesSpot[5][2]);
+    gl.uniform3f(shaderProgram.lightDirectionSpotUniform, direccionLucesSpot[0],direccionLucesSpot[1],direccionLucesSpot[2]);
+    gl.uniform1f(shaderProgram.lightInnerCutOffSpotUniform,Math.cos(anguloInteriorLuzSpot*Math.PI/180));
+    gl.uniform1f(shaderProgram.lightOutterCutOffSpotUniform, Math.cos(anguloExteriorLuzSpot*Math.PI/180));
         
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);
@@ -323,7 +334,7 @@
         
         gui.add(window, "modo",["wireframe","smooth","edges"]);
         // Menu de parámetros para generacion de superficies
-        gui.add(window, "textura",["marmol1","marmol2","patron1","patron2","patron3","ajedrez"]);
+        gui.add(window, "textura",["marmol1","marmol2","patron1","patron2","patron3"]);
         gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
         gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
         gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
