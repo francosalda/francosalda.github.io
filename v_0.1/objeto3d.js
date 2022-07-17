@@ -283,7 +283,7 @@ class objeto3D
          else if (superficie == "B1")
         {
             let cantidadTramos =3;
-            let cantidadPuntosPorTramo = 4;
+            let cantidadPuntosPorTramo = 18;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB1(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1,1,4);
@@ -319,7 +319,7 @@ class objeto3D
         else if (superficie == "B4")
         {
             let cantidadTramos =4;
-            let cantidadPuntosPorTramo = 9;
+            let cantidadPuntosPorTramo = 18;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesB4(),cantidadTramos,cantidadPuntosPorTramo);
             this.superficie3D = new superficieBarrido(1,4,4);
