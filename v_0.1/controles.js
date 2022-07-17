@@ -23,6 +23,21 @@ var mouse = {x: 0, y: 0};
 var tipoCamaraActual = "orbital";
 
 
+/*Posiciones de  dummys centros de estanteria*/
+var dummyEstantes = 
+[[-3.5,1.75,-1.3],[-3.5,1.25,-1.3],[-3.5,0.75,-1.3],
+[-3.5,1.75,-0.9],[-3.5,1.25,-0.9],[-3.5,0.75,-0.9],
+[-3.5,1.75,-0.5],[-3.5,1.25,-0.5],[-3.5,0.75,-0.5],
+[-3.5,1.75,-0.1],[-3.5,1.25,-0.1],[-3.5,0.75,-0.1],
+[-3.5,1.75,0.3],[-3.5,1.25,0.3],[-3.5,0.75,0.3],
+[-3.5,1.75,0.7],[-3.5,1.25,0.7],[-3.5,0.75,0.7],
+[-3.5,1.75,1.1],[-3.5,1.25,1.1],[-3.5,0.75,1.1],
+[-3.5,1.75,1.5],[-3.5,1.25,1.5],[-3.5,0.75,1.5]
+];
+var idEstantesOcupados = [];
+var minDistanciaPalaObjeto = 0.33; // distancia minima para agarrar el objeto impreso
+var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto impreso
+
     function AutoElevadorControl(initialPos)
     {
         let vec3=glMatrix.vec3;          // defino vec3 para no tener que escribir glMatrix.vec3
@@ -164,20 +179,49 @@ var tipoCamaraActual = "orbital";
                     break;
                 //agarrar objeto con el elevador
                 case "g":
+
                     if(vehicleState.sujentadoObjeto)
                     {
-                        autoElevador.quitarUltimoHijo();
-                        objetoEnEspera = false; // ya se puede imprimir otro objeto nuevo
-                        vehicleState.sujentadoObjeto = false;
+                        let posicionObjetoImpreso = vec3.create();
+                        mat4.getTranslation(posicionObjetoImpreso,objetoImpreso.obtenerMatrizTransformacion());
+                        //chequea el estante mas cercano libre que cumpla con la distancia minima requerida
+                        for(let i = 0; i< dummyEstantes.length;i++)
+                        {
+                            let posicionCentroEstante = dummyEstantes[i];
+                            let distance = vec3.dist(posicionCentroEstante,posicionObjetoImpreso);
+                            if(distance <= minDistanciaEstanteObjeto && (!idEstantesOcupados.includes(i)))
+                            {
+                                //deja el objeto en el estante
+                                autoElevador.quitarUltimoHijo();
+                                let dummyCentroEstante = new objeto3D;
+                                trasladarObjeto(dummyCentroEstante,posicionCentroEstante);
+                                reacomodarObjeto(objetoImpreso,dummyCentroEstante,0.0);
+                                idEstantesOcupados.push(i);
+                                objetoEnEspera = false; // ya se puede imprimir otro objeto nuevo
+                                vehicleState.sujentadoObjeto = false;
+
+                            }
+                        }
                     }
                     else
                     {
-                        if(!imprimiendo && objetoEnEspera) // evita que se tome un objeto en proceso de impresio
+                        if(!imprimiendo && objetoEnEspera)
                         {
-                            vehicleState.sujentadoObjeto = true;
-                            autoElevador.agregarHijo(objetoImpreso);
+                            let posicionCentroPala=vec3.create();
+                            mat4.getTranslation(posicionCentroPala,dummyCentroPalaAutoelevador.obtenerMatrizTransformacion());
+                            let posicionObjetoImpreso = vec3.create();
+                            mat4.getTranslation(posicionObjetoImpreso,objetoImpreso.obtenerMatrizTransformacion());
+                            let distance = vec3.dist(posicionCentroPala,posicionObjetoImpreso);
+                            if(distance <= minDistanciaPalaObjeto)
+                            {
+                                
+                                vehicleState.sujentadoObjeto = true;
+                                reacomodarObjeto(objetoImpreso,dummyCentroPalaAutoelevador,0.2);
+                                autoElevador.agregarHijo(objetoImpreso);
 
-                        }   
+                            }
+
+                        }
                         
                     }
                 break;
@@ -331,9 +375,10 @@ var tipoCamaraActual = "orbital";
             worldMatrix=mat4.create();
             mat4.translate(worldMatrix,worldMatrix,position);        
             mat4.multiply(worldMatrix,worldMatrix,rotationMatrix);
-        
+            //movimiento de la pala autoelevador
             trasladarObjeto(autoElevador,[translation[0],translation[1],translation[2]]);
             trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
+            trasladarObjeto(dummyCentroPalaAutoelevador,[0.0,vehicleState.yVelPala,0.0]);
             //traslado las camaras acorde a la traslacion del vehiculo
             vec3.add(posicionCamaraLateral,posicionCamaraLateral,[translation[0],translation[1],translation[2]]); 
             vec3.add(posicionCamaraTrasera,posicionCamaraTrasera,[translation[0],translation[1],translation[2]]); 
@@ -408,3 +453,25 @@ var tipoCamaraActual = "orbital";
         }
     }
 
+
+/* Traslada el objeto 1 a la posicion del objeto2Target en el plano XZ*/
+function reacomodarObjeto(objeto1,objeto2Target,yOffset)
+{
+    let posicionObjeto1 = vec3.create();
+    let posicionObjeto2 = vec3.create();
+    mat4.getTranslation(posicionObjeto1,objeto1.obtenerMatrizTransformacion());
+    mat4.getTranslation(posicionObjeto2,objeto2Target.obtenerMatrizTransformacion());
+    
+    let deltaX=0.0,deltaY=0.0,deltaZ=0.0;
+
+    deltaX = posicionObjeto1[0]-posicionObjeto2[0];
+    if(deltaX){deltaX = -1*deltaX;}
+    deltaY= posicionObjeto1[1]-posicionObjeto2[1];
+    if(deltaY){deltaY = -1*deltaY;}
+    deltaZ = posicionObjeto1[2]-posicionObjeto2[2];
+    if(deltaZ){deltaZ = -1*deltaZ;}
+
+    deltaY += yOffset;
+    trasladarObjeto(objeto1,[deltaX,deltaY,deltaZ]);
+
+}

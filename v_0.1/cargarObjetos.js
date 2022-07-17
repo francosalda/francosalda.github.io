@@ -156,6 +156,12 @@ function cargarAutoElevador(objetos)
 	palaAutoElevador = GenerarCubo();
 	escalarObjeto(palaAutoElevador,[0.4,0.01,0.3]);
 	trasladarObjeto(palaAutoElevador,[0.85,0.10,0.0]);
+	//dummy centro de la pala
+	dummyCentroPalaAutoelevador = new objeto3D;
+	escalarObjeto(dummyCentroPalaAutoelevador,[0.01,0.01,0.01]);
+	trasladarObjeto(dummyCentroPalaAutoelevador,[0.85,0.10,0.0]);
+
+	
 	
 	//barras de la estructura de la pala
 	trasladarObjeto(barraVertical1,[0.65,0.6,0.1]);
@@ -192,6 +198,7 @@ function cargarAutoElevador(objetos)
 	estructuraPala.agregarHijo(barraVertical1);
 	estructuraPala.agregarHijo(barraVertical2);
 	estructuraPala.agregarHijo(palaAutoElevador);
+	estructuraPala.agregarHijo(dummyCentroPalaAutoelevador);
 	autoElevador.agregarHijo(salpicadero);
 	autoElevador.agregarHijo(asiento);
 	autoElevador.agregarHijo(estructuraPala);
@@ -213,6 +220,8 @@ function cargarAutoElevador(objetos)
 	ruedas.agregarHijo(ruedaTI);ruedas.agregarHijo(ruedaDI);
 	ruedas.agregarHijo(ruedaTD);ruedas.agregarHijo(ruedaDD);
 	autoElevador.agregarHijo(ruedas);
+
+
 
 	//colores
 	chasis.setColor([0.99,0.94,0.13]);

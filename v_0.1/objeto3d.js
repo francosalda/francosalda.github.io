@@ -550,14 +550,13 @@ class objeto3D
      // se agrega la tapa superior e inferior si es una superficie cerrada
         if(this.esSuperficieCerrada()) 
         {
-            console.log("[Debug]: chequeando si es una superficie cerrada o no");
+         
             let cantidadCoordenadasPorVertice = 3;
             let verticesTapaInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice);
             let verticesTapaSuperior = this.positionBuffer.slice(-1*cantidad_columnas*cantidadCoordenadasPorVertice);
-            let posVerticeInf = this.calcularPuntoCentral(verticesTapaInferior);
-            console.log("[Debug] el Vinfcentral es:",posVerticeInf);
+            let posVerticeInf = this.calcularPuntoCentral(verticesTapaInferior); 
             let postVerticeSup = this.calcularPuntoCentral(verticesTapaSuperior);
-           console.log("[Debug] el Vsupcentral es:",postVerticeSup);
+        
            
             //duplico los vertices de la tapa superior
             for(let i = 0 ; i < cantidad_columnas; i++)
