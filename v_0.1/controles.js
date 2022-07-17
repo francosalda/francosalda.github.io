@@ -387,15 +387,15 @@ var tipoCamaraActual = "orbital";
             if(tipoSuperficieGUI == "Barrido")
             {
                  objetoImpreso = new objeto3D(forma2DBarridoGUI); 
-                 escalarObjeto(objetoImpreso,[0.3,0.5,0.3]);   
-                 trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
+                 escalarObjeto(objetoImpreso,[0.3,0.4,0.3]);   
+                 trasladarObjeto(objetoImpreso,[1.75,0.15,0.0]);
                  
             }
             else if (tipoSuperficieGUI == "Revolucion")
             {
                  objetoImpreso = new objeto3D(forma2DRevolucionGUI);
-                 escalarObjeto(objetoImpreso,[0.5,0.5,0.5]);      
-                 trasladarObjeto(objetoImpreso,[1.75,0.1,0.0]);
+                 escalarObjeto(objetoImpreso,[0.5,0.4,0.5]);      
+                 trasladarObjeto(objetoImpreso,[1.75,0.15,0.0]);
                  
             }
             trasladarObjeto(CabezalImpresora,[0.0,-0.4992,0.0]);  
