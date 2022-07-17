@@ -11,10 +11,10 @@ function superficieRevolucion(radio,altura)
     {
         let tangenteTrayectoria = curvaTrayectoria.getTangente(v);
         let tangenteForma2D =  curvaGeometrica.calcularPuntoCurvaDerivada(u,tramo);
-        let normal = productoVectorial(tangenteForma2D,tangenteTrayectoria);
+        let normal = productoVectorial(tangenteTrayectoria,tangenteForma2D);
 
         
-        return normal;
+        return [-1*normal[0],-1*normal[1],-1*normal[2]];
     }
     this.getCoordenadasTextura=function(u,v,tramo,curvaGeometrica){
     	let largoCurva = curvaGeometrica.obtenerCantidadTramos();
