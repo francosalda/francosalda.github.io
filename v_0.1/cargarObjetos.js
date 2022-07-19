@@ -9,7 +9,9 @@ function cargarObjetosEscena(objetos)
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
+	
 	asignarMallasObjetos(objetos);
+
 }
 
 /*carga las formas que conforman la estanteria*/
@@ -340,6 +342,7 @@ function cargarImpresora(objetos)
 	luzImpresoraDD.setTexture(textures[mapaTexturas.get("textMarmol")]);
 	luzImpresoraTI.setTexture(textures[mapaTexturas.get("textMarmol")]);
 	luzImpresoraTD.setTexture(textures[mapaTexturas.get("textMarmol")]);
+	baseImpresora.setReflectionCubeMapState(true);
 
 	//ubicacion de la impresora en la escena
 	trasladarObjeto(impresora,[2.0,0.6,0.0]);

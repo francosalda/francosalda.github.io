@@ -75,6 +75,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
         let worldMatrix=mat4.create();
 
         let vehicleInitialState={
+            sujentadoObjeto:false,
             xVel:0,
             zVel:0,
             yVel:0,
@@ -192,13 +193,14 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                             if(distance <= minDistanciaEstanteObjeto && (!idEstantesOcupados.includes(i)))
                             {
                                 //deja el objeto en el estante
-                                autoElevador.quitarUltimoHijo();
+                                
                                 let dummyCentroEstante = new objeto3D;
                                 trasladarObjeto(dummyCentroEstante,posicionCentroEstante);
                                 reacomodarObjeto(objetoImpreso,dummyCentroEstante,0.0);
                                 idEstantesOcupados.push(i);
                                 objetoEnEspera = false; // ya se puede imprimir otro objeto nuevo
                                 vehicleState.sujentadoObjeto = false;
+                                autoElevador.quitarUltimoHijo();
 
                             }
                         }
@@ -214,7 +216,6 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                             let distance = vec3.dist(posicionCentroPala,posicionObjetoImpreso);
                             if(distance <= minDistanciaPalaObjeto)
                             {
-                                
                                 vehicleState.sujentadoObjeto = true;
                                 reacomodarObjeto(objetoImpreso,dummyCentroPalaAutoelevador,0.2);
                                 autoElevador.agregarHijo(objetoImpreso);

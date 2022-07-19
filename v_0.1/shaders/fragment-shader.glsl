@@ -4,8 +4,9 @@
         varying vec3 vNormal;
         varying vec3 vWorldPosition;
         varying vec3 vFixedColorObject;
-    
 
+    
+        uniform bool uUseReflectionCubeMap; // usar reflexion del cube-Map si/no 
         uniform bool uUseLighting;          // usar iluminacion si/no
         //Luces spots
         uniform vec3 uAmbientColor;         // color de luz ambiente
@@ -19,13 +20,15 @@
         uniform float uLightInnerCutOffSpot; // angulo interno 
         uniform float uLightOutterCutOffSpot; // angulo externo
         //luces puntuales
-        uniform vec3 uLightPositionPoint1;
-        uniform vec3 uLightPositionPoint2;
-        uniform vec3 uLightPositionPoint3;
-        uniform vec3 uLightPositionPoint4;
+        uniform vec3 uLightPositionPoint1; //posicion de luz puntual1
+        uniform vec3 uLightPositionPoint2; // posicion de luz puntual2
+        uniform vec3 uLightPositionPoint3; // posicion de luz puntual3
+        uniform vec3 uLightPositionPoint4; // posicion de luz puntual3
 
         
         uniform sampler2D uSampler_0;       //sampler de textura
+        uniform samplerCube u_texture;  //sampler de cube-map
+        uniform vec3 u_worldCameraPosition; // posicion de la camara
         
         //calcula la luz de un spot
         float calculateBrightnessSpot(vec3 posicionLuz)
@@ -41,7 +44,7 @@
             return brightnessSpot;
 
         }
-        //calcula las luz de una fuente puntual
+        //calcula la luz de una fuente puntual
         float calculateBrightnessPoint(vec3 posicionLuzPuntual)
         {
             vec3 offset = posicionLuzPuntual-vWorldPosition;
@@ -72,26 +75,40 @@
             float brightnessSpot4  = calculateBrightnessSpot(uLightPositionSpot4);
             float brightnessSpot5  = calculateBrightnessSpot(uLightPositionSpot5);
             float brightnessSpot6  = calculateBrightnessSpot(uLightPositionSpot6);
-
             return brightnessSpot1+brightnessSpot2+brightnessSpot3+brightnessSpot4+brightnessSpot5+brightnessSpot6;
             
         }
         
 
 
-        void main(void) {        
+        void main(void) 
+        {        
 
             if (uUseLighting)
             {
-            
-            float brightness = calculateTotalBritghnessPoints()+calculateTotalBrightnessSpot();
-            gl_FragColor = (texture2D(uSampler_0, vUv)*(uAmbientColor,1.0))*.2+(texture2D(uSampler_0, vUv)* brightness) * 0.8; //20% luz ambiente+ 80% luz de fuentes 
-            gl_FragColor.a = 1.0;
+                //reflexion del cube map
+                vec3 eyeToSurfaceDir = normalize(vWorldPosition - u_worldCameraPosition);
+                vec3 direction = reflect(eyeToSurfaceDir,vNormal);
+                vec4 reflectedColor =textureCube(u_texture, direction);
+
+                //luces difusas
+                float brightness = calculateTotalBritghnessPoints()+calculateTotalBrightnessSpot();
+                vec4 diffuseColor=(texture2D(uSampler_0, vUv)*(uAmbientColor,1.0))*.2+(texture2D(uSampler_0, vUv)* brightness) * 0.8;
+
+                if(uUseReflectionCubeMap)
+                {
+                    gl_FragColor = mix(diffuseColor,reflectedColor,0.6);
+                }
+                else
+                {
+                    gl_FragColor = diffuseColor;
+                }
+                
+                gl_FragColor.a = 1.0;
 
             }
-          
             else
-                //colores sólidos
+                //sin iluminacion utilizar colores sólidos
                 gl_FragColor = vec4(vFixedColorObject,1.0);
             
         }

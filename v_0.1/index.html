@@ -107,6 +107,7 @@
         var imagesTextures = [];
         var mapaTexturas= new Map();
         var cantTexturas = 0;
+        var cubeMapTexture;
 
         //iluminacion
         var posicionLucesSpot = [[-3.5,2.5,-1.5],[0.0,2.5,-1.5],[3.5,2.5,-1.5],[-3.5,2.5,1.5],[0.0,2.5,1.5],[3.5,2.5,1.5]];
@@ -223,9 +224,10 @@
         shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
         shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
         shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+        shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
+        //iluminacion
         shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
         shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-        shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
         shaderProgram.lightPositionPointUniform1 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint1");
         shaderProgram.lightPositionPointUniform2 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint2");
         shaderProgram.lightPositionPointUniform3 = gl.getUniformLocation(shaderProgram, "uLightPositionPoint3");
@@ -239,14 +241,12 @@
         shaderProgram.lightDirectionSpotUniform = gl.getUniformLocation(shaderProgram, "uLightDirectionSpot");
         shaderProgram.lightInnerCutOffSpotUniform = gl.getUniformLocation(shaderProgram, "uLightInnerCutOffSpot");
         shaderProgram.lightOutterCutOffSpotUniform = gl.getUniformLocation(shaderProgram, "uLightOutterCutOffSpot");
-
-
-
-
         shaderProgram.uFixedColorObject = gl.getUniformLocation(shaderProgram, "uFixedColorObject");
+        //cube-map de reflexion
+        shaderProgram.textureLocationUniform = gl.getUniformLocation(shaderProgram, "u_texture");
+        shaderProgram.UseReflectionCubeMapUniform = gl.getUniformLocation(shaderProgram, "uUseReflectionCubeMap");
+        shaderProgram.worldCameraPositionLocationUniform = gl.getUniformLocation(shaderProgram, "u_worldCameraPosition");
 
-
-        
     }
     
     
@@ -256,6 +256,10 @@
         gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, matrizModelado);
         gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, matrizVista);
         gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, matrizProyeccion);
+
+
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+        gl.uniform1i(shaderProgram.textureLocationUniform, 1);
 
         var normalMatrix = mat3.create();
         mat3.fromMat4(normalMatrix,matrizModelado); // normalMatrix= (inversa(traspuesta(matrizModelado)));
@@ -388,11 +392,9 @@
 
         srcTexturesMap.forEach((scrTextura,nombreTextura)=>{
         loadTexture(nombreTextura,scrTextura);
-      });
-
-
-        
+      });        
     }
+
 
 
 
@@ -402,6 +404,7 @@
         initGL(canvas);
         initShaders();
         initTextures();
+        loadCubeMap();
         
         cargarObjetosEscena(objetosEscena);
         gl.clearColor(66.2, 0.2, 0.2, 1.0);

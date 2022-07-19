@@ -26,6 +26,7 @@ class objeto3D
             console.log("[DEBUG]Se instancio un nuevo objeto 3D");
             this.textura = null;
             this.colorObjeto = [0.9,0.1,0.1];
+            this.reflectionCubeMap = false;
             
             
         }
@@ -39,6 +40,16 @@ class objeto3D
         this.cantHijos = 0; 
         this.hijos = [];
 	}
+    setReflectionCubeMapState(estado)
+    {
+        this.reflectionCubeMap = estado;
+    }
+    getReflectionCubeMapState()
+    {
+
+        return this.reflectionCubeMap;
+    }
+
     setTexture(texture)
     {
         this.textura =texture; 
@@ -93,7 +104,7 @@ class objeto3D
 
     agregarHijo(objeto)
     {
-    this.hijos.push(objeto);
+    (this.hijos).push(objeto);
     this.cantHijos++;
     }
     quitarUltimoHijo()
