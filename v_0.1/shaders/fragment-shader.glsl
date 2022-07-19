@@ -40,7 +40,10 @@
             float diffuse = max(0.0,dot(pointToLightDirection,vNormal));
             float angleToSurface = dot(uLightDirectionSpot,lightToPointDirection);
             float spot = smoothstep(uLightOutterCutOffSpot,uLightInnerCutOffSpot,angleToSurface);
-            float brightnessSpot = diffuse * spot;
+            //atenuacion de luz spot
+            float distance = length(pointToLightOffset);            
+            float attenuation = 1.0/(0.2*(distance * distance));
+            float brightnessSpot = diffuse * spot * attenuation;
             return brightnessSpot;
 
         }
