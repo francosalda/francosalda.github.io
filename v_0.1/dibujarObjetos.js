@@ -62,7 +62,6 @@ function asignarMallasObjetos(objetosEscena)
 /*Carga las texturas*/
 function loadTexture(nombreTextura,scrTextura)
 {
-	console.log("[Debug] Cargando Textura:",nombreTextura);
 	mapaTexturas.set(nombreTextura,cantTexturas);
 	gl.activeTexture(gl.TEXTURE0);
 	let textura = gl.createTexture();

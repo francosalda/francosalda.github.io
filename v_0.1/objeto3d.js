@@ -23,7 +23,6 @@ class objeto3D
             this.asignarTipoDeSuperficie(nombreSuperficie);// le asigna la función que calculara los vertices
             this.contenedor = false; // true: si es un objeto contenedor 
             this.curvaGeometrica; // curva de forma geometrica para objetos que son superficies de barrido
-            console.log("[DEBUG]Se instancio un nuevo objeto 3D");
             this.textura = null;
             this.colorObjeto = [0.9,0.1,0.1];
             this.reflectionCubeMap = false;
@@ -32,13 +31,12 @@ class objeto3D
         }
         else
         {
-            console.log("[DEBUG]Se instancio un nuevo objeto contenedor 3D");
             this.contenedor = true; 
             this.matrizTransformacion = new mat4.create();
         }
 
         this.cantHijos = 0; 
-        this.hijos = [];
+        this.hijos = new Array();
 	}
     setReflectionCubeMapState(estado)
     {
@@ -108,13 +106,13 @@ class objeto3D
     this.cantHijos++;
     }
     quitarUltimoHijo()
-    {
-        this.hijos.pop();
-        this.cantHijos--;
+    {    
+    (this.hijos).pop();
+    this.cantHijos--;   
     }
     obtenerUltimoHijo()
     {
-        return this.hijos[(hijos.length)-1];
+        return this.hijos[(this.hijos.length)-1];
     }
     obtenerHijos(objeto)
     {
@@ -148,13 +146,11 @@ class objeto3D
     {
         if(superficie == "plano")
         {
-            console.log("[Debug Objeto3d]: Se asigno el plano como superficie");
             this.superficie3D = new Plano(8,8);
             this.filas = 1; this.columnas = 1;
         }
         else if (superficie == 'esfera')
         {
-            console.log("[Debug Objeto3d]: Se asigno la esfera como superficie");
             this.superficie3D = new Esfera(1);
             this.filas = 40; this.columnas = 40;
         }
@@ -166,7 +162,6 @@ class objeto3D
         }
         else if (superficie == 'cubo')
         {
-            console.log("[Debug Objeto3d]: se asigno como superficie de barrido un cubo");
             let cantidadTramos = 4;
             let cantidadPuntosPorTramo = 2 ; // determina la cantidad de pasos por tramo 
             let gradoCurva = 3;

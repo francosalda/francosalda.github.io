@@ -34,7 +34,9 @@ var dummyEstantes =
 [-3.5,1.75,1.1],[-3.5,1.25,1.1],[-3.5,0.75,1.1],
 [-3.5,1.75,1.5],[-3.5,1.25,1.5],[-3.5,0.75,1.5]
 ];
-var idEstantesOcupados = [];
+var idEstantesOcupados = (new Array(dummyEstantes.length)).fill(0); 
+
+
 var minDistanciaPalaObjeto = 0.33; // distancia minima para agarrar el objeto impreso
 var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto impreso
 
@@ -186,7 +188,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                     break;
                 //agarrar objeto con el elevador
                 case "g":
-
+                console.log(autoElevador.obtenerHijos().length);
                     if(vehicleState.sujentadoObjeto)
                     {
                         let posicionObjetoImpreso = vec3.create();
@@ -208,6 +210,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                                 objetoEnEspera = false; // ya se puede imprimir otro objeto nuevo
                                 vehicleState.sujentadoObjeto = false;
                                 autoElevador.quitarUltimoHijo();
+                                break;
 
                             }
                         }
@@ -346,6 +349,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
 
         this.update=function()
         {
+
             
             //limites de la escena
             if(position[0] > MAX_X ||position[0] <MIN_X ||position[2] > MAX_Z || position[2] <MIN_Z )

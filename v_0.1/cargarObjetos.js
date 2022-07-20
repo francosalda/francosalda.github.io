@@ -2,8 +2,6 @@
 /*carga el conjunto de objetos de la escena en el array 'objetos' */
 function cargarObjetosEscena(objetos)
 {
-	console.log("[DEBUG] Cargando objetos de la escena");
-	
 	cargarAutoElevador(objetos);
 	cargarEstanteria(objetos);
 	cargarGalpon(objetos);
@@ -17,7 +15,6 @@ function cargarObjetosEscena(objetos)
 /*carga las formas que conforman la estanteria*/
 function cargarEstanteria(objetos)
 {
-	console.log("[DEBUG] Cargando objetos de la estanteria");
 	estanteria = new objeto3D; // contenedor
 	estanteInferior = GenerarCubo();
 	patasDelanterasEstanteria = new objeto3D; //contenedor
@@ -76,7 +73,7 @@ function cargarEstanteria(objetos)
 /*Carga las formas que conforman el galpon*/
 function cargarGalpon(objetos)
 {
-	console.log("[DEBUG] Cargando objetos del galpon");
+
 	let largoPiso=10.0,anchoPiso= 10.0,altoGalpon = 1.0;
 	let largoParedLateral = 8.0,anchoParedLateral = 1.0,altoParedGalpon = 2.5;
 
@@ -135,7 +132,6 @@ function cargarGalpon(objetos)
 /*Carga las formas que conforman el autoelevador*/
 function cargarAutoElevador(objetos)
 {
-	console.log("[DEBUG] Cargando objetos del autoElevador");
 	autoElevador = new objeto3D(); autoElevador.asignarIdentificadorObjeto("CAutoelevador");
 	estructuraPala = new objeto3D;
 	ruedas = new objeto3D;
@@ -257,7 +253,6 @@ function cargarAutoElevador(objetos)
 
 function cargarImpresora(objetos)
 {
-	console.log("[DEBUG] Cargando objetos de la impresora");
 	impresora = new objeto3D;//contenedor
 	tuboImpresora = new objeto3D("cilindro",matrizModelado);
 
