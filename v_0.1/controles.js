@@ -52,6 +52,9 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
         let DELTA_ROTACION=0.02;         // velocidad de rotacion
         let DELTA_MOVIMIENTO_PALA = 0.002; 
         let FACTOR_INERCIA=0.05;
+        let FACTOR_INERCIA_RUEDAS=0.025;
+        let DELTA_ROTACION_RUEDAS= 0.04;
+
 
 
 
@@ -63,7 +66,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
         var posicionTargetConductor = vec3.fromValues(1.5,1.0,0.0);
         var posicionCamaraTrasera = vec3.fromValues(-1.5,1.4,0.0);    
         
-
+        var ejeRotacionRueda = vec3.fromValues(0.0,0.0,1.0);
         if (!initialPos) initialPos=[0,0,0];
 
         let position=vec3.fromValues(initialPos[0],initialPos[1],initialPos[2]);
@@ -85,7 +88,8 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
             yVelPala:0,
           
 
-
+            yRotRueda:0, 
+            yRotRuedaTarget:0, 
             yRotVelTarget:0,
             yRotVel:0,
             zRotVelTarget:0,
@@ -109,7 +113,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                 
 
                mouse.x = e.clientX || e.pageX; 
-               mouse.y = e.clientY || e.pageY ;
+               mouse.y = e.clientY || e.pageY;
                var deltaX=0;
                var deltaY=0;
 
@@ -152,6 +156,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                 //avanzar
                 case "ArrowUp": case"w":
                     vehicleState.xVelTarget=DELTA_TRASLACION;
+                    vehicleState.yRotRuedaTarget = -DELTA_ROTACION_RUEDAS;
                  break;
                 
 
@@ -160,6 +165,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                 case "ArrowDown": case"s":
 
                     vehicleState.xVelTarget=-DELTA_TRASLACION;
+                    vehicleState.yRotRuedaTarget = DELTA_ROTACION_RUEDAS;
 
                 break;
                 //girar sobre el eje 'y' horario
@@ -188,13 +194,13 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                         //chequea el estante mas cercano libre que cumpla con la distancia minima requerida
                         for(let i = 0; i< dummyEstantes.length;i++)
                         {
-                            let posicionCentroEstante = dummyEstantes[i];
+                            let posicionCentroEstante = vec3.fromValues(dummyEstantes[i][0],dummyEstantes[i][1],dummyEstantes[i][2]);
                             let distance = vec3.dist(posicionCentroEstante,posicionObjetoImpreso);
                             if(distance <= minDistanciaEstanteObjeto && (!idEstantesOcupados.includes(i)))
                             {
-                                console.log("Se cumple distancia minima requqeria y desocupado");
+                                console.log("[Info] Se coloco un objeto en el estante");
                                 //deja el objeto en el estante
-                                
+     
                                 let dummyCentroEstante = new objeto3D;
                                 trasladarObjeto(dummyCentroEstante,posicionCentroEstante);
                                 reacomodarObjeto(objetoImpreso,dummyCentroEstante,0.0);
@@ -311,10 +317,14 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
             switch ( e.key ) 
             {
                 case "ArrowUp":  case "w":
-                    vehicleState.xVelTarget=0; break;
+                    vehicleState.xVelTarget=0; 
+                    vehicleState.yRotRuedaTarget=0;
+                    break;
                 
                 case "ArrowDown": case "s": 
-                    vehicleState.xVelTarget=0; break; 
+                    vehicleState.xVelTarget=0; 
+                    vehicleState.yRotRuedaTarget=0;
+                    break; 
   
                 case "ArrowLeft" :case "a": 
                     vehicleState.yRotVelTarget=0; break;
@@ -343,7 +353,6 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                vehicleState.xVel = -1*vehicleState.xVel ;
             }
             
-
             vehicleState.xVel+=(vehicleState.xVelTarget-vehicleState.xVel)*FACTOR_INERCIA;
             vehicleState.yVel+=(vehicleState.yVelTarget-vehicleState.yVel)*FACTOR_INERCIA;
             vehicleState.zVel+=(vehicleState.zVelTarget-vehicleState.zVel)*FACTOR_INERCIA;
@@ -352,6 +361,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
             vehicleState.xRotVel+=(vehicleState.xRotVelTarget-vehicleState.xRotVel)*FACTOR_INERCIA;
             vehicleState.yRotVel+=(vehicleState.yRotVelTarget-vehicleState.yRotVel)*FACTOR_INERCIA;
             vehicleState.zRotVel+=(vehicleState.zRotVelTarget-vehicleState.zRotVel)*FACTOR_INERCIA;
+            vehicleState.yRotRueda+=(vehicleState.yRotRuedaTarget-vehicleState.yRotRueda)*FACTOR_INERCIA;
 
 
             let translation=vec3.fromValues(vehicleState.xVel,vehicleState.yVel,vehicleState.zVel);                        
@@ -363,6 +373,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                 mat4.getTranslation(posicionActual,autoElevador.obtenerMatrizTransformacion());
                 trasladarObjeto(autoElevador,[-1*posicionActual[0],-1*posicionActual[1]  ,-1*posicionActual[2]]);
                 rotarObjeto(autoElevador,vehicleState.yRotVel,[0.0,1.0,0.0]);
+                vec3.rotateY(ejeRotacionRueda, ejeRotacionRueda, vec3.fromValues(0.0,0.0,0.0), vehicleState.yRotVel); 
                 trasladarObjeto(autoElevador,[posicionActual[0],posicionActual[1]  ,posicionActual[2]]);
                 //roto las camaras acorde a la rotacion del vehiculo
                 vec3.rotateY(posicionCamaraLateral,posicionCamaraLateral,[posicionActual[0],posicionActual[1] ,posicionActual[2]],vehicleState.yRotVel);
@@ -372,27 +383,29 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                      
             }
             
+            //calculo de la rotoTraslacion del elevador
             vec3.transformMat4(translation,translation,rotationMatrix);
             vec3.add(position,position,translation);
             worldMatrix=mat4.create();
             mat4.translate(worldMatrix,worldMatrix,position);        
             mat4.multiply(worldMatrix,worldMatrix,rotationMatrix);
-            //movimiento de la pala autoelevador
+            //Traslacion del auto Elevador
             trasladarObjeto(autoElevador,[translation[0],translation[1],translation[2]]);
             trasladarObjeto(palaAutoElevador,[0.0,vehicleState.yVelPala,0.0]);
             trasladarObjeto(dummyCentroPalaAutoelevador,[0.0,vehicleState.yVelPala,0.0]);
+            //giro las ruedas
+            this.girarRuedas();
             //traslado las camaras acorde a la traslacion del vehiculo
             vec3.add(posicionCamaraLateral,posicionCamaraLateral,[translation[0],translation[1],translation[2]]); 
             vec3.add(posicionCamaraTrasera,posicionCamaraTrasera,[translation[0],translation[1],translation[2]]); 
             vec3.add(posicionCamaraConductor,posicionCamaraConductor,[translation[0],translation[1],translation[2]]); 
             vec3.add(posicionTargetConductor,posicionTargetConductor,[translation[0],translation[1],translation[2]]);
-
+            
             if(vehicleState.sujentadoObjeto)
             {
                 trasladarObjeto(objetoImpreso,[0.0,vehicleState.yVelPala,0.0]);    
             }
-            //actualizo la camara actual de las camaras firsPerson
-            
+            //actualizo la camara actual de las camaras firstPerson
             if (tipoCamaraActual == "firstPerson4")
              {
                 posicionEyeCamara = posicionCamaraConductor;
@@ -408,6 +421,21 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                 posicionCenterCamara = position;
                 posicionEyeCamara = posicionCamaraLateral;
              }
+        }
+        this.girarRuedas=function()
+        {
+            this.girarRueda(ruedaTI);this.girarRueda(ruedaDI);
+            this.girarRueda(ruedaTD);this.girarRueda(ruedaDD);
+    
+        }
+        
+        this.girarRueda=function(rueda)
+        {
+            let posicionActualRuedas = vec3.create();
+            mat4.getTranslation(posicionActualRuedas,rueda.obtenerMatrizTransformacion());
+            trasladarObjeto(rueda,[-1*posicionActualRuedas[0],-1*posicionActualRuedas[1],-1*posicionActualRuedas[2]]);
+            rotarObjeto(rueda,vehicleState.yRotRueda,ejeRotacionRueda);            
+            trasladarObjeto(rueda,[posicionActualRuedas[0],posicionActualRuedas[1],posicionActualRuedas[2]]);
         }
 
 
@@ -425,6 +453,10 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
         }
 
     }
+
+
+
+
 
     //funcion de la impresora 3d
     function imprimirObjeto()

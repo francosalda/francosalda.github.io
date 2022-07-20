@@ -634,52 +634,7 @@ class objeto3D
 
             filas = filas + 4; // se agregaron 2 tapas + 2 filas de punto de colapso
         }
-      /*  else if(this.superficieDeUnaCara)
-        {
-            let cantidadCoordenadasPorVertice = 3;
-            let verticesSuperficieInferior = this.positionBuffer.slice(0,cantidad_columnas*cantidadCoordenadasPorVertice); 
-            let posVerticeCentral = this.calcularPuntoCentral(verticesSuperficieInferior);
-            
-             for(let i = 0 ; i < cantidad_columnas; i++)
-                {
-                    this.positionBuffer.unshift(verticesSuperficieInferior[0+i*3]);
-                    this.positionBuffer.unshift(verticesSuperficieInferior[1+i*3]);
-                    this.positionBuffer.unshift(verticesSuperficieInferior[2+i*3]);
-                     nrm = [0.0,1.0,0.0];
-                    this.normalBuffer.unshift(nrm[0]);
-                    this.normalBuffer.unshift(nrm[1]);
-                    this.normalBuffer.unshift(nrm[2]);
-                    //uvs = [0.1,0.1];
 
-                    let coordMinimas = this.buscarMinimos(verticesSuperficieInferior);
-                    let coordMaximas = this.buscarMaximos(verticesSuperficieInferior);
-
-                    let ux = (verticesSuperficieInferior[0+i*3] - coordMinimas[0]) /(coordMaximas[0]-coordMinimas[0]);
-                    let uz = (verticesSuperficieInferior[2+i*3] - coordMinimas[2]) /(coordMaximas[2]-coordMinimas[2]);
-
-                    this.uvBuffer.unshift(ux); 
-                    this.uvBuffer.unshift(uz);
-
-                }
-            for(let i = 0 ; i < cantidad_columnas; i++)
-                {
-                    this.positionBuffer.unshift(posVerticeCentral[0]);
-                    this.positionBuffer.unshift(posVerticeCentral[1]);
-                    this.positionBuffer.unshift(posVerticeCentral[2]);
-                    nrm = [0.0,1.0,0.0];
-                    this.normalBuffer.unshift(nrm[0]);
-                    this.normalBuffer.unshift(nrm[1]);
-                    this.normalBuffer.unshift(nrm[2]);
-                    uvs = [0.5,0.5];
-                    this.uvBuffer.unshift(uvs[0]); 
-                    this.uvBuffer.unshift(uvs[1]);
-
-                }
-
-
-
-            filas = filas + 2; // se agregaron 1 fila de colapso + 1 tapa 
-       }*/
     return this.llenarBuffers(filas,columnas,this.positionBuffer,this.normalBuffer,this.uvBuffer);
 }
 

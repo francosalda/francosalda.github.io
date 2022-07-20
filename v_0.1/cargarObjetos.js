@@ -9,7 +9,7 @@ function cargarObjetosEscena(objetos)
 	cargarGalpon(objetos);
 	cargarImpresora(objetos);
 	cargarObjetosPrueba(objetos);
-
+	
 	asignarMallasObjetos(objetos);
 
 }
