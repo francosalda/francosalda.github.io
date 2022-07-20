@@ -510,7 +510,8 @@ class objeto3D
                     0, 0, 0, 1); 
                     if(imprimiendo)
                     {
-                        mat4.rotate(matrizNivel, matrizNivel, anguloTorsionGUI*i*2*Math.PI/360, [0.0,1.0,0.0]);    
+                        mat4.rotate(matrizNivel, matrizNivel, (anguloTorsionGUI*Math.PI/180)*i/filas, [0.0,1.0,0.0]);    
+
                     }
                     
                     mat4.transpose(matrizNivelTranspuesta,matrizNivel);            
