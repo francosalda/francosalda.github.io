@@ -192,6 +192,7 @@ var minDistanciaEstanteObjeto = 0.36;// distancia minima para dejar el objeto im
                             let distance = vec3.dist(posicionCentroEstante,posicionObjetoImpreso);
                             if(distance <= minDistanciaEstanteObjeto && (!idEstantesOcupados.includes(i)))
                             {
+                                console.log("Se cumple distancia minima requqeria y desocupado");
                                 //deja el objeto en el estante
                                 
                                 let dummyCentroEstante = new objeto3D;
