@@ -90,7 +90,8 @@
             if (uUseLighting)
             {
                 //reflexion del cube map
-                vec3 eyeToSurfaceDir = normalize(vWorldPosition - u_worldCameraPosition);
+                vec3 fixedWorldPosition = vWorldPosition -  vec3(2.2,0.5,0.0); // compensa desplazamiento impresora para el cubeMap
+                vec3 eyeToSurfaceDir = normalize(fixedWorldPosition - u_worldCameraPosition);
                 vec3 direction = reflect(eyeToSurfaceDir,vNormal);
                 vec4 reflectedColor =textureCube(u_texture, direction);
 
@@ -100,7 +101,7 @@
 
                 if(uUseReflectionCubeMap)
                 {
-                    gl_FragColor = mix(diffuseColor,reflectedColor,0.6);
+                    gl_FragColor = mix(diffuseColor,reflectedColor,0.5);
                 }
                 else
                 {
