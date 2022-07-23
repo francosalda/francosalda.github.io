@@ -101,7 +101,7 @@
 
                 if(uUseReflectionCubeMap)
                 {
-                    gl_FragColor = mix(diffuseColor,reflectedColor,0.6);
+                    gl_FragColor = mix(diffuseColor,reflectedColor,0.4);
                 }
                 else
                 {

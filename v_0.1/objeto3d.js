@@ -220,7 +220,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesRueda(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieRevolucion(1); //radio
+            this.superficie3D = new superficieRevolucion(1,1,1,1); //radio
             this.claseDeSuperficie = "revolucion";
             this.curvaTrayectoria = new recorridoCircular();
             this.filas = 360;
@@ -232,7 +232,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesBaseImpresora(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieRevolucion(1,4); //radio
+            this.superficie3D = new superficieRevolucion(1,4,1,1); //radio
             this.claseDeSuperficie = "revolucion";
             this.curvaTrayectoria = new recorridoCircular();
             this.filas = 360;
@@ -244,7 +244,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA1(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieRevolucion(1,0.4); //radio
+            this.superficie3D = new superficieRevolucion(1,0.4,3,3); //radio
             this.claseDeSuperficie = "revolucion";
             this.curvaTrayectoria = new recorridoCircular();
             this.filas = 360;
@@ -256,7 +256,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA2(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieRevolucion(1,0.4); //radio , altura
+            this.superficie3D = new superficieRevolucion(1,0.4,2,2); //radio , altura
             this.claseDeSuperficie = "revolucion";
             this.curvaTrayectoria = new recorridoCircular();
             this.filas = 360;
@@ -268,7 +268,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA3(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieRevolucion(1,0.4); //radio
+            this.superficie3D = new superficieRevolucion(1,0.4,3,3); //radio
             this.claseDeSuperficie = "revolucion";
             this.curvaTrayectoria = new recorridoCircular();
             this.filas = 360;
@@ -280,7 +280,7 @@ class objeto3D
             let cantidadPuntosPorTramo = 16;
             let gradoCurva = 3;
             this.curvaGeometrica =new CurvaBezier(gradoCurva,verticesA4(),cantidadTramos,cantidadPuntosPorTramo);
-            this.superficie3D = new superficieRevolucion(1,0.4); //radio
+            this.superficie3D = new superficieRevolucion(1,0.4,3,3); //radio
             this.claseDeSuperficie = "revolucion";
             this.curvaTrayectoria = new recorridoCircular();
             this.filas = 360;

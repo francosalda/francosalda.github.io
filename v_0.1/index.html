@@ -69,13 +69,12 @@
         var forma2DBarridoGUI = "B1";
         var forma2DRevolucionGUI = "A1";
         var anguloTorsionGUI = 0;
-        var alturaTotalGUI = 1;
         var textura= "marmol2";
         let mapaOpcionATextura=new Map();
         mapaOpcionATextura.set("marmol1","textMarmolNegro");
         mapaOpcionATextura.set("marmol2","textMarmol");
-        mapaOpcionATextura.set("patron1","textPatron1");
-        mapaOpcionATextura.set("patron2","textMetalOxidado");
+        mapaOpcionATextura.set("patron1","textMetalOxidado");
+        mapaOpcionATextura.set("patron2","textPatron1");
         mapaOpcionATextura.set("patron3","textPatron3");
         
 
@@ -356,7 +355,6 @@
         gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
         gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
         gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
-        gui.add(window, "alturaTotalGUI",0.1,2.0).step(0.1);
         gui.add(window, "anguloTorsionGUI",0.0,180).step(1);
         //comandos
         var f1 = gui.addFolder('Comandos'); 
