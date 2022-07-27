@@ -312,6 +312,7 @@
     gl.uniform3f(shaderProgram.lightPositionPointUniform3, posicionluzPuntual[0],posicionluzPuntual[1],posicionluzPuntual[2]);
     mat4.getTranslation(posicionluzPuntual,luzImpresoraTD.obtenerMatrizTransformacion());
     gl.uniform3f(shaderProgram.lightPositionPointUniform4, posicionluzPuntual[0],posicionluzPuntual[1],posicionluzPuntual[2]);
+    
         //dibujado de objetos de la escena
         dibujarObjetos(objetosEscena);
 

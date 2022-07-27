@@ -21,6 +21,8 @@ function dibujarObjetos(objetosEscena)
 	        	if(objetosEscena[i].getReflectionCubeMapState())
 	        	{
 	        		gl.uniform1i(shaderProgram.UseReflectionCubeMapUniform,true);
+              //posicion de la camara para el cube map
+              gl.uniform3f(shaderProgram.worldCameraPositionLocationUniform,posicionEyeCamara[0],posicionEyeCamara[1],posicionEyeCamara[2]);
 	        	}
 	        	else {gl.uniform1i(shaderProgram.UseReflectionCubeMapUniform,false);}
 	        }

@@ -90,8 +90,7 @@
             if (uUseLighting)
             {
                 //reflexion del cube map
-                vec3 fixedWorldPosition = vWorldPosition -  vec3(1.77,0.15,0.0); // compensa desplazamiento impresora para el cubeMap
-                vec3 eyeToSurfaceDir = normalize(fixedWorldPosition - u_worldCameraPosition);
+                vec3 eyeToSurfaceDir = normalize(vWorldPosition - u_worldCameraPosition);
                 vec3 direction = reflect(eyeToSurfaceDir,vNormal);
                 vec4 reflectedColor =textureCube(u_texture, direction);
 
