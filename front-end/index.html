@@ -50,7 +50,7 @@
         <div class="container px-1 mt-3 mb-3  ">
             <div class="row gx-5">
               <div class="col w-100" >
-               <div class="p-3   border bg-light border border-primary rounded ">
+               <div class="p-3  bg-light border border-primary rounded ">
                 <div class="d-flex flex-column bd-highlight mb-3">
                     <div class="d-flex flex-row bd-highlight mb-3 mt-3">
                         <div class="p-2 bd-highlight w-25">
@@ -58,9 +58,11 @@
                         </div>
                         <div class="p-2 bd-highlight">
                             <div class="d-flex flex-column bd-highlight">
-                                <div class="p-2 bd-highlight">Estudio 1</div>
-                                <div class="p-2 bd-highlight">Estudio 2</div>
-                                <div class="p-2 bd-highlight">Estudio 3</div>
+                                
+                                <div class="p-2 bd-highlight">
+                                    <h3>Acerca de mi </h3>
+                                <em>resumen de about me data</em>
+                                </div>
                               </div>    
                         
                         </div>
@@ -90,9 +92,11 @@
 -->
     <!-- end of About me-->
 
+  
+
     <!-- Progreso de HARD & SOFT SKILLS-->
-    <div class=" bg-light border border-primary ">
-        <h1>Skills</h1>
+    <div class=" bg-light border border-primary w-100">
+        <h1 class="p-3">Skills</h1>
         <div class="row justify-content-center">
             <div class="col-md-3 col-sm-6">
                 <h3><em>HTML</em></h3>
@@ -174,11 +178,118 @@
         
 <!--End of skills-->
 
-
-<!--Proyectos -->
-<!--end of Proyectos -->
+  
+    <!--Educación -->
+    <div class="container-fluid w-100 " >
+        <div><h1>Educación</h1></div>
     
+
+    <div class="card mb-3 w-100" >
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="./imagenes/logo_fiuba.png" class="img-fluid rounded-start w-75 h-75" alt="logo_fiuba">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Ingenieria Electrónica</h5>
+              <p class="card-text">Ingreso a la carrera: 2018. FIUBA-Paseo Colon 850.</p>
+              <p class="card-text"><small class="text-muted">Actualizado en Agosto 2022</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3 w-100" >
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="./imagenes/logo_fiuba.png" class="img-fluid w-75 h-75 rounded-start" alt="logo_fiuba">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Ingenieria informática</h5>
+              <p class="card-text">Ingreso a la carrera: 2019.  FIUBA-Paseo Colon 850.</p>
+              <p class="card-text"><small class="text-muted">Actualizado en Agosto 2022</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3 w-100" >
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="./imagenes/logo_itba.jpg" class="img-fluid rounded-start w-75 h-75" alt="logo_fiuba">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Python</h5>
+              <p class="card-text"> Curso Introductorio de Python  durante mayo de 2021. Online.</p>
+              <p class="card-text"><small class="text-muted">Actualizado en Agosto 2022</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3 w-100" >
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="./imagenes/logo_cambridge.png" class="img-fluid rounded-start w-75 h-75" alt="logo_fiuba">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Ingles FIRST CERTIFICATE</h5>
+              <p class="card-text"> Examen de nivel de ingles. Diciembre del 2017</p>
+              <p class="card-text"><small class="text-muted">Actualizado en Agosto 2022</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    
+
     </div>
+    <!--end of Educación -->
+    <!--Proyectos -->
+    <div class="container-fluid w-100 " >
+      <h1> Proyectos</h1>
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+          <div class="card">
+            <img src="./imagenes/Escena3D.jpg" class="card-img-top" alt="img_proyecto_escena_3d">
+            <div class="card-body">
+              <h5 class="card-title">Escena 3D interactiva</h5>
+              <p class="card-text">Desarrollo de una escena 3D interactiva utilizando <b>OpenGL</b> y <b>JavaScript</b>.<br>
+                Modelado de superficies a partir de curvas de Bezier, superficies paramétricas de barrido y revolución.<br>
+                Implementación de Texturas y detección de eventos de entrada del teclado.<br>
+                Modelo de Phong para simulación de iluminación y mapas de reflexión cubicos.<br>
+                <a href="https://francosalda.github.io/v_0.1/">Visualizar escena</a>
+              </p>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">Realizado en agosto del 2022</small>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <img src="./imagenes/proyecto_medidor_capacitancia.jpg" class="card-img-top" alt="img_proyecto_medidor_capacitancia">
+            <div class="card-body">
+              <h5 class="card-title">Medidor de Capacitancia con Atmega328p</h5>
+              <p class="card-text">Desarrollo e Implementación de un medidor de capacitancia basado en el microcontrolador Atmega328p.<br>
+                Código del microcontrolador elaborado en lenguaje <b>assembly.</b><br>
+                Interfaz de software de comunicación serial a la PC elaboarada en lenguaje <b>C++.</b><br>
+                Utilización de los perifericos del microncontrolador : <b>ADC, TIMER, USART</b>
+            <br>
+            <a href="https://github.com/fiuba-labo-de-micro-miercoles/2021_2c_trabajos_practicos-francosalda/blob/TrabajoFinal/TP_FINAL/informe.pdf">Ver Informe, explicación y pruebas</a><br>    
+            <a href="https://github.com/fiuba-labo-de-micro-miercoles/2021_2c_trabajos_practicos-francosalda/tree/TrabajoFinal/TP_FINAL">Ver repositorio </a><br>
+                
+
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">Realizado en Diciembre del 2021</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!--end of Proyectos -->
+  </div>
 
   </body>
 </html>
