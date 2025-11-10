@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creación Geocerca</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #map { height: 80%; }
+    #panel {
+      height: 20%;
+      background: #f8f9fa;
+      padding: 10px;
+      font-family: sans-serif;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+    button {
+      border: none;
+      background: #007bff;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
+    ul { padding-left: 20px; }
+    li { margin: 4px 0; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="panel">
+  <button id="reset">Reset</button>
+  <h3>Puntos seleccionados:</h3>
+  <ul id="lista"></ul>
+  <p id="info">Hacé clic en el mapa para agregar puntos (4 máx.).</p>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Inicializar el mapa centrado en Buenos Aires
+  const map = L.map('map').setView([-34.6037, -58.3816], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  let puntos = [];
+  let marcadores = [];
+  let poligono = null;
+
+  const lista = document.getElementById("lista");
+  const info = document.getElementById("info");
+  const resetBtn = document.getElementById("reset");
+
+  // Al hacer click en el mapa
+  map.on('click', e => {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+
+    if (puntos.length >= 4) return; // Máximo 4 puntos
+
+    puntos.push([lat, lng]);
+
+    // Crear marcador
+    const marker = L.marker([lat, lng]).addTo(map)
+      .bindPopup(`Punto ${puntos.length}<br>Lat: ${lat.toFixed(6)}<br>Lon: ${lng.toFixed(6)}`)
+      .openPopup();
+    marcadores.push(marker);
+
+    // Mostrar lista
+    actualizarLista();
+
+    // Si ya hay 4 puntos, dibujar el polígono
+    if (puntos.length === 4) {
+      if (poligono) map.removeLayer(poligono);
+      poligono = L.polygon(puntos, {
+        color: '#0066ff',
+        fillColor: '#99ccff',
+        fillOpacity: 0.5
+      }).addTo(map);
+      info.innerHTML = "✅ Cuadrilátero dibujado.";
+      console.log("Polígono:", puntos);
+    } else {
+      info.innerHTML = `Puntos: ${puntos.length}/4`;
+    }
+  });
+
+  // Actualiza la lista de coordenadas en pantalla
+  function actualizarLista() {
+    lista.innerHTML = "";
+    puntos.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.textContent = `Punto ${i+1}: Lat ${p[0].toFixed(6)}, Lon ${p[1].toFixed(6)}`;
+      lista.appendChild(li);
+    });
+  }
+
+  // Botón Reset
+  resetBtn.addEventListener("click", () => {
+    puntos = [];
+    marcadores.forEach(m => map.removeLayer(m));
+    marcadores = [];
+    if (poligono) { map.removeLayer(poligono); poligono = null; }
+    lista.innerHTML = "";
+    info.innerHTML = "Mapa reiniciado. Hacé clic para agregar puntos.";
+  });
+</script>
+</body>
+</html>
