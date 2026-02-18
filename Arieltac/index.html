@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control Tacógrafo v2.0</title>
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="top-bar">
+            <div class="port-selector">
+                <label>Puerto COM:</label>
+                <div class="selector-wrapper">
+                    <select id="portSelect">
+                        <option>Seleccionar Puerto...</option>
+                    </select>
+                    <button id="btnConectar" class="btn-primary">
+                        <i class="fab fa-usb"></i> <strong>Conectar</strong>
+                    </button>
+                </div>
+            </div>
+            <div class="status-info">
+                <div class="status-indicator">
+                    <span id="connStatus" class="status-dot"></span>
+                    <span id="statusText">Desconectado</span>
+                </div>
+                <span id="dateDisplay" class="date-text">17/02/2026 19:15</span>
+            </div>
+        </header>
+
+        <nav class="tabs-container">
+            <button class="tab-btn active" id="tabConfig"><i class="fas fa-cog"></i> Configuración</button>
+            <button class="tab-btn" id="tabImpresora"><i class="fas fa-print"></i> Impresora</button>
+        </nav>
+
+        <main class="main-content">
+            <section id="panelImpresora" class="card printer-panel hidden">
+                <div class="card-header">
+                    <h3><i class="fas fa-edit"></i> Textos de impresión</h3>
+                </div>
+                <div class="printer-grid">
+                    <div class="input-container">
+                        <label>Línea 1</label>
+                        <input type="text" placeholder="Linea 1 impresora ">
+                    </div>
+                    <div class="input-container">
+                        <label>Línea 2</label>
+                        <input type="text" placeholder="Linea 2 impresora ">
+                    </div>
+                    <div class="input-container">
+                        <label>Línea 3</label>
+                        <input type="text" placeholder="Linea 3 impresora ">
+                    </div>
+                    <div class="input-container">
+                        <label>Línea 4</label>
+                        <input type="text" placeholder="Linea 4 impresora ">
+                    </div>
+                    <div class="input-container">
+                        <label>Línea 5</label>
+                        <input type="text" placeholder="Linea 5 impresora ">
+                    </div>
+                </div>
+            </section>
+            <div id="panelConfiguracion"  class="card config-panel">
+            <section class="grid-section">
+                <div class="card">
+                    <h3><i class="fas fa-car"></i> Vehículo</h3>
+                    <div class="input-group">
+                        <label>Dominio / Patente:</label>
+                        <input type="text" placeholder="Dominio del vehiculo">
+                    </div><br>
+                    <div class="input-group">
+                        <label>Identificador Interno:</label>
+                        <input type="text" placeholder="Identificador o chofer">
+                    </div>
+                </div>
+                <div class="card info-tacografo">
+                    <h3><i class="fas fa-info-circle"></i> Información del tacógrafo</h3>
+                    <p>Última Programación: <strong>--/--/----</strong></p>
+                    <p>Identificador: <strong>XXXXXX</strong></p>
+                    <p>Versión: <strong>v X.X</strong></p>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3><i class="fas fa-tachometer-alt"></i> Límites de Velocidad</h3>
+                <div class="flex-row">
+                    <div class="input-container">
+                        <label>Vel. Máxima 1 (Km/h)</label>
+                        <input type="number" value="90">
+                    </div>
+                    <div class="input-container">
+                        <label>Tiempo (Seg)</label>
+                        <input type="number" value="120">
+                    </div>
+                    <div class="check-group">
+                        <input type="checkbox" id="chkHabilitar" checked>
+                        <label for="chkHabilitar">Habilitar</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="flex-row">
+                    <div class="input-container">
+                        <label>Pulsos por Km</label>
+                        <input type="number" value="14800">
+                    </div>
+                    <div class="input-container">
+                        <label>Odometer (Km)</label>
+                        <input type="text" value="00000000">
+                    </div>
+                    <button class="btn-action btn-danger-outline"><i class="fas fa-undo"></i> Reiniciar Odómetro</button>
+                </div>
+            </section>
+            </div>
+
+
+            <footer class="actions-grid">
+                <button class="btn-action btn-danger"><i class="fas fa-trash-alt"></i> Borrar Registros</button>
+                <button class="btn-action btn-secondary"><i class="fas fa-sync"></i>Reset de Fábrica</button>
+                <button class="btn-action btn-success"><i class="fas fa-file-download"></i> Leer</button>
+                <button class="btn-action btn-primary-full"><i class="fas fa-save"></i> Programar</button>
+            </footer>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

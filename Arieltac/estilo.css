@@ -1,0 +1,83 @@
+:root {
+    --primary: #2563eb;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --secondary: #64748b;
+    --bg: #f8fafc;
+}
+
+body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header y Tabs */
+.top-bar { background: white; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 10px; }
+.selector-wrapper { display: flex; gap: 10px; }
+.tabs-container { display: flex; margin-top: 20px; }
+.tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; cursor: pointer; border-radius: 8px 8px 0 0; margin-right: 5px; font-weight: bold; color: #64748b; }
+.tab-btn.active { background: white; color: var(--primary); border-top: 3px solid var(--primary); }
+
+/* Botón Conectar Redondeado (Única modificación) */
+#btnConectar {
+    border-radius: 50px; /* Hace el botón totalmente redondo en los extremos */
+    padding-left: 25px;
+    padding-right: 25px;
+    background: #2563eb;
+}
+
+/* Cards e Inputs */
+.card { 
+    background: #fcfeff; /* Este es el color celeste */
+    padding: 20px; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    margin-bottom: 20px; 
+    border: 1px solid #e2e8f0; 
+}
+.printer-panel{ border-top: 4px solid var(--primary) !important; background: #fcfeff !important; }
+.config-panel{ border-top: 4px solid var(--primary) !important; background: #fcfeff !important; }
+.hidden { display: none !important; }
+
+.grid-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.printer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.flex-row { display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+
+label { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: block; }
+input[type="text"], input[type="number"], select {
+    width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; outline: none; transition: 0.3s; box-sizing: border-box;
+}
+input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+/* Botonera de Acción */
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.btn-action {
+    padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px; color: white; transition: 0.2s;
+}
+.btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-primary, .btn-primary-full { background: var(--primary); }
+.btn-success { background: var(--success); }
+.btn-danger { background: var(--danger); }
+.btn-secondary { background: var(--secondary); }
+.btn-danger-outline { background: transparent; border: 2px solid var(--danger); color: var(--danger); }
+
+.status-dot { width: 12px; height: 12px; background: #bbb; border-radius: 50%; display: inline-block; }
+.connected { background: var(--success); }
+
+@media (max-width: 600px) {
+    .grid-section, .actions-grid { grid-template-columns: 1fr; }
+}
+
+
+
+
+
+
