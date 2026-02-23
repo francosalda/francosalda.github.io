@@ -2,7 +2,7 @@ const tabConfig = document.getElementById('tabConfig');
 const tabImpresora = document.getElementById('tabImpresora');
 const panelImpresora = document.getElementById('panelImpresora');
 const panelConfiguracion = document.getElementById('panelConfiguracion'); // Referencia al nuevo panel
-
+const btnConectar = document.getElementById('btnConectar');
 
 
 
@@ -29,24 +29,6 @@ tabConfig.addEventListener('click', () => {
     tabImpresora.classList.remove('active');
 });
 
-
-let port;
-btnConectar.addEventListener('click', async () => {
-    if ("serial" in navigator) {
-        try {
-            port = await navigator.serial.requestPort();
-            await port.open({ baudRate: 9600 });
-            statusDot.classList.add('connected');
-            document.getElementById('statusText').innerText = "Conectado";
-            btnConectar.innerText = "En Línea";
-            btnConectar.style.background = "#22c55e";
-        } catch (e) {
-            alert("Error al conectar.");
-        }
-    } else {
-        alert("Navegador no compatible.");
-    }
-});
 
 
 

@@ -16,68 +16,131 @@ body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px;
 .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; cursor: pointer; border-radius: 8px 8px 0 0; margin-right: 5px; font-weight: bold; color: #64748b; }
 .tab-btn.active { background: white; color: var(--primary); border-top: 3px solid var(--primary); }
 
-/* Botón Conectar Redondeado (Única modificación) */
-#btnConectar {
-    border-radius: 50px; /* Hace el botón totalmente redondo en los extremos */
-    padding-left: 25px;
-    padding-right: 25px;
-    background: #2563eb;
+/* Botón Conectar */
+#btnConectar { border-radius: 50px; padding: 10px 25px; background: #2563eb; color: white; border: none; cursor: pointer; font-weight: bold; }
+
+
+/*Tab sugerencias*/
+/* Estilos para Sugerencias */
+.suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
 }
 
-/* Cards e Inputs */
-.card { 
-    background: #fcfeff; /* Este es el color celeste */
-    padding: 20px; 
-    border-radius: 12px; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-    margin-bottom: 20px; 
-    border: 1px solid #e2e8f0; 
+.suggestion-item {
+    text-align: center;
 }
-.printer-panel{ border-top: 4px solid var(--primary) !important; background: #fcfeff !important; }
-.config-panel{ border-top: 4px solid var(--primary) !important; background: #fcfeff !important; }
+
+.img-placeholder {
+    width: 150px;
+    height: 150px;
+    background: #e2e8f0;
+    border: 2px dashed #cbd5e1;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+.suggestion-item p {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.4;
+}
+
+/* Ajuste móvil para sugerencias */
+@media (max-width: 600px) {
+    .suggestions-grid { grid-template-columns: 1fr; }
+}
+/* Solo agranda las imágenes de sugerencias cuando tienen la clase 'active' */
+.suggestions-grid img.zoom-active {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(4); /* Escala x4 */
+    z-index: 1000;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    cursor: zoom-out;
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+/* Cards */
+.card { background: #fcfeff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
+.printer-panel, .config-panel { border-top: 4px solid var(--primary) !important; }
 .hidden { display: none !important; }
 
+/* Impresora: Una debajo de la otra */
+.printer-grid { display: flex; flex-direction: column; gap: 15px; }
+.printer-row { display: flex; align-items: flex-end; gap: 15px; }
+.input-container-main { flex: 1; }
+
+/* Toggles Deseleccionables */
+.toggle-group { display: flex; background: #e2e8f0; padding: 4px; border-radius: 8px; gap: 2px; }
+.toggle-group input[type="checkbox"] { display: none; }
+.toggle-group label { margin-bottom: 0; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-size: 10px; transition: 0.2s; background: transparent; color: #64748b; text-align: center; min-width: 55px; }
+.toggle-group input[type="checkbox"]:checked + label { background: var(--primary); color: white; }
+
+/* Grid y Formulario */
 .grid-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.printer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
 .flex-row { display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+.input-container { flex: 1; min-width: 120px; }
 
 label { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: block; }
-input[type="text"], input[type="number"], select {
-    width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; outline: none; transition: 0.3s; box-sizing: border-box;
-}
-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+input[type="text"], input[type="number"], select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; outline: none; box-sizing: border-box; }
 
-/* Botonera de Acción */
-.actions-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 2px solid #e2e8f0;
-}
+/* Checkbox Habilitar Estilo */
+.check-group { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; }
+.check-group input { width: 18px; height: 18px; cursor: pointer; }
 
-.btn-action {
-    padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px; color: white; transition: 0.2s;
-}
-.btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
-
-.btn-primary, .btn-primary-full { background: var(--primary); }
-.btn-success { background: var(--success); }
+/* Botones Acción */
+.actions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0; }
+.btn-action { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; transition: 0.2s; }
 .btn-danger { background: var(--danger); }
+.btn-success { background: var(--success); }
 .btn-secondary { background: var(--secondary); }
-.btn-danger-outline { background: transparent; border: 2px solid var(--danger); color: var(--danger); }
+.btn-primary-full { background: var(--primary); }
+.btn-danger-outline { background: transparent; border: 2px solid var(--danger); color: var(--danger); width: fit-content; }
 
 .status-dot { width: 12px; height: 12px; background: #bbb; border-radius: 50%; display: inline-block; }
 .connected { background: var(--success); }
 
 @media (max-width: 600px) {
     .grid-section, .actions-grid { grid-template-columns: 1fr; }
+    .printer-row { flex-direction: column; align-items: flex-start; }
+}
+
+.terminal-log {
+    background: #0a0a0a;
+    color: #22c55e; /* Verde terminal */
+    font-family: 'Courier New', Courier, monospace;
+    padding: 15px;
+    height: 150px;
+    overflow-y: auto;
+    border-radius: 8px;
+    font-size: 13px;
+    border: 1px solid #333;
+}
+
+.terminal-log span { display: block; margin-bottom: 4px; }
+.sent { color: #60a5fa; } /* Azul para lo enviado */
+.system-msg { color: #94a3b8; font-style: italic; }
+
+.taco-img-container {
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 
 
 
-
-
+/* Opcional: un pequeño efecto cuando el mouse pasa por encima */
+#imgTacografo:hover {
+    transform: scale(1.3);
+}
