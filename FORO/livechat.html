@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat en Vivo - Plataforma</title>
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --bg-dark: #0f172a;
+            --nav-bg: rgba(15, 23, 42, 0.8);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* BARRA SUPERIOR IGUAL A TU CUENTA.HTML */
+        .top-bar {
+            height: 60px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* CONTENEDOR DEL CHAT */
+        #chat-wrapper {
+            flex-grow: 1;
+            width: 100%;
+            background: #fff; /* Tlk.io es blanco, así que lo dejamos limpio */
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-bar">
+        <a href="cuenta.html" class="back-btn">← VOLVER AL PANEL</a>
+        <div style="margin-left: auto; font-size: 0.8rem; opacity: 0.8;">
+            Usuario: <strong>Jacinto</strong> 🟢
+        </div>
+    </nav>
+
+    <div id="chat-wrapper">
+        <iframe src="https://tlk.io/chat-reparando-v1" allow="microphone; camera"></iframe>
+    </div>
+
+</body>
+</html>
