@@ -99,6 +99,9 @@
                         <option value="sprinter">Sprinter 2026</option>
                         <option value="transit">Ford Transit</option>
                         <option value="hiace">Toyota Hiace</option>
+                        <option value="sensor_universal">Sensor Universal</option>
+                        <option value="tracker_gps">Tracker GPS</option>
+
                     </select>
                 </div>
 
@@ -291,7 +294,7 @@ async function leerRespuesta() {
     let acumuladorHex = "";
 
     while (port && port.readable && keepReading) {
-        reader = port.readable.getReader(); // Asignamos a la global
+        reader = port.readable.getReader(); // Asignamos a la globalg
         try {
             while (keepReading) {
                 const { value, done } = await reader.read();
@@ -353,7 +356,8 @@ function parsearIdentificador(data) {
         return false;
     }
 }
-
+const terminal = document.querySelector('.terminal-container');
+    terminal.style.display = 'none';
 
     // --- MANEJO DE PESTAÑAS (Mantenido) ---
     const tabConfig = document.getElementById('tabConfig');
@@ -401,36 +405,45 @@ tabImpresora.addEventListener('click', () => {
 
 vehicleSelect.addEventListener('change', () => {
     const seleccion = vehicleSelect.value;
+    sugerenciasContent.classList.remove('hidden');
     
-    if (seleccion === "sprinter") {
-        sugerenciasContent.classList.remove('hidden');
-        
-        // Configurar rutas de imágenes
-        const basePath = "imgs/sprinter/2026/";
-        
+    // Función auxiliar para resetear la vista
+    const limpiarSugerencias = () => {
         for (let i = 1; i <= 3; i++) {
-            const imgElement = document.getElementById(`imgSug${i}`);
-            const placeholder = document.getElementById(`placeholder${i}`);
-            
-            // Asignar fuente y mostrar imagen
-            imgElement.src = `${basePath}img_${i}.jpeg`;
-            imgElement.style.display = "block";
-            
-            // Ocultar el recuadro gris de placeholder
-            placeholder.style.display = "none";
+            document.getElementById(`imgSug${i}`).style.display = "none";
+            document.getElementById(`placeholder${i}`).style.display = "flex";
         }
+    };
 
-        // Opcional: Cambiar los textos específicamente para la Sprinter
+    if (seleccion === "sprinter") {
+        const basePath = "imgs/sprinter/2026/";
+        for (let i = 1; i <= 3; i++) {
+            const img = document.getElementById(`imgSug${i}`);
+            img.src = `${basePath}img_${i}.jpeg`;
+            img.style.display = "block";
+            document.getElementById(`placeholder${i}`).style.display = "none";
+        }
         document.getElementById('txtSug1').innerText = "Sprinter 2026";
         document.getElementById('txtSug2').innerText = "Fichas de alimentación y pulsos";
         document.getElementById('txtSug3').innerText = "Pinout de las fichas";
 
+    } else if (seleccion === "sensor_universal") {
+        // --- LÓGICA PARA SENSOR UNIVERSAL ---
+        limpiarSugerencias();
+        
+        const img1 = document.getElementById('imgSug1');
+        img1.src = "imgs/sensor_universal/sensor.jpeg";
+        img1.style.display = "block";
+        document.getElementById('placeholder1').style.display = "none";
+        
+        document.getElementById('txtSug1').innerText = " Pinout";
+        document.getElementById('txtSug2').innerText = "Información pendiente.";
+        document.getElementById('txtSug3').innerText = "Información pendiente.";
+
     } else {
-        // Si eligen Ford o Toyota (que aún no tienen fotos), volvemos al estado vacío o placeholders
-        sugerenciasContent.classList.remove('hidden');
+        // Otros modelos (Transit, Hiace)
+        limpiarSugerencias();
         for (let i = 1; i <= 3; i++) {
-            document.getElementById(`imgSug${i}`).style.display = "none";
-            document.getElementById(`placeholder${i}`).style.display = "flex";
             document.getElementById(`txtSug${i}`).innerText = "Información pendiente para este modelo.";
         }
     }
@@ -456,6 +469,7 @@ document.querySelectorAll('.suggestions-grid img').forEach(img => {
             }
         });
     });
+
 </script>
 </body>
 </html>
