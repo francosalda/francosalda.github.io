@@ -1,394 +1,475 @@
-<!doctype html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <script src="js/jquery.js"></script>
-    <script src="js/gl-matrix-3.3.0.js"></script>    
-    <script type="text/javascript" src="js/gl-matrix.js"></script>
-    <script src="js/gl-matrix-3.3.0.min.js"></script>    
-    <script src="js/webgl-utils.js"></script>
-    <script src="js/dat.gui.js"></script>
-    <script src="transformacionesGeometricas.js"></script>
-    <script src="curvas.js"></script>
-    <script src="superficiesBarrido.js"></script>
-    <script src="superficiesRevolucion.js"></script>
-    <script src="superficiesAnaliticas.js"></script>
-    <script src="objeto3d.js"></script>
-    <script src="cargarObjetos.js"></script>
-    <script src="dibujarObjetos.js"></script>
-    <script src="controles.js"></script>
-
-    
-    <style>
-        html{
-            height: 100%;
-        }
-        body{
-            padding: 0;
-            margin: 0;
-            height: 100%;;
-        }
-
-        #myCanvas{
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-    </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control Tacógrafo LITE v1.0</title>
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<body>
+    <div class="container">
+        <header class="top-bar">
+            <div class="port-selector">
+                <label>Puerto COM:</label>
+                <div class="selector-wrapper">
+                    <button id="btnConectar"><i class="fab fa-usb"></i> <strong>Conectar</strong></button>
+                </div>
+            </div>
+            <div class="status-info">
+                <div class="status-indicator"><span id="connStatus" class="status-dot"></span> <span id="statusText">Desconectado</span></div>
+            </div>
+        </header>
 
-<body style="overflow-y:hidden">
-           
-    <canvas id="myCanvas" >
-        Your browser does not support the HTML5 canvas element.
-    </canvas>
+        <section class="card terminal-container">
+            <h3><i class="fas fa-terminal"></i> Terminal de Datos</h3>
+            <div id="terminalLog" class="terminal-log">
+                <span class="system-msg">> Esperando conexión...</span>
+            </div>
+        </section>
+
+        <nav class="tabs-container">
+            <button class="tab-btn active" id="tabConfig"><i class="fas fa-cog"></i> Configuración</button>
+            <button class="tab-btn" id="tabImpresora"><i class="fas fa-print"></i> Impresora</button>
+            <button class="tab-btn" id="tabSugerencias"><i class="fas fa-lightbulb"></i> Sugerencias</button> 
+        </nav>
+
+        <main class="main-content">
+            <section id="panelImpresora" class="card printer-panel hidden">
+                <h3><i class="fas fa-edit"></i> Textos de impresión</h3>
+                <div class="printer-grid">
+                    <div class="printer-row">
+                        <div class="input-container-main"><label>Línea 1</label><input type="text" placeholder="Línea 1"></div>
+                        <div class="toggle-container">
+                            <label>Posición</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" class="pos-check" data-group="L1" id="up1"><label for="up1">Arriba</label>
+                                <input type="checkbox" class="pos-check" data-group="L1" id="down1"><label for="down1">Abajo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="printer-row">
+                        <div class="input-container-main"><label>Línea 2</label><input type="text" placeholder="Línea 2"></div>
+                        <div class="toggle-container">
+                            <label>Posición</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" class="pos-check" data-group="L2" id="up2"><label for="up2">Arriba</label>
+                                <input type="checkbox" class="pos-check" data-group="L2" id="down2"><label for="down2">Abajo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="printer-row">
+                        <div class="input-container-main"><label>Línea 3</label><input type="text" placeholder="Línea 3"></div>
+                        <div class="toggle-container">
+                            <label>Posición</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" class="pos-check" data-group="L3" id="up3"><label for="up3">Arriba</label>
+                                <input type="checkbox" class="pos-check" data-group="L3" id="down3"><label for="down3">Abajo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="printer-row">
+                        <div class="input-container-main"><label>Línea 4</label><input type="text" placeholder="Línea 4"></div>
+                        <div class="toggle-container">
+                            <label>Posición</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" class="pos-check" data-group="L4" id="up4"><label for="up4">Arriba</label>
+                                <input type="checkbox" class="pos-check" data-group="L4" id="down4"><label for="down4">Abajo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="printer-row">
+                        <div class="input-container-main"><label>Línea 5</label><input type="text" placeholder="Línea 5"></div>
+                        <div class="toggle-container">
+                            <label>Posición</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" class="pos-check" data-group="L5" id="up5"><label for="up5">Arriba</label>
+                                <input type="checkbox" class="pos-check" data-group="L5" id="down5"><label for="down5">Abajo</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="panelSugerencias" class="card hidden">
+                <h3><i class="fas fa-car-side"></i> Sugerencias de Instalación</h3>
+                <div class="input-container-main" style="margin-bottom: 20px;">
+                    <label>Seleccionar Modelo de Vehículo:</label>
+                    <select id="vehicleSelect">
+                        <option value="" disabled selected>Elija un modelo...</option>
+                        <option value="sprinter">Sprinter 2026</option>
+                        <option value="transit">Ford Transit</option>
+                        <option value="hiace">Toyota Hiace</option>
+                        <option value="sensor_universal">Sensor Universal</option>
+                        <option value="tracker_gps">Tracker GPS</option>
+
+                    </select>
+                </div>
+
+               <div id="sugerenciasContent" class="hidden">
+                    <div class="suggestions-grid">
+                        <div class="suggestion-item">
+                            <img id="imgSug1" src="" alt="Sugerencia 1" style="width:150px; height:150px; object-fit: cover; border-radius: 8px; display: none;">
+                            <div id="placeholder1" class="img-placeholder">150x150</div>
+                            <p id="txtSug1">Descripción de la instalación 1.</p>
+                        </div>
+                        <div class="suggestion-item">
+                            <img id="imgSug2" src="" alt="Sugerencia 2" style="width:150px; height:150px; object-fit: cover; border-radius: 8px; display: none;">
+                            <div id="placeholder2" class="img-placeholder">150x150</div>
+                            <p id="txtSug2">Descripción de la instalación 2.</p>
+                        </div>
+                        <div class="suggestion-item">
+                            <img id="imgSug3" src="" alt="Sugerencia 3" style="width:150px; height:150px; object-fit: cover; border-radius: 8px; display: none;">
+                            <div id="placeholder3" class="img-placeholder">150x150</div>
+                            <p id="txtSug3">Descripción de la instalación 3.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="panelConfiguracion" class="card config-panel">
+                <section class="grid-section">
+                    <div class="card">
+                        <h3><i class="fas fa-car"></i> Vehículo</h3>
+                        <label>Dominio / Patente:</label><br><input type="text" placeholder="Dominio">
+                        <br><br>
+                        <label>Identificador Interno:</label><br><input type="text" placeholder="Chofer">
+                    </div>
+                   <div class="card info-tacografo">
+                        <h3><i class="fas fa-info-circle"></i> Información</h3>
+                        <p>Última Programación: <strong id="valFechaProg">--/--/----</strong></p>
+                        <p>Versión: <strong id="valVersion">v X.X</strong></p>
+                        
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <img id="imgTacografo" src="imgs/tacografo.png" alt="Tacógrafo" class="hidden" style="max-width: 300px; height: auto; opacity:;">
+                        </div>
+                    </div>
+
+                <section class="card">
+                    <h3><i class="fas fa-tachometer-alt"></i> Límites de Velocidad</h3>
+                    <div class="flex-row">
+                        <div class="input-container"><label>Vel. Máxima (Km/h)</label><br><input type="number" value="90"></div>
+                        <div class="input-container"><label>Tiempo (Seg)<br></label><input type="number" value="120"></div>
+                        <div class="check-group">
+                            <input type="checkbox" id="chkHabilitar" checked>
+                            <label for="chkHabilitar">Habilitar</label>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="flex-row">
+                        <div class="input-container"><label>Pulsos por Km</label><br><br><input type="number" value="14800"></div>
+                        <div class="input-container"><label>Odometer (Km)</label><br><input type="text" value="00000000"></div>
+                        <button class="btn-action btn-danger-outline"><i class="fas fa-undo"></i> Reiniciar Odómetro</button>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="actions-grid">
+                <button class="btn-action btn-danger"><i class="fas fa-trash-alt"></i> Borrar Registros</button>
+                <button class="btn-action btn-secondary"><i class="fas fa-sync"></i> Reset de Fabrica</button>
+                <button class="btn-action btn-success"><i class="fas fa-file-download"></i> Leer</button>
+                <button class="btn-action btn-primary-full"><i class="fas fa-save"></i> Programar</button>
+            </footer>
+        </main>
+    </div>
+
+   <script>
+    // Variables de interfaz (IDs corregidos para tu HTML)
+    const btnConectar = document.getElementById('btnConectar');
+    const statusDot = document.getElementById('connStatus'); // El punto de color
+    const statusText = document.getElementById('statusText');
+    let port;
+
+    // --- LÓGICA DE CONEXIÓN SERIAL REAL ---
+   // Función para escribir en la terminal visual
+function logTerminal(mensaje, tipo = '') {
+    const log = document.getElementById('terminalLog');
+    const span = document.createElement('span');
+    span.className = tipo;
+    span.innerText = `[${new Date().toLocaleTimeString()}] ${mensaje}`;
+    log.appendChild(span);
+    log.scrollTop = log.scrollHeight; // Auto-scroll al final
+}
+
+
+
+
+
+// --- LÓGICA DE CONEXIÓN SERIAL REAL ---
+let reader; // Variable global para poder cancelarlo desde el botón
+let keepReading = true; // Bandera para detener el bucle limpiamente
+
+function logTerminal(mensaje, tipo = '') {
+    const log = document.getElementById('terminalLog');
+    const span = document.createElement('span');
+    span.className = tipo;
+    span.innerText = `[${new Date().toLocaleTimeString()}] ${mensaje}`;
+    log.appendChild(span);
+    log.scrollTop = log.scrollHeight;
+}
+// ESTA ES LA FUNCIÓN QUE FALTABA
+async function enviarComandoConexion() {
+    if (port && port.writable) {
+        const writer = port.writable.getWriter();
+        // Trama: 0x02 + "CNT0" + 0x03 + "38" (33 38) + 0x04
+        const data = new Uint8Array([
+            0x02,                               // STX
+            0x43, 0x4E, 0x54, 0x30,             // "CNT0"
+            0x03,                               // ETX
+            0x33, 0x38,                         // "38" en ASCII
+            0x04                                // EOT
+        ]);
         
-    <script>
+        await writer.write(data);
+        writer.releaseLock();
+        logTerminal("TX -> Comando de identificación enviado", "sent");
+    }
+}
+// Función para convertir los bytes recibidos a una cadena HEX limpia
+function bufferToHex(buffer) {
+    return Array.from(new Uint8Array(buffer))
+        .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+        .join('');
+}
 
-        var vertexShaderFile="vertex-shader.glsl";
-        var fragmentShaderFile = "fragment-shader.glsl"
+btnConectar.addEventListener('click', async () => {
+    const imgTaco = document.getElementById('imgTacografo');
 
-        var modo="smooth"; // wireframe, smooth, edges
-        var shaderProgram;
-        var time=0;
-        
-
-        var gl;
-        var mat4=glMatrix.mat4;
-        var mat3=glMatrix.mat3;
-        var vec3=glMatrix.vec3;
-        var vec4 = glMatrix.vec4;   
-        
-        var earth;
-            
-        var $canvas=$("#myCanvas");
-        var aspect=$canvas.width()/$canvas.height();
-
-
-        //variables de la GUI
-        var tipoSuperficieGUI = "Barrido";
-        var forma2DBarridoGUI = "B1";
-        var forma2DRevolucionGUI = "A1";
-        var anguloTorsionGUI = 0;
-        var alturaTotalGUI = 1;
-        var textura= "marmol1";
-        let mapaOpcionATextura=new Map();
-        mapaOpcionATextura.set("marmol1","textMarmolNegro");
-        mapaOpcionATextura.set("marmol2","textMarmol");
-        mapaOpcionATextura.set("patron1","textPatron1");
-        mapaOpcionATextura.set("patron2","textPatron2");
-        mapaOpcionATextura.set("patron3","textPatron3");
-        
-
-
-
-
-
-        //variables de impresora 3d
-        var imprimiendo = false;
-        var tiempoImprimiendo = 0;
-        var objetoEnEspera = false; // indica si se imprimio un objeto y no se coloco en la estanteria
-        
-        var lighting="true";
-        var vertexShaderSource;
-        var fragmentShaderSource;
-        //matrices
-        var matrizProyeccion = mat4.create();            
-        var matrizVista = mat4.create();            
-        var matrizModelado = mat4.create();
-        //objetos de la escena
-        objetosEscena = [];
-        //controladores
-        let controladorVehiculo = new AutoElevadorControl([0.0,0.0,0.0]);
-        //camara
-        var posicionEyeCamara = vec3.fromValues(0.0,1.0,2.0);
-        var posicionCenterCamara  = vec3.fromValues(0.0,0.0,0.0);
-        //texturas
-        var textures = []; 
-        var imagesTextures = [];
-        var mapaTexturas= new Map();
-        var cantTexturas = 0;
-
-
-    /* Inicializacion de WebGl*/
-    function initGL(canvas) 
-    {
-
+    // ESTADO: DESCONECTAR
+    if (port) {
         try {
-            gl = canvas.getContext("webgl");
-            gl.canvas.width=$canvas.width();
-            gl.canvas.height=$canvas.height();                
+            logTerminal("Desconectando...", "system-msg");
+            keepReading = false; // 1. Ordenamos al bucle detenerse
+
+            if (reader) {
+                await reader.cancel().catch(() => {}); // 2. Cancelamos la lectura
+                // El releaseLock() ocurre en el 'finally' de leerRespuesta
+            }
+
+            // 3. Espera mínima para que el flujo se libere
+            await new Promise(r => setTimeout(r, 200));
+
+            await port.close();
+            port = null;
+
+            statusDot.classList.remove('connected');
+            statusText.innerText = "Desconectado";
+            btnConectar.innerText = "Conectar";
+            btnConectar.style.background = "#2563eb";
+            imgTaco.classList.add('hidden');
+            logTerminal("Puerto cerrado.", "system-msg");
         } catch (e) {
-            console.error(e);
+            logTerminal("Error al cerrar: " + e.message, "danger");
         }
-        if (!gl) {
-            alert("[Error] No se pudo inicializar WebGL");
-        }
-    }
-    /*Cargar shaders*/
-    function loadShaders()
-    {
-        $.when(loadVS(), loadFS()).done(function(res1,res2){
-            // Cuando se cargue todo , se inicia
-            webGLStart();
-        });
-    function loadVS() {
-        return  $.ajax({
-            url: "shaders/"+vertexShaderFile,
-            success: function(result){
-                vertexShaderSource=result;
-            }
-        });
-    }   
-
-    function loadFS() {
-        return  $.ajax({
-            url: "shaders/"+fragmentShaderFile,
-            success: function(result){
-                fragmentShaderSource=result;
-            }
-        });
-     }
-    }
-    
-    function getShader(gl,code,type) {
-
-        var shader;
-
-        if (type == "fragment") 
-            shader = gl.createShader(gl.FRAGMENT_SHADER);
-        else // "vertex"
-            shader = gl.createShader(gl.VERTEX_SHADER);
-        
-        gl.shaderSource(shader, code);
-        gl.compileShader(shader);
-
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            console.error(gl.getShaderInfoLog(shader));
-            return null;
-        }    
-        return shader;
-    }
-        
-    function onResize()
-    {
-        gl.canvas.width=$canvas.width();
-        gl.canvas.height=$canvas.height();
-        aspect=$canvas.width()/$canvas.height();
+        return;
     }
 
-    function getShaderSource(url) 
-    {
-        var req = new XMLHttpRequest();
-        req.open("GET", url, false);
-        req.send(null);
-        return (req.status == 200) ? req.responseText : null;
-    }; 
+    // ESTADO: CONECTAR
+    if ("serial" in navigator) {
+        try {
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
 
-    function initShaders() 
-    {
-        var fragmentShader= getShader(gl, vertexShaderSource,"vertex");
-        var vertexShader= getShader(gl, fragmentShaderSource,"fragment");
-        shaderProgram = gl.createProgram();
-        gl.attachShader(shaderProgram, vertexShader);
-        gl.attachShader(shaderProgram, fragmentShader);
-        gl.linkProgram(shaderProgram);
-
-        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-            alert("Could not initialise shaders");
-        }
-        gl.useProgram(shaderProgram);
-
-
-  
-  
-
-        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
-        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-
-        shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aUv");
-        gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
-
-        shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aNormal");
-        gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
-
-        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-        shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
-        shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
-        shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-        shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-        shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
-        shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-        shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
-        shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
-        shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
-        shaderProgram.uFixedColorObject = gl.getUniformLocation(shaderProgram, "uFixedColorObject");
-
-
-        
-    }
-    
-    
-    function setMatrixUniforms() 
-    {
-        
-        gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, matrizModelado);
-        gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, matrizVista);
-        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, matrizProyeccion);
-
-        var normalMatrix = mat3.create();
-        mat3.fromMat4(normalMatrix,matrizModelado); // normalMatrix= (inversa(traspuesta(matrizModelado)));
-
-        mat3.invert(normalMatrix, normalMatrix);
-        mat3.transpose(normalMatrix,normalMatrix);
-
-        gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
-    }
-              
-    function drawScene() 
-    {
-    
-        // Se configura el viewport dentro del "canvas". 
-        // En este caso se utiliza toda el área disponible
-        gl.viewport(0, 0, $canvas.width(), $canvas.height());
-        
-        // Se habilita el color de borrado para la pantalla (Color Buffer) y otros buffers
-        gl.clearColor(0.2,0.2,0.2,1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        // Se configura la matriz de proyección
-        mat4.identity(matrizProyeccion);
-        mat4.perspective(matrizProyeccion, 30, aspect, 0.1, 100.0);
-        mat4.scale(matrizProyeccion,matrizProyeccion,[1,-1,1]); // parche para hacer un flip de Y, parece haber un bug en glmatrix
-           
-        // Se inicializan las variables asociadas con la Iluminación
-        
-        gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
-        gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
-        gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
-        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
-        
-        // Definimos la ubicación de la camara                        
-        
-        mat4.lookAt(matrizVista,posicionEyeCamara,posicionCenterCamara,vec3.fromValues(0,1,0));
-        //mat4.lookAt(matrizVista,vec3.fromValues(0,alturaCamara,distanciaCamara),vec3.fromValues(1.5,0,0),vec3.fromValues(0,1,0));
-        /*mat4.lookAt(matrizVista,
-            vec3.fromValues(0,alturaCamara,distanciaCamara),
-            vec3.fromValues(0,0,0),
-            vec3.fromValues(0,1,0)
-        );*/
+            statusDot.classList.add('connected');
+            statusText.innerText = "Conectado";
+            btnConectar.innerText = "Desconectar";
+            btnConectar.style.background = "#ef4444";
+            imgTaco.classList.remove('hidden');
             
-        var lightPosition = [10.0,0.0, 3.0];  
-        gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
-        
-        //dibujado de objetos de la escena
-        dibujarObjetos(objetosEscena);
+            document.getElementById('terminalLog').innerHTML = ""; 
+            logTerminal("Conectado. Iniciando...", "system-msg");
 
-    }
-        
-    function tick()
-    {
-        requestAnimFrame(tick);
-        controladorVehiculo.update();        
-        
+            await enviarComandoConexion();
+            leerRespuesta(); // Iniciar bucle
 
-        //animación de impresora 3D
-        if(imprimiendo)
-        {
-            if(tiempoImprimiendo < 240)
-            {
-                trasladarObjeto(objetoImpreso,[0.0,0.00208,0.0]);
-                trasladarObjeto(CabezalImpresora,[0.0,0.00208,0.0]);   
-                tiempoImprimiendo += 1; 
-            }
-            else
-            {
-                imprimiendo = false;
-                tiempoImprimiendo =0; 
-            }
-            
+        } catch (e) {
+            logTerminal("Error: " + e.message, "danger");
         }
-
-        time+=1/60;
-        drawScene();
     }
-    /*Menu de Interfaz con el usiario*/   
-    function initMenu()
-    {
-        var gui = new dat.GUI();
-        //Menu de control de la escena
-        
-        gui.add(window, "modo",["wireframe","smooth","edges"]);
-        // Menu de parámetros para generacion de superficies
-        gui.add(window, "textura",["marmol1","marmol2","patron1","patron2","patron3","ajedrez"]);
-        gui.add(window, "tipoSuperficieGUI",["Barrido","Revolucion"]);
-        gui.add(window, "forma2DRevolucionGUI",["A1","A2","A3","A4"]);
-        gui.add(window, "forma2DBarridoGUI",["B1","B2","B3","B4"]);
-        gui.add(window, "alturaTotalGUI",0.1,2.0).step(0.1);
-        gui.add(window, "anguloTorsionGUI",0.0,20).step(1);
-        //comandos
-        var f1 = gui.addFolder('Comandos'); 
-        f1.add(window, 'imprimirObjeto').name("Generar");    
-        f1.open(); // hace que la carpeta f1 inicie abierta
+});
 
-        
-    }
-    
-    function initTextures()
-    {
+async function leerRespuesta() {
+    keepReading = true;
+    let acumuladorHex = "";
 
-        let srcTexturesMap = new Map();
-        srcTexturesMap.set("textPisoPiedra","maps/StoneTilesFloor01_1K_BaseColor.png");
-        srcTexturesMap.set("textMetalOxidado","maps/metal_grate_rusty_diff_1k.jpg");
-        srcTexturesMap.set("textGruaMetalica","maps/texturaGrua.png");
-        srcTexturesMap.set("textRueda","maps/rueda2.jpg");
-        srcTexturesMap.set("textMetalAzul","maps/ScratchedPaintedMetal01_1K_BaseColor.png");
-        srcTexturesMap.set("textMarmol","maps/Marble09_1K_BaseColor.png");
-        srcTexturesMap.set("textMarmolNegro","maps/Marble03_1K_BaseColor.png");
-        srcTexturesMap.set("textMetalVerde","maps/green_metal_rust_diff_1k.png");
-        srcTexturesMap.set("textMetalGris","maps/metallic_textured_background.png");
-        srcTexturesMap.set("textMadera","maps/wood_table_worn_diff_1k.jpg");
-        srcTexturesMap.set("textAjedrez","maps/floor_tiles_06_diff_1k.jpg");    
-        srcTexturesMap.set("textRocasArenosas","maps/medieval_blocks_02_diff_1k.jpg");    
-        srcTexturesMap.set("textCueroRojo","maps/leather_red_03_coll1_1k.jpg");
-        srcTexturesMap.set("textMetalOxidado2","maps/rust_coarse_01_diff_1k.jpg");
-        srcTexturesMap.set("MetalParedes","maps/CorrugatedMetalPanel02_1K_BaseColor2.png");
-        srcTexturesMap.set("textTest","maps/test.jpg");
-        srcTexturesMap.set("textMaderaRayada","maps/wood_peeling_paint_weathered_diff_1k.jpg");
-        srcTexturesMap.set("textPatron1","maps/Pattern02_1K_VarA.png");
-        srcTexturesMap.set("textPatron2","maps/patron3.png");
-        srcTexturesMap.set("textPatron3","maps/Pattern05_1K_VarC.png");
+    while (port && port.readable && keepReading) {
+        reader = port.readable.getReader(); // Asignamos a la globalg
+        try {
+            while (keepReading) {
+                const { value, done } = await reader.read();
+                if (done || !keepReading) break;
 
-        srcTexturesMap.forEach((scrTextura,nombreTextura)=>{
-        loadTexture(nombreTextura,scrTextura);
-      });
+                const hexChunk = bufferToHex(value);
+                acumuladorHex += hexChunk;
+                logTerminal("RX HEX <- " + hexChunk);
 
-
-        
-    }
-
-
-
-
-    function webGLStart() {
-        var canvas = document.getElementById("myCanvas");
-        initGL(canvas);
-        initShaders();
-        initTextures();
-        
-        cargarObjetosEscena(objetosEscena);
-        gl.clearColor(66.2, 0.2, 0.2, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.enable(gl.DEPTH_TEST);
-
-        $(window).on("resize",onResize);
-        initMenu();
-        tick();
+                if (acumuladorHex.startsWith("02") && acumuladorHex.endsWith("04")) {
+                    let tramaLimpia = "";
+                    for (let i = 2; i < acumuladorHex.length - 6; i += 2) {
+                        const code = parseInt(acumuladorHex.substring(i, i + 2), 16);
+                        tramaLimpia += String.fromCharCode(code);
+                    }
+                    logTerminal("Trama Decodificada: " + tramaLimpia, "system-msg");
+                    parsearIdentificador(tramaLimpia);
+                    acumuladorHex = ""; 
+                }
+            }
+        } catch (error) {
+            console.warn("Lectura interrumpida");
+        } finally {
+            reader.releaseLock(); // Liberamos el puerto SIEMPRE
+            reader = null;
         }
-        // cuando el documento HTML esta completo, iniciamos la aplicación
-        $(document).ready(function(){
-            loadShaders();
-        })
-    </script>
+    }
+}
+
+function parsearIdentificador(data) {
+    // data aquí ya es "434E54010119..." como en tu Java
+    if (data.length < 30 || !data.includes("434E54")) return false;
+
+    try {
+        // Ultima Programación (substrings idénticos a tu Java)
+        const dia = parseInt(data.substring(6, 8), 16).toString().padStart(2, '0');
+        const mes = parseInt(data.substring(8, 10), 16).toString().padStart(2, '0');
+        const anio = parseInt(data.substring(10, 12), 16).toString().padStart(2, '0');
+        const hora =  parseInt(data.substring(12, 14),16).toString().padStart(2, '0');
+        const min =  parseInt(data.substring(14, 16),16).toString().padStart(2, '0');
+        const sec =  parseInt(data.substring(16, 18),16).toString().padStart(2, '0');
+
+        // Versión (Posiciones 25 y 26)
+        const v1 =  parseInt(data.charAt(24),16).toString();
+        const v2 = parseInt(data.charAt(25),16).toString();
+
+        // Actualizar el HTML
+        // Buscamos los strong dentro de la card de información
+        const infoCard = document.querySelector('.info-tacografo');
+        const strongs = infoCard.querySelectorAll('strong');
+        
+        strongs[0].innerText = `${dia}/${mes}/20${anio} ${hora}:${min}:${sec}`;
+        strongs[1].innerText = `v ${v1}.${v2}`;
+
+        logTerminal("Datos de equipo actualizados correctamente", "system-msg");
+        return true;
+    } catch (e) {
+        console.error("Error parseo:", e);
+        return false;
+    }
+}
+const terminal = document.querySelector('.terminal-container');
+    terminal.style.display = 'none';
+
+    // --- MANEJO DE PESTAÑAS (Mantenido) ---
+    const tabConfig = document.getElementById('tabConfig');
+    const tabImpresora = document.getElementById('tabImpresora');
+    const panelConfig = document.getElementById('panelConfiguracion');
+    const panelImpresora = document.getElementById('panelImpresora');
+    const tabSugerencias = document.getElementById('tabSugerencias');
+    const panelSugerencias = document.getElementById('panelSugerencias');
+    const vehicleSelect = document.getElementById('vehicleSelect');
+    const sugerenciasContent = document.getElementById('sugerenciasContent');
     
+    // Función para ocultar todos los paneles
+function ocultarTodo() {
+    [panelConfiguracion, panelImpresora, panelSugerencias].forEach(p => p.classList.add('hidden'));
+    [tabConfig, tabImpresora, tabSugerencias].forEach(t => t.classList.remove('active'));
+}
+
+// Evento pestaña Sugerencias
+tabSugerencias.addEventListener('click', () => {
+    ocultarTodo();
+    panelSugerencias.classList.remove('hidden');
+    tabSugerencias.classList.add('active');
+});
+
+// Evento selector de vehículos
+vehicleSelect.addEventListener('change', () => {
+    if (vehicleSelect.value) {
+        sugerenciasContent.classList.remove('hidden');
+    }
+});
+
+// (Asegúrate de actualizar los eventos de tabConfig y tabImpresora para que usen ocultarTodo() o similar)
+tabConfig.addEventListener('click', () => {
+    ocultarTodo();
+    panelConfiguracion.classList.remove('hidden');
+    tabConfig.classList.add('active');
+});
+
+tabImpresora.addEventListener('click', () => {
+    ocultarTodo();
+    panelImpresora.classList.remove('hidden');
+    tabImpresora.classList.add('active');
+});
+// Dentro de tu script.js, actualiza el evento del selector:
+
+vehicleSelect.addEventListener('change', () => {
+    const seleccion = vehicleSelect.value;
+    sugerenciasContent.classList.remove('hidden');
+    
+    // Función auxiliar para resetear la vista
+    const limpiarSugerencias = () => {
+        for (let i = 1; i <= 3; i++) {
+            document.getElementById(`imgSug${i}`).style.display = "none";
+            document.getElementById(`placeholder${i}`).style.display = "flex";
+        }
+    };
+
+    if (seleccion === "sprinter") {
+        const basePath = "imgs/sprinter/2026/";
+        for (let i = 1; i <= 3; i++) {
+            const img = document.getElementById(`imgSug${i}`);
+            img.src = `${basePath}img_${i}.jpeg`;
+            img.style.display = "block";
+            document.getElementById(`placeholder${i}`).style.display = "none";
+        }
+        document.getElementById('txtSug1').innerText = "Sprinter 2026";
+        document.getElementById('txtSug2').innerText = "Fichas de alimentación y pulsos";
+        document.getElementById('txtSug3').innerText = "Pinout de las fichas";
+
+    } else if (seleccion === "sensor_universal") {
+        // --- LÓGICA PARA SENSOR UNIVERSAL ---
+        limpiarSugerencias();
+        
+        const img1 = document.getElementById('imgSug1');
+        img1.src = "imgs/sensor_universal/sensor.jpeg";
+        img1.style.display = "block";
+        document.getElementById('placeholder1').style.display = "none";
+        
+        document.getElementById('txtSug1').innerText = " Pinout";
+        document.getElementById('txtSug2').innerText = "Información pendiente.";
+        document.getElementById('txtSug3').innerText = "Información pendiente.";
+
+    } else {
+        // Otros modelos (Transit, Hiace)
+        limpiarSugerencias();
+        for (let i = 1; i <= 3; i++) {
+            document.getElementById(`txtSug${i}`).innerText = "Información pendiente para este modelo.";
+        }
+    }
+});
+
+// Manejar el zoom solo para las imágenes de sugerencias
+document.querySelectorAll('.suggestions-grid img').forEach(img => {
+    img.addEventListener('click', function() {
+        this.classList.toggle('zoom-active');
+    });
+});
+
+
+    // --- LÓGICA DE TOGGLES DE IMPRESORA (Deseleccionables) ---
+    const checks = document.querySelectorAll('.pos-check');
+    checks.forEach(check => {
+        check.addEventListener('click', function() {
+            const group = this.getAttribute('data-group');
+            if (this.checked) {
+                document.querySelectorAll(`.pos-check[data-group="${group}"]`).forEach(c => {
+                    if (c !== this) c.checked = false;
+                });
+            }
+        });
+    });
+
+</script>
 </body>
 </html>
