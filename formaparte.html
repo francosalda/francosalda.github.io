@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red de Distribuidores - Relojes Ariel</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Fondo celeste recuperado */
+        .distribuidores-hero {
+            background: linear-gradient(rgba(44, 114, 212, 0.95), rgba(44, 114, 212, 0.95));
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .intro-text {
+            max-width: 800px;
+            margin: 20px auto 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Grilla de beneficios */
+        .benefits-section {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--blue-main);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Botón de WhatsApp más bajo y estilizado */
+        .cta-section {
+            padding: 40px 0 80px;
+            text-align: center;
+        }
+
+        .cta-whatsapp-slim {
+            background: #25d366;
+            color: white;
+            padding: 15px 40px; /* Reducimos el padding vertical */
+            border-radius: 50px; /* Bordes más redondeados tipo pastilla */
+            display: inline-flex;
+            align-items: center; /* Alineación horizontal */
+            gap: 15px;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .cta-whatsapp-slim:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+        }
+
+        .cta-whatsapp-slim img {
+            width: 30px; /* Icono más pequeño para bajar la altura total */
+            height: auto;
+        }
+
+        .cta-whatsapp-slim span {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .distribuidores-hero { padding: 40px 0; }
+            .intro-text { font-size: 1.1rem; }
+            .cta-whatsapp-slim { width: 90%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/imgs/img-logo.png" alt="Relojes Ariel">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">VOLVER AL SITIO</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="distribuidores-hero">
+        <div class="container">
+            <h1>Sumate a nuestra Red Oficial</h1>
+            <p class="intro-text">
+                ¿Te interesa vender, instalar, configurar o brindar mantenimiento técnico a los productos de <strong>Relojes Ariel</strong>? 
+                Formá parte de nuestra red de distribuidores oficial y potenciá tu negocio con respaldo de fábrica.
+            </p>
+            Sumate desde cualquier parte del país.
+        </div>
+    </section>
+
+    <section class="benefits-section">
+        <div class="container">
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="benefit-icon">💰</span>
+                    <h3>Margen de Ganancia</h3>
+                    <p>Descuentos mayoristas competitivos y promociones exclusivas para miembros de la red.</p>
+                </div>
+                 <div class="benefit-card">
+                    <span class="benefit-icon">🛠️</span>
+                    <h3>Soporte Especializado</h3>
+                    <p>Línea directa con nuestros técnicos para resolver dudas  y asistencia remota.</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">💻</span>
+                    <h3>Documentación Técnica</h3>
+                    <p>Acceso al software, manuales de instalación, diagramas y guías de configuración.</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">🚀</span>
+                    <h3>Lanzamientos Prioritarios</h3>
+                    <p>Sé el primero en conocer y recibir stock de los últimos lanzamientos.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <a href="https://api.whatsapp.com/send?phone=5491144204094&text=Hola!%20Me%20interesa%20formar%20parte%20de%20la%20red%20de%20distribuidores." class="cta-whatsapp-slim" target="_blank">
+                <img src="images/whatsapp.png" alt="WhatsApp">
+                <span>Contactanos por WhatsApp</span>
+            </a>
+        </div>
+    </section>
+
+    <footer style="background: var(--blue-main); color: white; padding: 40px 0; text-align: center;">
+        <p>&copy; 2026 Relojes Ariel - Taxímetros y Tacógrafos.</p>
+    </footer>
+
+</body>
+</html>
