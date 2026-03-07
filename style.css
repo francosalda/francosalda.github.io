@@ -529,3 +529,61 @@ nav ul li a.active::after {
         height: 50px; /* Logo un poco más pequeño */
     }
 }
+
+.nosotros-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.distribuidores-promo {
+    background: rgba(44, 114, 212, 0.05); /* Un fondo celeste muy tenue */
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: 1px dashed var(--blue-main); /* Borde punteado estilo cupón/invitación */
+    max-width: 500px;
+    transition: transform 0.3s ease;
+}
+
+.distribuidores-promo:hover {
+    transform: scale(1.02);
+    background: rgba(44, 114, 212, 0.08);
+}
+
+.distribuidores-promo p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.promo-link {
+    display: block;
+    color: var(--blue-main);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    transition: color 0.3s;
+}
+
+.promo-link:hover {
+    color: #1a4a8e; /* Un azul más oscuro al pasar el mouse */
+    text-decoration: underline;
+}
+
+/* Ajuste para Celulares */
+@media (max-width: 768px) {
+    .distribuidores-promo {
+        margin: 0 15px;
+        padding: 15px;
+    }
+    
+    .promo-link {
+        font-size: 1.1rem; /* Un poco más chico para que no rompa el diseño en pantallas pequeñas */
+    }
+}
