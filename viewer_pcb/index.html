@@ -44,15 +44,22 @@
 
     <h1>Visor Interactivo 3D - Mi Placa KiCad</h1>
 
-    <model-viewer 
-        src="DISPLAY_COLOR.glb" 
-        alt="Modelo 3D de mi PCB exportada de KiCad" 
-        auto-rotate 
-        camera-controls 
-        shadow-intensity="1" 
-        exposure="1.2"
-        environment-image="neutral">
-    </model-viewer>
+   <model-viewer 
+    src="DISPLAY_COLOR.GLB" 
+    alt="Modelo 3D de la PCB del Display" 
+    camera-controls 
+    auto-rotate 
+    rotation-per-second="30deg"
+    shadow-intensity="1"
+    shadow-softness="0.5"
+    exposure="0.75"
+    environment-image="legacy"
+    interaction-prompt="auto">
+    
+    <div class="progress-bar" slot="progress">
+        <div class="update-bar"></div>
+    </div>
+</model-viewer>
 
     <div class="controls">
         <p>Usa el mouse para rotar, scroll para hacer zoom y arrastra con clic derecho para mover.</p>
