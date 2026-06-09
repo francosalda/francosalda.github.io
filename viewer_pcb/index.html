@@ -3,127 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vista 3D del Display</title>
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-
+    <title>Visor 3D de KiCad</title>
     <style>
-        * {
-            box-sizing: border-box;
+        body {
             margin: 0;
             padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #0f172a; /* Fondo oscuro elegante (Slate 900) */
-            color: #f8fafc;
+            background-color: #1a1a1a;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+            height: 100vh;
+            color: white;
         }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            background-color: #1e293b; /* Fondo de la tarjeta (Slate 800) */
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            border: 1px solid #334155;
-        }
-
-        .header {
-            padding: 20px;
-            background-color: #111827;
-            border-bottom: 1px solid #334155;
-            text-align: center;
-        }
-
-        .header h1 {
+        h1 {
+            margin-bottom: 10px;
             font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.025em;
-            color: #38bdf8; /* Azul brillante */
         }
 
-        .header p {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
-
-        /* Contenedor del modelo 3D con colores calibrados */
+        /* Contenedor del visor 3D */
         model-viewer {
-            width: 100%;
-            height: 550px; /* Altura del visor */
-            background-color: #141b2d; /* Fondo interno del visor 3D */
-            --poster-color: transparent;
+            width: 80%;
+            height: 70vh;
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Personalización de la barra de carga */
-        .progress-bar {
-            display: block;
-            width: 33%;
-            height: 4px;
-            max-height: 4px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        .update-bar {
-            background-color: #38bdf8;
-            width: 0%;
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-
-        .instructions {
-            padding: 15px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #64748b;
-            background-color: #111827;
-            border-top: 1px solid #334155;
+        .controls {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #aaa;
         }
     </style>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Visor 3D interactivo</h1>
-            <p>Modelo exportado desde KiCad: DISPLAY_COLOR.GLB</p>
-        </div>
+    <h1>Visor Interactivo 3D - Mi Placa KiCad</h1>
 
-        <model-viewer 
-            src="DISPLAY_COLOR.GLB" 
-            alt="Modelo 3D de la PCB del Display" 
-            camera-controls 
-            auto-rotate 
-            rotation-per-second="30deg"
-            shadow-intensity="1"
-            shadow-softness="0.5"
-            exposure="0.75"
-            environment-image="legacy"
-            interaction-prompt="auto">
-            
-            <div class="progress-bar" slot="progress">
-                <div class="update-bar"></div>
-            </div>
-        </model-viewer>
+    <model-viewer 
+        src="mi_placa.glb" 
+        alt="Modelo 3D de mi PCB exportada de KiCad" 
+        auto-rotate 
+        camera-controls 
+        shadow-intensity="1" 
+        exposure="1.2"
+        environment-image="neutral">
+    </model-viewer>
 
-        <div class="instructions">
-            <span>Usa el mouse (o el dedo en móviles) para rotar. Rueda del mouse para hacer zoom.</span>
-        </div>
+    <div class="controls">
+        <p>Usa el mouse para rotar, scroll para hacer zoom y arrastra con clic derecho para mover.</p>
     </div>
 
 </body>
